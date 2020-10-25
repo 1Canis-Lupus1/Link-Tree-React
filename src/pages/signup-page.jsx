@@ -12,7 +12,13 @@ const items = [
 class RequestDemo extends Component {
   constructor(props) {
     super(props);
-    this.state = { activeIndex: 0 };
+    this.state = { 
+      activeIndex: 0,
+      email:"",
+      username:"",
+      password:"",
+      rptPassword:""
+    };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.goToIndex = this.goToIndex.bind(this);
@@ -47,7 +53,21 @@ class RequestDemo extends Component {
 
   login=()=>{
     this.props.history.push('/login')
-	}
+  }
+  
+  handleChange=(e)=>{
+    console.log(e.target.value);
+    //Setting State Values
+    // this.setState({
+    //   ...this.state,
+    //   [e.target.name]: e.target.value
+    // })
+
+    // console.log("State Email:",this.state.email)
+    // console.log("State Username:", this.state.username);
+    // console.log("State Password:", this.state.password);
+    // console.log("State Repeat-Password:", this.state.rptPassword);
+  }
 
   render() {
     const { activeIndex } = this.state;
@@ -93,21 +113,20 @@ class RequestDemo extends Component {
 
                   <FormGroup>
                     <Label>Email</Label>
-                    <Input type="email" placeholder="Enter Email" />
+                    <Input type="email" placeholder="Enter Email" name="email" value={this.state.email} onChange={this.handleChange} />
                     {/* error msg, currently hidden */}
                     <small className="d-none">Enter a valid email ID</small>
                   </FormGroup>
-
                   <FormGroup>
                     <Label>Username</Label>
-                    <Input type="text" placeholder="Enter Username" />
+                    <Input type="text" placeholder="Enter Username" name="username" onChange={this.handleChange} />
                     {/* error msg, currently hidden */}
                     <small className="d-none"></small>
                   </FormGroup>
 
                   <FormGroup className="position-relative">
                     <Label>Password</Label>
-                    <Input type="text" placeholder="Enter Password" style={{paddingRight: 35}} />
+                    <Input type="text" placeholder="Enter Password" style={{paddingRight: 35}} name="password" onChange={this.handleChange}/>
                     {/* error msg, currently hidden */}
                     <small className="d-none"></small>
                     {/* eye icon for viewing the entered password */}
@@ -117,7 +136,7 @@ class RequestDemo extends Component {
                   </FormGroup>
                   <FormGroup className="position-relative">
                     <Label>Repeat Password</Label>
-                    <Input type="text" placeholder="Repeat Password" style={{paddingRight: 35}} />
+                    <Input type="text" placeholder="Repeat Password" style={{paddingRight: 35}} name="rptPassword" onChange={this.handleChange} />
                     {/* error msg, currently hidden */}
                     <small className="d-none"></small>
                     {/* eye icon for viewing the entered password */}
