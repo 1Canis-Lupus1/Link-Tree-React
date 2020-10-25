@@ -62,12 +62,35 @@ class RequestDemo extends Component {
   }
 
   login=(e)=>{
-    this.props.history.push('/login')
+    // this.props.history.push('/login')
+    let isTrue={
+      email:true,
+      password:true
+    };
+    this.setState({isTrue},()=>{
+      let errors=this.validation();
+      if(!errors){
+        const data={
+          email:this.state.user.email,
+          username:this.state.user.username,
+          password:this.state.user.password
+        }
+        SignUp(data).then(response=>{
+          console.log(response);
+        })
+      }
+    })
   }
   
   handleChange=(e)=>{
     console.log(e.target.value);
     //Setting State Values
+    this.state.user[e.target.name]=e.target.value;
+    this.state.isTrue[e.target.name]=true;
+
+    this.setState({user,isTrue},()=>{
+      this.validation();
+    })
     // this.setState({
     //   ...this.state,
     //   [e.target.name]: e.target.value
@@ -77,6 +100,11 @@ class RequestDemo extends Component {
     // console.log("State Username:", this.state.username);
     // console.log("State Password:", this.state.password);
     // console.log("State Repeat-Password:", this.state.rptPassword);
+  }
+
+  //Validation
+  validation(){
+    //Validation here
   }
 
   render() {
