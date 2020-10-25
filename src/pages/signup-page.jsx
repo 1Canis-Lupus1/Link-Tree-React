@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {Col, Container, Row, Carousel, CarouselIndicators, CarouselItem, CarouselCaption, Button, Form, Input, FormGroup, Label } from 'reactstrap';
+import {SignUp} from '../http/http-calls';
 
 const items = [
   {
@@ -14,10 +15,19 @@ class RequestDemo extends Component {
     super(props);
     this.state = { 
       activeIndex: 0,
-      email:"",
-      username:"",
-      password:"",
-      rptPassword:""
+      user:{
+        email:"",
+        username:"",
+        password:"",
+        rptPassword:""
+      },
+      isTrue:{
+        email:false,
+        username:false,
+        password:false,
+        rptPassword:false
+      },
+      errors:{}
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -51,7 +61,7 @@ class RequestDemo extends Component {
     this.setState({ activeIndex: newIndex });
   }
 
-  login=()=>{
+  login=(e)=>{
     this.props.history.push('/login')
   }
   
@@ -113,36 +123,56 @@ class RequestDemo extends Component {
 
                   <FormGroup>
                     <Label>Email</Label>
-                    <Input type="email" placeholder="Enter Email" name="email" value={this.state.email} onChange={this.handleChange} />
+                    <Input type="email" placeholder="Enter Email" name="email" value={this.state.user.email} onChange={this.handleChange} />
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.email}
+                      </p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none">Enter a valid email ID</small>
+                    {/* <small className="d-none">Enter a valid email ID</small> */}
                   </FormGroup>
                   <FormGroup>
                     <Label>Username</Label>
                     <Input type="text" placeholder="Enter Username" name="username" onChange={this.handleChange} />
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.username}
+                      </p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none"></small>
+                    {/* <small className="d-none"></small> */}
                   </FormGroup>
 
                   <FormGroup className="position-relative">
                     <Label>Password</Label>
                     <Input type="text" placeholder="Enter Password" style={{paddingRight: 35}} name="password" onChange={this.handleChange}/>
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.password}
+                      </p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none"></small>
+                    {/* <small className="d-none"></small> */}
                     {/* eye icon for viewing the entered password */}
-                    <span className="fa fa-eye-slash eyeIcon"></span>
+                    {/* <span className="fa fa-eye-slash eyeIcon"></span> */}
                     {/* toggle the above icon with the below icon */}
-                    <span className="fa fa-eye eyeIcon d-none"></span>
+                    {/* <span className="fa fa-eye eyeIcon d-none"></span> */}
                   </FormGroup>
                   <FormGroup className="position-relative">
                     <Label>Repeat Password</Label>
                     <Input type="text" placeholder="Repeat Password" style={{paddingRight: 35}} name="rptPassword" onChange={this.handleChange} />
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.rptPassword}
+                      </p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none"></small>
+                    {/* <small className="d-none"></small> */}
                     {/* eye icon for viewing the entered password */}
-                    <span className="fa fa-eye-slash eyeIcon"></span>
+                    {/* <span className="fa fa-eye-slash eyeIcon"></span> */}
                     {/* toggle the above icon with the below icon */}
-                    <span className="fa fa-eye eyeIcon d-none"></span>
+                    {/* <span className="fa fa-eye eyeIcon d-none"></span> */}
                   </FormGroup>
       
                   <Button className="recruitechThemeBtn loginBtn" style={{marginTop: 30}} onClick={this.login}>Get Started</Button>

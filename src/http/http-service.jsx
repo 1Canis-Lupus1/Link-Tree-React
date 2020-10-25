@@ -73,7 +73,7 @@ export const makeGetRequest = async (
 ) => {
   let queryString = "";
   if (params) {
-    queryString = structureQueryParams(params);
+    queryString = queryParams(params);
   }
   let headers = {
     Accept: "application/json",
