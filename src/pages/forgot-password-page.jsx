@@ -12,7 +12,16 @@ const items = [
 class ForgotPassword extends Component {
   constructor(props) {
     super(props);
-    this.state = { activeIndex: 0 };
+    this.state = { 
+      activeIndex: 0,
+      user:{
+        mail:""
+      },
+      isTrue:{
+        mail:false
+      },
+      errors:{}
+    };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.goToIndex = this.goToIndex.bind(this);
@@ -46,8 +55,42 @@ class ForgotPassword extends Component {
   }
 
   login=()=>{
-    this.props.history.push('/login')
-	}
+    let isTrue = {
+      mail: true
+    };
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      console.log("Error:", errors);
+      if (!errors) {
+        this.props.history.push("/login");
+      }
+    });
+  }
+  
+  handleChange=(name,value)=>{
+    const {user,isTrue}=this.state;
+    user[name]=value;
+    isTrue[name]=true;
+    this.setState({ user, isTrue }, () => {
+      this.validation();
+    });
+  }
+
+  validation=()=>{
+    const {user,errors,isTrue}=this.state;
+    Object.keys(user).forEach((entry)=>{
+      if(entry ==="mail" && isTrue.mail){
+        if(!user.mail.trim().length){
+          errors[entry] = "*Field Cannot Be Empty!!";
+        } else{
+          delete errors[entry];
+          isTrue.mail = false;
+        }
+      }
+    })
+    this.setState({ errors });
+    return Object.keys(errors).length ? errors : null;
+  }
 
   render() {
     const { activeIndex } = this.state;
@@ -69,40 +112,74 @@ class ForgotPassword extends Component {
         <Container fluid>
           <Row>
             <Col md="6" lg="6" className="loginPgLeftSide lightBlueBg">
-            {/* don't remove the below div */}
-              <div style={{visibility: 'hidden'}}>
+              {/* don't remove the below div */}
+              <div style={{ visibility: "hidden" }}>
                 <h3 className="pl-4">Link Tree</h3>
               </div>
 
-              <img src={'assets/img/forgot-password-img.svg'} alt="Forgot Password Img" className="img-fluid loginImg"></img>
+              <img
+                src={"assets/img/forgot-password-img.svg"}
+                alt="Forgot Password Img"
+                className="img-fluid loginImg"
+              ></img>
 
               <div className="loginContentLeftSide">
-                <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
+                <Carousel
+                  activeIndex={activeIndex}
+                  next={this.next}
+                  previous={this.previous}
+                >
                   {/* <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} /> */}
                   {slides2}
                 </Carousel>
               </div>
             </Col>
-           
+
             <Col md="6" lg="6" className="loginPgRightSide">
               <div className="d-flex justify-content-between align-items-center pr-2 pl-3">
-                <img src={'assets/img/company-logo.png'} alt="Login Img" className="projectLogo" />
+                <img
+                  src={"assets/img/company-logo.png"}
+                  alt="Login Img"
+                  className="projectLogo"
+                />
 
-                <a href="javascript:void(0)" className="backToLogin" onClick={this.login}>Back to Login</a>
+                <a
+                  href="javascript:void(0)"
+                  className="backToLogin"
+                  onClick={this.login}
+                >
+                  Back to Login
+                </a>
               </div>
-              
 
               <div className="w-100 justify-content-center d-flex flex-column align-items-center">
                 <Form className="loginFormWrapper">
                   <h4>Forgot Password?</h4>
                   <FormGroup>
                     <Label>Email</Label>
-                    <Input type="email" placeholder="Your Email" />
+                    <Input
+                      type="email"
+                      placeholder="Your Email"
+                      name="mail"
+                      value={this.state.user.mail}
+                      onChange={(e) =>
+                        this.handleChange(e.target.name, e.target.value)
+                      }
+                    />
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.mail}</p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none">Enter a valid email ID</small> 
+                    {/* <small className="d-none">Enter a valid email ID</small> */}
                   </FormGroup>
 
-                  <Button className="recruitechThemeBtn loginBtn" onClick={this.login}>Reset Password</Button>
+                  <Button
+                    className="recruitechThemeBtn loginBtn"
+                    onClick={this.login}
+                  >
+                    Reset Password
+                  </Button>
                 </Form>
               </div>
 
@@ -116,7 +193,12 @@ class ForgotPassword extends Component {
                 <div className="copyrightWrap pl-3">
                   Link Tree &#169; 2020.
                   <div>
-                    Powered By: <a href="https://www.logic-square.com/" target="_blank" className="lsWebsite">
+                    Powered By:{" "}
+                    <a
+                      href="https://www.logic-square.com/"
+                      target="_blank"
+                      className="lsWebsite"
+                    >
                       Logic Square
                     </a>
                   </div>

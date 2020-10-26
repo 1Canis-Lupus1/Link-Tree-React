@@ -84,7 +84,6 @@ class Login extends Component {
     }).catch(err => console.log(err));
   }
 
-  //handling input here
   handleChange = (name, value) => {
     const { user, isTrue } = this.state;
     user[name] = value;
@@ -94,22 +93,21 @@ class Login extends Component {
     });
   };
 
-  //for validation
   validation() {
     const { user, errors, isTrue } = this.state;
-    Object.keys(user).forEach((each) => {
-      if (each === "password" && isTrue.password) {
+    Object.keys(user).forEach((entry) => {
+      if (entry === "password" && isTrue.password) {
         if (!user.password.trim().length) {
-          errors[each] = "*Required";
+          errors[entry] = "*Field Cannot Be Empty!!";
         } else {
-          delete errors[each];
+          delete errors[entry];
           isTrue.password = false;
         }
-      } else if (each === "userName" && isTrue.userName) {
+      } else if (entry === "userName" && isTrue.userName) {
         if (!user.userName.trim().length) {
-          errors[each] = "*Required";
+          errors[entry] = "*Field Cannot Be Empty!!";
         } else {
-          delete errors[each];
+          delete errors[entry];
           isTrue.userName = false;
         }
       }
@@ -139,14 +137,22 @@ class Login extends Component {
           <Row>
             <Col md="6" lg="6" className="loginPgLeftSide lightBlueBg">
               {/* don't remove the below div */}
-              <div style={{ visibility: 'hidden' }}>
+              <div style={{ visibility: "hidden" }}>
                 <h3 className="pl-4">Link Tree</h3>
               </div>
 
-              <img src={'assets/img/login-img.svg'} alt="Login Img" className="img-fluid loginImg"></img>
+              <img
+                src={"assets/img/login-img.svg"}
+                alt="Login Img"
+                className="img-fluid loginImg"
+              ></img>
 
               <div className="loginContentLeftSide">
-                <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
+                <Carousel
+                  activeIndex={activeIndex}
+                  next={this.next}
+                  previous={this.previous}
+                >
                   {/* <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} /> */}
                   {slides2}
                 </Carousel>
@@ -154,14 +160,20 @@ class Login extends Component {
             </Col>
 
             <Col md="6" lg="6" className="loginPgRightSide">
-              <img src={'assets/img/company-logo.png'} alt="Login Img" className="projectLogo pl-3" />
+              <img
+                src={"assets/img/company-logo.png"}
+                alt="Login Img"
+                className="projectLogo pl-3"
+              />
 
               <div className="w-100 justify-content-center d-flex flex-column align-items-center">
                 <Form className="loginFormWrapper">
                   <h4>Login to your account</h4>
                   <FormGroup>
                     <Label>Username</Label>
-                    <Input type="text" placeholder="Your Username"
+                    <Input
+                      type="text"
+                      placeholder="Your Username"
                       value={this.state.user.userName}
                       name="userName"
                       onChange={(e) =>
@@ -169,12 +181,18 @@ class Login extends Component {
                       }
                     />
                     {this.state.errors && (
-                      <small style={{ color: "red" }}>{this.state.errors.userName}</small>
+                      <p style={{ color: "red" }}>
+                        {this.state.errors.userName}
+                      </p>
                     )}
+                    {/* error msg, currently hidden */}
+                    {/* <small className="d-none">Enter a valid Username</small> */}
                   </FormGroup>
                   <FormGroup>
                     <Label>Password</Label>
-                    <Input type="password" placeholder="Your Password"
+                    <Input
+                      type="password"
+                      placeholder="Your Password"
                       value={this.state.user.password}
                       name="password"
                       onChange={(e) =>
@@ -182,10 +200,19 @@ class Login extends Component {
                       }
                     />
                     {this.state.errors && (
-                      <small style={{ color: "red" }}>{this.state.errors.password}</small>
+                      <p style={{ color: "red" }}>
+                        {this.state.errors.password}
+                      </p>
                     )}
+                    {/* error msg, currently hidden */}
+                    {/* <small className="d-none">Enter a valid Password</small> */}
                   </FormGroup>
-                  <Button className="recruitechThemeBtn loginBtn" onClick={this.users}>Login</Button>
+                  <Button
+                    className="recruitechThemeBtn loginBtn"
+                    onClick={this.users}
+                  >
+                    Login
+                  </Button>
                 </Form>
 
                 <div className="registerWrap">
@@ -194,11 +221,20 @@ class Login extends Component {
                     <Label for="rememberMe" className="mb-0">Remember Me</Label> */}
                   </div>
 
-                  <a href="javascript:void(0)" className="forgotPassword" onClick={this.forgotPassword}>Forgot Password?</a>
+                  <a
+                    href="javascript:void(0)"
+                    className="forgotPassword"
+                    onClick={this.forgotPassword}
+                  >
+                    Forgot Password?
+                  </a>
                 </div>
 
                 <div className="register">
-                  Don't have an account? <a href="javascript:void(0)" onClick={this.requestDemo}>Sign Up!</a>
+                  Don't have an account?{" "}
+                  <a href="javascript:void(0)" onClick={this.requestDemo}>
+                    Sign Up!
+                  </a>
                 </div>
               </div>
 
@@ -212,7 +248,12 @@ class Login extends Component {
                 <div className="copyrightWrap pl-3">
                   Link Tree &#169; 2020.
                   <div>
-                    Powered By: <a href="https://www.logic-square.com/" target="_blank" className="lsWebsite">
+                    Powered By:{" "}
+                    <a
+                      href="https://www.logic-square.com/"
+                      target="_blank"
+                      className="lsWebsite"
+                    >
                       Logic Square
                     </a>
                   </div>

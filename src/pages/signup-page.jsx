@@ -111,11 +111,6 @@ class RequestDemo extends Component {
     const { user, isTrue } = this.state;
     user[name] = value;
     isTrue[name] = true;
-    // if (field === "userName") {
-    //   this.setState({
-    //     validUsername: false
-    //   });
-    // }
     this.setState({ user, isTrue }, () => {
       this.validation();
     });
