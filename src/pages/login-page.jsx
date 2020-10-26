@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import {Logging} from '../http/http-calls';
 import {logUser} from '../redux/action/action-data';
+import {connect} from 'react-redux';
 
 const items = [
   {
@@ -94,6 +95,7 @@ class Login extends Component {
     // console.log("Clicked");
     // console.log("Target:", e.target.value);
     let userData={}
+    //Api Request data
     const data={
       handle: this.state.user.userName,
       password: this.state.user.password
@@ -104,6 +106,7 @@ class Login extends Component {
         token:response.token
       }
       //SEND USER DATA TO REDUX STORE
+      this.props.logUser({userData});
       this.props.history.push("/links");
     }).catch(err=>console.log("Error:",err))
   };
@@ -310,4 +313,16 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps=(state)=>{
+  return{
+    data:state.data
+  }
+}
+
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    logUser:(user)=>dispatch(logUser(user))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Login);

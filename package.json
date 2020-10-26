@@ -19,6 +19,7 @@
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "classnames": "^2.2.6",
+    "clone-deep": "^4.0.1",
     "core-js": "^3.1.4",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -30,19 +31,18 @@
     "react-app-polyfill": "^1.0.1",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
-    "react-router-config": "^5.0.1",
-    "react-test-renderer": "^16.8.6",
-    "reactstrap": "^8.0.0",
-    "simple-line-icons": "^2.4.1",
-    "clone-deep": "^4.0.1",
     "react-loader-spinner": "^3.1.4",
-    "react-redux": "^7.1.1",
+    "react-redux": "^7.2.1",
+    "react-router-config": "^5.0.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-test-renderer": "^16.8.6",
     "react-toasts": "^3.0.5",
+    "reactstrap": "^8.0.0",
     "redux": "^4.0.4",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
     "react-scripts": "^3.0.1"

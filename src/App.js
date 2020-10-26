@@ -6,11 +6,13 @@ import './App.scss';
 import SignUp from './pages/signup-page';
 import LoginPage from './pages/login-page';
 import ForgotPasswordPage from './pages/forgot-password-page';
-
 import DefaultLayout from "./containers/DefaultLayout/DefaultLayout";
+import {store} from './redux/store';
+import {Provider} from 'react-redux';
 
 function App() {
   return (
+    <Provider store={store}>
         <Router>
           <div>
             <ToastsContainer store={ToastsStore} position={ToastsContainerPosition.BOTTOM_RIGHT} />
@@ -25,6 +27,7 @@ function App() {
             </Switch>
           </div>
         </Router>
+    </Provider>
   );
 }
 
