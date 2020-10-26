@@ -76,6 +76,10 @@ class ForgotPassword extends Component {
     });
   };
 
+  sudologin=()=>{
+    this.props.history.push("/login");
+  }
+
   handleChange = (name, value) => {
     const { user, isTrue } = this.state;
     user[name] = value;
@@ -178,7 +182,7 @@ class ForgotPassword extends Component {
                 <a
                   href="javascript:void(0)"
                   className="backToLogin"
-                  onClick={this.login}
+                  onClick={this.sudologin}
                 >
                   Back to Login
                 </a>

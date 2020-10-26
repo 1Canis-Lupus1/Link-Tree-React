@@ -70,10 +70,18 @@ class Login extends Component {
 
   users = () => {
     let user = {};
-    const data = {
-      handle: this.state.user.userName,
-      password: this.state.user.password
+    let isTrue={
+      userName:true,
+      password:true
     }
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      console.log("Error:",errors);
+      if (!errors) {
+        const data = {
+          handle: this.state.user.userName,
+          password: this.state.user.password
+        };
     Logging(data).then(response => {
       user = {
         userName: response.handle,
@@ -83,6 +91,8 @@ class Login extends Component {
       this.props.history.push('/links')
     }).catch(err => console.log(err));
   }
+})
+}
 
   handleChange = (name, value) => {
     const { user, isTrue } = this.state;
@@ -205,7 +215,7 @@ class Login extends Component {
                       </p>
                     )}
                     {/* error msg, currently hidden */}
-                    {/* <small className="d-none">Enter a valid Password</small> */}
+                    {/* <small className="d-none">Enter a valid </small> */}
                   </FormGroup>
                   <Button
                     className="recruitechThemeBtn loginBtn"
