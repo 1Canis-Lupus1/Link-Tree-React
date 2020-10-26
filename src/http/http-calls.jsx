@@ -26,7 +26,21 @@ export const validUsername = (userName) => {
       })
       .catch((err) => {
           reject(err);
-          console.log("API call error: ", err);
+          console.log("Error: ", err);
+      });
+  });
+};
+
+export const Logging = (data) => {
+  return new Promise((resolve, reject) => {
+    makePostRequest(url + "/login", false, data)
+      .then((response) => {
+        resolve(response);
+        console.log("Token Response:",response);
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+        reject(err);
       });
   });
 };

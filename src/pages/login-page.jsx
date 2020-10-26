@@ -14,6 +14,7 @@ import {
   FormGroup,
   Label,
 } from "reactstrap";
+import {Logging} from '../http/http-calls';
 
 const items = [
   {
@@ -23,14 +24,24 @@ const items = [
   },
 ];
 
-const url = "http://139.59.14.81:4000/api/v1";
+//Base Url
+// const url = "http://139.59.14.81:4000/api/v1";
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeIndex: 0,
-      username: "",
+      user:{
+        userName:"",
+        password:"",
+        token:""
+      },
+      isTrue:{
+        userName:false,
+        password:false
+      },
+      errors:{}
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -81,29 +92,73 @@ class Login extends Component {
   users = (e) => {
     // console.log("Clicked");
     // console.log("Target:", e.target.value);
-    this.props.history.push("/links");
+    let userData={}
+    const data={
+      handle: this.state.user.userName,
+      password: this.state.user.password
+    }
+    Logging(data).then(response=>{
+      userData={
+        userName:response.handle,
+        token:response.token
+      }
+      //SEND USER DATA TO REDUX STORE
+      this.props.history.push("/links");
+    }).catch(err=>console.log("Error:",err))
   };
 
+  handleChange=(e)=>{
+    // console.log(e.target.name,e.target.value);
+    const {user,isTrue}=this.state;
+    user[e.target.name]=e.target.value;
+    isTrue[e.target.name]=true;
+    
+    this.setState({user,isTrue},()=>{
+      this.validation();
+    })
+  }
+
+  validation=()=>{
+    const {user,isTrue,errors}=this.state;
+    Object.keys(user).forEach(entry=>{
+      if(entry==="userName" && isTrue.userName){
+        if(!user.userName.trim().length){
+          errors[entry] = "*Field Cannot Be Empty!!";
+        } else{
+          delete errors[entry];
+          isTrue.userName=false;
+        }
+      } else if(entry ==="password" && isTrue.password){
+        if(!user.password.trim().length){
+          errors[entry] = "*Field Cannot Be Empty!!";
+        } else{
+          delete errors[entry];
+          isTrue.password=false;
+        }
+      }
+    })
+    this.setState({errors});
+    return Object.keys(errors).length ? errors:null;
+  }
+
+  // //Username valid or not
+  // const handleChange = (e) => {
+  //   console.log(e.target.value);
+  //   fetch(`${url}/check-userName`, {
+  //     method: "POST",
+  //     // headers:{
+  //     //   "Accept":'application/json',
+  //     //   "Content-Type":'application/json'
+  //     // },
+  //     body: {
+  //       "userName": "e.target.value",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((resText) => console.log(resText))
+  //     .catch((err) => console.log(err));
+  // };
   render() {
-    //Username valid or not
-    const handleChange = (e) => {
-      console.log(e.target.value);
-      fetch(`${url}/check-userName`, {
-        method: "POST",
-        // headers:{
-        //   "Accept":'application/json',
-        //   "Content-Type":'application/json'
-        // },
-        body: {
-          "userName": "e.target.value",
-        },
-      })
-        .then((response) => response.json())
-        .then((resText) => console.log(resText))
-        .catch((err) => console.log(err));
-    };
-
-
     const { activeIndex } = this.state;
 
     const slides2 = items.map((item) => {
@@ -164,23 +219,34 @@ class Login extends Component {
                     <Input
                       type="text"
                       placeholder="Your Username"
-                      value={this.username}
-                      onChange={handleChange}
+                      name="userName"
+                      value={this.state.user.userName}
+                      onChange={this.handleChange}
                     />
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.userName}</p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none">Enter a valid username</small>
+                    {/* <small className="d-none">Enter a valid username</small> */}
                   </FormGroup>
                   <FormGroup>
                     <Label>Password</Label>
                     <Input
                       type="password"
                       placeholder="Your Password"
-                      value={this.password}
+                      name="password"
+                      value={this.state.user.password}
+                      onChange={this.handleChange}
                     />
+                    {this.state.errors && (
+                      <p style={{color:"red"}}>
+                        {this.state.errors.password}</p>
+                    )}
                     {/* error msg, currently hidden */}
-                    <small className="d-none">
+                    {/* <small className="d-none">
                       Password entered is incorrect
-                    </small>
+                    </small> */}
                   </FormGroup>
 
                   <Button
