@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {Col, Container, Row, Carousel, CarouselIndicators, CarouselItem, CarouselCaption, Button, Form, Input, FormGroup, Label } from 'reactstrap';
-import {SignUp} from '../http/http-calls';
+import {SignUp,validUsername} from '../http/http-calls';
 
 const items = [
   {
@@ -27,7 +27,8 @@ class RequestDemo extends Component {
         password:false,
         rptPassword:false
       },
-      errors:{}
+      errors:{},
+      usernameStatus:false
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -76,6 +77,7 @@ class RequestDemo extends Component {
         }
         SignUp(data).then(response=>{
           console.log(response);
+          //Redirecting to '/login'
           this.props.history.push("/login");
         })
       }
@@ -86,8 +88,8 @@ class RequestDemo extends Component {
     console.log(e.target.value);
     const {user,isTrue}=this.state;
     //Setting State Values
-    this.state.user[e.target.name]=e.target.value;
-    this.state.isTrue[e.target.name]=true;
+    user[e.target.name]=e.target.value;
+    isTrue[e.target.name]=true;
 
     this.setState({user,isTrue},()=>{
       this.validation();
@@ -103,10 +105,27 @@ class RequestDemo extends Component {
     // console.log("State Repeat-Password:", this.state.rptPassword);
   }
 
+  //Validating Username
+  isValid=name=>{
+    validUsername(name).then(response=>{
+      console.log(response)
+      if(response.isAvailable){
+        this.setState({
+          usernameStatus:true
+        });
+      }else{
+        this.setState({
+          usernameStatus:false
+        })
+      }
+    })
+    return true;
+  }
+
   //Validation
   validation(){
     //Validation here
-    console.log("Validating input here");
+    // console.log("Validating Entry here:");
     const {user,errors,isTrue}=this.state;
     Object.keys(user).forEach((entry)=>{
       if(entry === "email" && isTrue.email){
@@ -124,8 +143,13 @@ class RequestDemo extends Component {
           isTrue.email=false;
         }
       }else if(entry==="username" && isTrue.username){
+        let buffer={
+          username:user.username
+        }
         if(!user.username.trim().length){
-          errors.username="*Cannot be empty";
+          errors[entry]="In-Valid Username";
+        }else if(!(this.isValid(buffer) && this.state.usernameStatus)){
+          errors[entry]="Username already exists!!";
         }else{
           delete errors[entry];
           isTrue.username=false;
@@ -140,6 +164,8 @@ class RequestDemo extends Component {
       }else if(entry ==="rptPassword" && isTrue.rptPassword){
         if(!user.rptPassword.trim().length){
           errors[entry]="*Cannot be empty";
+        }else if(!(user.rptPassword === user.password)){
+          errors[entry]= "Password does not match!!"
         }else{
           delete errors[entry];
           isTrue.rptPassword=false;

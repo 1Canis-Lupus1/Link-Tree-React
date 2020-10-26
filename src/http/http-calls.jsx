@@ -19,15 +19,15 @@ export const SignUp=data=>{
     })
 }
 
-export const validUsername=name=>{
+export const validUsername=userName=>{
     return new Promise((resolve,reject)=>{
         makePostRequest(
             url+'/check-userName',
             false,
-            name
+            userName
         ).then(response=>{
             resolve(response);
-            // console.log(response);
+            console.log("In Calls:",response);
         }).catch(err=>{
             reject(err);
             console.log("Error:",err);
