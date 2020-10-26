@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {Col, Container, Row, Carousel, CarouselIndicators, CarouselItem, CarouselCaption, Button, Form, Input, FormGroup, Label } from 'reactstrap';
+import { validPass } from "../http/http-calls";
 
 const items = [
   {
@@ -12,15 +13,16 @@ const items = [
 class ForgotPassword extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       activeIndex: 0,
-      user:{
-        mail:""
+      user: {
+        mail: "",
       },
-      isTrue:{
-        mail:false
+      isTrue: {
+        mail: false,
       },
-      errors:{}
+      errors: {},
+      validMail: false,
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -39,13 +41,19 @@ class ForgotPassword extends Component {
 
   next() {
     if (this.animating) return;
-    const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
+    const nextIndex =
+      this.state.activeIndex === items.length - 1
+        ? 0
+        : this.state.activeIndex + 1;
     this.setState({ activeIndex: nextIndex });
   }
 
   previous() {
     if (this.animating) return;
-    const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
+    const nextIndex =
+      this.state.activeIndex === 0
+        ? items.length - 1
+        : this.state.activeIndex - 1;
     this.setState({ activeIndex: nextIndex });
   }
 
@@ -54,43 +62,64 @@ class ForgotPassword extends Component {
     this.setState({ activeIndex: newIndex });
   }
 
-  login=()=>{
+  login = () => {
     let isTrue = {
-      mail: true
+      mail: true,
     };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
       console.log("Error:", errors);
       if (!errors) {
+        alert("Password Reset Link Sent Successfully");
         this.props.history.push("/login");
       }
     });
-  }
-  
-  handleChange=(name,value)=>{
-    const {user,isTrue}=this.state;
-    user[name]=value;
-    isTrue[name]=true;
+  };
+
+  handleChange = (name, value) => {
+    const { user, isTrue } = this.state;
+    user[name] = value;
+    isTrue[name] = true;
     this.setState({ user, isTrue }, () => {
       this.validation();
     });
-  }
+  };
 
-  validation=()=>{
-    const {user,errors,isTrue}=this.state;
-    Object.keys(user).forEach((entry)=>{
-      if(entry ==="mail" && isTrue.mail){
-        if(!user.mail.trim().length){
+  validation = () => {
+    const { user, errors, isTrue } = this.state;
+    Object.keys(user).forEach((entry) => {
+      if (entry === "mail" && isTrue.mail) {
+        const obj = {
+          handle: user.mail,
+        };
+        if (!user.mail.trim().length) {
           errors[entry] = "*Field Cannot Be Empty!!";
-        } else{
+        } else if (!(this.isValid(obj) && this.state.validMail)) {
+          errors[entry] = "*Enter Registered Email";
+        } else {
           delete errors[entry];
           isTrue.mail = false;
         }
       }
-    })
+    });
     this.setState({ errors });
     return Object.keys(errors).length ? errors : null;
-  }
+  };
+
+  isValid = (email) => {
+    validPass(email).then((response) => {
+      if (!response.error) {
+        this.setState({
+          validMail: true,
+        });
+      } else {
+        this.setState({
+          validMail: false,
+        });
+      }
+    });
+    return true;
+  };
 
   render() {
     const { activeIndex } = this.state;
@@ -102,7 +131,10 @@ class ForgotPassword extends Component {
           onExited={this.onExited}
           key={item.src}
         >
-          <CarouselCaption captionText={item.caption} captionHeader={item.header} />
+          <CarouselCaption
+            captionText={item.caption}
+            captionHeader={item.header}
+          />
         </CarouselItem>
       );
     });
@@ -167,8 +199,7 @@ class ForgotPassword extends Component {
                       }
                     />
                     {this.state.errors && (
-                      <p style={{color:"red"}}>
-                        {this.state.errors.mail}</p>
+                      <p style={{ color: "red" }}>{this.state.errors.mail}</p>
                     )}
                     {/* error msg, currently hidden */}
                     {/* <small className="d-none">Enter a valid email ID</small> */}

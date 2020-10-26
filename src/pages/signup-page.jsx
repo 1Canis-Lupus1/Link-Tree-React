@@ -149,14 +149,14 @@ class RequestDemo extends Component {
         if (!user.userName.trim().length) {
           errors[entry] = "*Field Cannot Be Empty!!";
         } else if (!(this.isValid(obj) && this.state.validUsername)) {
-          errors[entry] = "Enter Unique userName";
+          errors[entry] = "Enter Unique Username";
         } else {
           delete errors[entry];
           isTrue.userName = false;
         }
       } else if (entry === "rptPassword" && isTrue.rptPassword) {
         if (!(user.rptPassword === user.password)) {
-          errors[entry] = "*Password not matching";
+          errors[entry] = "*Password Does Not Match!!";
         } else {
           delete errors[entry];
           isTrue.rptPassword = false;

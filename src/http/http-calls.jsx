@@ -45,7 +45,7 @@ export const Logging = (data) => {
   });
 };
 
-export const forgotPass=(mail)=>{
+export const validPass=(mail)=>{
   return new Promise((resolve,reject)=>{
     makePostRequest(url+"/forgotPassword",false,mail)
     .then((response)=>{
