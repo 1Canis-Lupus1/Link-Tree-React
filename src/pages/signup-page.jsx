@@ -108,8 +108,8 @@ class RequestDemo extends Component {
     //Validation here
     console.log("Validating input here");
     const {user,errors,isTrue}=this.state;
-    Object.keys(user).forEach((each)=>{
-      if(each === "email" && isTrue.email){
+    Object.keys(user).forEach((entry)=>{
+      if(entry === "email" && isTrue.email){
         if(!user.email.trim().length){
           errors.email="*Cannot Be Empty";
         }else if(
@@ -120,28 +120,28 @@ class RequestDemo extends Component {
         ){
           errors.email="In-Valid Email";
         }else{
-          delete errors[each];
+          delete errors[entry];
           isTrue.email=false;
         }
-      }else if(each==="username" && isTrue.username){
+      }else if(entry==="username" && isTrue.username){
         if(!user.username.trim().length){
           errors.username="*Cannot be empty";
         }else{
-          delete errors[each];
+          delete errors[entry];
           isTrue.username=false;
         }
-      }else if(each ==="password" && isTrue.password){
+      }else if(entry ==="password" && isTrue.password){
         if(!user.password.trim().length){
-          errors[each]="*Cannot be empty";
+          errors[entry]="*Cannot be empty";
         }else{
-          delete errors[each];
+          delete errors[entry];
           isTrue.password=false;
         }
-      }else if(each ==="rptPassword" && isTrue.rptPassword){
+      }else if(entry ==="rptPassword" && isTrue.rptPassword){
         if(!user.rptPassword.trim().length){
-          errors[each]="*Cannot be empty";
+          errors[entry]="*Cannot be empty";
         }else{
-          delete errors[each];
+          delete errors[entry];
           isTrue.rptPassword=false;
         }
       }

@@ -18,3 +18,19 @@ export const SignUp=data=>{
         })
     })
 }
+
+export const validUsername=name=>{
+    return new Promise((resolve,reject)=>{
+        makePostRequest(
+            url+'/check-userName',
+            false,
+            name
+        ).then(response=>{
+            resolve(response);
+            // console.log(response);
+        }).catch(err=>{
+            reject(err);
+            console.log("Error:",err);
+        })
+    })
+}
