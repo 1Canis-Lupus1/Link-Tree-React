@@ -26,7 +26,7 @@ export const validUsername = (userName) => {
       })
       .catch((err) => {
           reject(err);
-          console.log("Error: ", err);
+          console.log("Error in /check-userName:", err);
       });
   });
 };
@@ -39,8 +39,21 @@ export const Logging = (data) => {
         console.log("Token Response:",response);
       })
       .catch((err) => {
-        console.log("Error: ", err);
+        console.log("Error in /login :", err);
         reject(err);
       });
   });
 };
+
+export const forgotPass=(mail)=>{
+  return new Promise((resolve,reject)=>{
+    makePostRequest(url+"/forgotPassword",false,mail)
+    .then((response)=>{
+      resolve(response);
+      console.log("Forgot Password:",response);
+    })
+    .catch((err)=>{
+      console.log("Error in /forgotPassword :",err);
+    })
+  })
+}

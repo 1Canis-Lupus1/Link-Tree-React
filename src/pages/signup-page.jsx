@@ -102,6 +102,10 @@ class RequestDemo extends Component {
     });
   };
 
+  userLogin=()=>{
+    this.props.history.push("/login");
+  }
+
   //handling input here
   handleChange = (name, value) => {
     const { user, isTrue } = this.state;
@@ -259,7 +263,7 @@ class RequestDemo extends Component {
                   </FormGroup>
 
                   <FormGroup>
-                    <Label>userName</Label>
+                    <Label>Username</Label>
                     <Input
                       type="text"
                       placeholder="Enter userName"
@@ -332,7 +336,7 @@ class RequestDemo extends Component {
 
                 <div className="register mt-0 mb-3">
                   Already have an account?{" "}
-                  <a href="javascript:void(0)" onClick={this.login}>
+                  <a href="javascript:void(0)" onClick={this.userLogin}>
                     Login
                   </a>
                 </div>
