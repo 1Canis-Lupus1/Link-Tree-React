@@ -19,12 +19,11 @@ export const makePostRequest = async (
     Accept: "application/json",
     "Content-Type": "application/json",
   };
-  //When We receive the token in reponse
   // if (attachToken) {
   //   try {
-  //     const receivedToken = await getToken();
-  //     if (receivedToken) {
-  //       headers["Authorization"] = "Bearer " + receivedToken;
+  //     const authToken = await getToken();
+  //     if (authToken) {
+  //       headers["Authorization"] = "Bearer " + authToken;
   //     }
   //   } catch (e) {
   //     console.log("Error fetching auth token: ", e);
@@ -79,13 +78,12 @@ export const makeGetRequest = async (
     Accept: "application/json",
     "Content-Type": "application/json",
   };
-  //When we receive the token in response
   // if (attachToken) {
   //   try {
-  //     const receivedToken = await getToken();
-  //     if (receivedToken) {
-  //       console.log(receivedToken);
-  //       headers["Authorization"] = "Bearer " + receivedToken;
+  //     const authToken = await getToken();
+  //     if (authToken) {
+  //       console.log(authToken);
+  //       headers["Authorization"] = "Bearer " + authToken;
   //     }
   //   } catch (e) {
   //     console.log(e);
@@ -100,7 +98,6 @@ export const makeGetRequest = async (
         .then((res) => res.json())
         .then((jsonResponse) => {
           if (jsonResponse.error === false) {
-            // change this condition according to response structure
             resolve(jsonResponse);
           } else {
             console.log(jsonResponse);
