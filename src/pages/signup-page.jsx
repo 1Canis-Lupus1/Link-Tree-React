@@ -62,7 +62,6 @@ class RequestDemo extends Component {
   }
 
   login=(e)=>{
-    // this.props.history.push('/login')
     let isTrue={
       email:true,
       password:true
@@ -77,6 +76,7 @@ class RequestDemo extends Component {
         }
         SignUp(data).then(response=>{
           console.log(response);
+          this.props.history.push("/login");
         })
       }
     })
@@ -84,6 +84,7 @@ class RequestDemo extends Component {
   
   handleChange=(e)=>{
     console.log(e.target.value);
+    const {user,isTrue}=this.state;
     //Setting State Values
     this.state.user[e.target.name]=e.target.value;
     this.state.isTrue[e.target.name]=true;
@@ -105,6 +106,48 @@ class RequestDemo extends Component {
   //Validation
   validation(){
     //Validation here
+    console.log("Validating input here");
+    const {user,errors,isTrue}=this.state;
+    Object.keys(user).forEach((each)=>{
+      if(each === "email" && isTrue.email){
+        if(!user.email.trim().length){
+          errors.email="*Cannot Be Empty";
+        }else if(
+          user.email.trim().length && 
+          !new RegExp(
+            "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z]{2,3,4}$"
+          ).test(user.email) 
+        ){
+          errors.email="In-Valid Email";
+        }else{
+          delete errors[each];
+          isTrue.email=false;
+        }
+      }else if(each==="username" && isTrue.username){
+        if(!user.username.trim().length){
+          errors.username="*Cannot be empty";
+        }else{
+          delete errors[each];
+          isTrue.username=false;
+        }
+      }else if(each ==="password" && isTrue.password){
+        if(!user.password.trim().length){
+          errors[each]="*Cannot be empty";
+        }else{
+          delete errors[each];
+          isTrue.password=false;
+        }
+      }else if(each ==="rptPassword" && isTrue.rptPassword){
+        if(!user.rptPassword.trim().length){
+          errors[each]="*Cannot be empty";
+        }else{
+          delete errors[each];
+          isTrue.rptPassword=false;
+        }
+      }
+    });
+    this.setState({errors});
+    return Object.keys(errors).length ? errors:null;
   }
 
   render() {
@@ -162,7 +205,7 @@ class RequestDemo extends Component {
                   </FormGroup>
                   <FormGroup>
                     <Label>Username</Label>
-                    <Input type="text" placeholder="Enter Username" name="username" onChange={this.handleChange} />
+                    <Input type="text" placeholder="Enter Username" name="username" value={this.state.user.username} onChange={this.handleChange} />
                     {this.state.errors && (
                       <p style={{color:"red"}}>
                         {this.state.errors.username}
