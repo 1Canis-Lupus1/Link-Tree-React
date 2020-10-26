@@ -1,49 +1,32 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import {
-  Col,
-  Container,
-  Row,
-  Carousel,
-  CarouselIndicators,
-  CarouselItem,
-  CarouselCaption,
-  Button,
-  Form,
-  Input,
-  FormGroup,
-  Label,
-} from "reactstrap";
-import {Logging} from '../http/http-calls';
-import {logUser} from '../redux/action/action-data';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Col, Container, Row, Carousel, CarouselIndicators, CarouselItem, CarouselCaption, Button, Form, Input, FormGroup, Label } from 'reactstrap';
+import { Logging } from "../http/http-calls";
+import { logUser } from "../redux/action/user-data";
+import { connect } from "react-redux";
 
 const items = [
   {
-    header: "Title",
-    caption:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.",
+    header: 'Title',
+    caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.',
   },
 ];
-
-//Base Url
-// const url = "http://139.59.14.81:4000/api/v1";
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeIndex: 0,
-      user:{
-        userName:"",
-        password:"",
-        token:""
+      user: {
+        userName: '',
+        password: '',
+        token: ''
       },
-      isTrue:{
-        userName:false,
-        password:false
+      isTrue: {
+        userName: false,
+        password: false
       },
-      errors:{}
+      errors: {}
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -62,19 +45,13 @@ class Login extends Component {
 
   next() {
     if (this.animating) return;
-    const nextIndex =
-      this.state.activeIndex === items.length - 1
-        ? 0
-        : this.state.activeIndex + 1;
+    const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
     this.setState({ activeIndex: nextIndex });
   }
 
   previous() {
     if (this.animating) return;
-    const nextIndex =
-      this.state.activeIndex === 0
-        ? items.length - 1
-        : this.state.activeIndex - 1;
+    const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
     this.setState({ activeIndex: nextIndex });
   }
 
@@ -84,84 +61,63 @@ class Login extends Component {
   }
 
   forgotPassword = () => {
-    this.props.history.push("/forgot-password");
-  };
+    this.props.history.push('/forgot-password')
+  }
 
   requestDemo = () => {
-    this.props.history.push("/signup");
-  };
+    this.props.history.push('/signup')
+  }
 
-  users = (e) => {
-    // console.log("Clicked");
-    // console.log("Target:", e.target.value);
-    let userData={}
-    //Api Request data
-    const data={
+  users = () => {
+    let user = {};
+    const data = {
       handle: this.state.user.userName,
       password: this.state.user.password
     }
-    Logging(data).then(response=>{
-      userData={
-        userName:response.handle,
-        token:response.token
+    Logging(data).then(response => {
+      user = {
+        userName: response.handle,
+        token: response.token
       }
-      //SEND USER DATA TO REDUX STORE
-      this.props.logUser({userData});
-      this.props.history.push("/links");
-    }).catch(err=>console.log("Error:",err))
+      this.props.logUser({ user });
+      this.props.history.push('/links')
+    }).catch(err => console.log(err));
+  }
+
+  //handling input here
+  handleChange = (name, value) => {
+    const { user, isTrue } = this.state;
+    user[name] = value;
+    isTrue[name] = true;
+    this.setState({ user, isTrue }, () => {
+      this.validation();
+    });
   };
 
-  handleChange=(e)=>{
-    // console.log(e.target.name,e.target.value);
-    const {user,isTrue}=this.state;
-    user[e.target.name]=e.target.value;
-    isTrue[e.target.name]=true;
-    
-    this.setState({user,isTrue},()=>{
-      this.validation();
-    })
-  }
-
-  validation=()=>{
-    const {user,isTrue,errors}=this.state;
-    Object.keys(user).forEach(entry=>{
-      if(entry==="userName" && isTrue.userName){
-        if(!user.userName.trim().length){
-          errors[entry] = "*Field Cannot Be Empty!!";
-        } else{
-          delete errors[entry];
-          isTrue.userName=false;
+  //for validation
+  validation() {
+    const { user, errors, isTrue } = this.state;
+    Object.keys(user).forEach((each) => {
+      if (each === "password" && isTrue.password) {
+        if (!user.password.trim().length) {
+          errors[each] = "*Required";
+        } else {
+          delete errors[each];
+          isTrue.password = false;
         }
-      } else if(entry ==="password" && isTrue.password){
-        if(!user.password.trim().length){
-          errors[entry] = "*Field Cannot Be Empty!!";
-        } else{
-          delete errors[entry];
-          isTrue.password=false;
+      } else if (each === "userName" && isTrue.userName) {
+        if (!user.userName.trim().length) {
+          errors[each] = "*Required";
+        } else {
+          delete errors[each];
+          isTrue.userName = false;
         }
       }
-    })
-    this.setState({errors});
-    return Object.keys(errors).length ? errors:null;
+    });
+    this.setState({ errors });
+    return Object.keys(errors).length ? errors : null;
   }
 
-  // //Username valid or not
-  // const handleChange = (e) => {
-  //   console.log(e.target.value);
-  //   fetch(`${url}/check-userName`, {
-  //     method: "POST",
-  //     // headers:{
-  //     //   "Accept":'application/json',
-  //     //   "Content-Type":'application/json'
-  //     // },
-  //     body: {
-  //       "userName": "e.target.value",
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((resText) => console.log(resText))
-  //     .catch((err) => console.log(err));
-  // };
   render() {
     const { activeIndex } = this.state;
 
@@ -172,10 +128,7 @@ class Login extends Component {
           onExited={this.onExited}
           key={item.src}
         >
-          <CarouselCaption
-            captionText={item.caption}
-            captionHeader={item.header}
-          />
+          <CarouselCaption captionText={item.caption} captionHeader={item.header} />
         </CarouselItem>
       );
     });
@@ -186,22 +139,14 @@ class Login extends Component {
           <Row>
             <Col md="6" lg="6" className="loginPgLeftSide lightBlueBg">
               {/* don't remove the below div */}
-              <div style={{ visibility: "hidden" }}>
+              <div style={{ visibility: 'hidden' }}>
                 <h3 className="pl-4">Link Tree</h3>
               </div>
 
-              <img
-                src={"assets/img/login-img.svg"}
-                alt="Login Img"
-                className="img-fluid loginImg"
-              ></img>
+              <img src={'assets/img/login-img.svg'} alt="Login Img" className="img-fluid loginImg"></img>
 
               <div className="loginContentLeftSide">
-                <Carousel
-                  activeIndex={activeIndex}
-                  next={this.next}
-                  previous={this.previous}
-                >
+                <Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
                   {/* <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} /> */}
                   {slides2}
                 </Carousel>
@@ -209,56 +154,38 @@ class Login extends Component {
             </Col>
 
             <Col md="6" lg="6" className="loginPgRightSide">
-              <img
-                src={"assets/img/company-logo.png"}
-                alt="Login Img"
-                className="projectLogo pl-3"
-              />
+              <img src={'assets/img/company-logo.png'} alt="Login Img" className="projectLogo pl-3" />
 
               <div className="w-100 justify-content-center d-flex flex-column align-items-center">
                 <Form className="loginFormWrapper">
                   <h4>Login to your account</h4>
                   <FormGroup>
                     <Label>Username</Label>
-                    <Input
-                      type="text"
-                      placeholder="Your Username"
-                      name="userName"
+                    <Input type="text" placeholder="Your Username"
                       value={this.state.user.userName}
-                      onChange={this.handleChange}
+                      name="userName"
+                      onChange={(e) =>
+                        this.handleChange(e.target.name, e.target.value)
+                      }
                     />
                     {this.state.errors && (
-                      <p style={{color:"red"}}>
-                        {this.state.errors.userName}</p>
+                      <small style={{ color: "red" }}>{this.state.errors.userName}</small>
                     )}
-                    {/* error msg, currently hidden */}
-                    {/* <small className="d-none">Enter a valid username</small> */}
                   </FormGroup>
                   <FormGroup>
                     <Label>Password</Label>
-                    <Input
-                      type="password"
-                      placeholder="Your Password"
-                      name="password"
+                    <Input type="password" placeholder="Your Password"
                       value={this.state.user.password}
-                      onChange={this.handleChange}
+                      name="password"
+                      onChange={(e) =>
+                        this.handleChange(e.target.name, e.target.value)
+                      }
                     />
                     {this.state.errors && (
-                      <p style={{color:"red"}}>
-                        {this.state.errors.password}</p>
+                      <small style={{ color: "red" }}>{this.state.errors.password}</small>
                     )}
-                    {/* error msg, currently hidden */}
-                    {/* <small className="d-none">
-                      Password entered is incorrect
-                    </small> */}
                   </FormGroup>
-
-                  <Button
-                    className="recruitechThemeBtn loginBtn"
-                    onClick={this.users}
-                  >
-                    Login
-                  </Button>
+                  <Button className="recruitechThemeBtn loginBtn" onClick={this.users}>Login</Button>
                 </Form>
 
                 <div className="registerWrap">
@@ -267,20 +194,11 @@ class Login extends Component {
                     <Label for="rememberMe" className="mb-0">Remember Me</Label> */}
                   </div>
 
-                  <a
-                    href="javascript:void(0)"
-                    className="forgotPassword"
-                    onClick={this.forgotPassword}
-                  >
-                    Forgot Password?
-                  </a>
+                  <a href="javascript:void(0)" className="forgotPassword" onClick={this.forgotPassword}>Forgot Password?</a>
                 </div>
 
                 <div className="register">
-                  Don't have an account?{" "}
-                  <a href="javascript:void(0)" onClick={this.requestDemo}>
-                    Sign Up!
-                  </a>
+                  Don't have an account? <a href="javascript:void(0)" onClick={this.requestDemo}>Sign Up!</a>
                 </div>
               </div>
 
@@ -294,12 +212,7 @@ class Login extends Component {
                 <div className="copyrightWrap pl-3">
                   Link Tree &#169; 2020.
                   <div>
-                    Powered By:{" "}
-                    <a
-                      href="https://www.logic-square.com/"
-                      target="_blank"
-                      className="lsWebsite"
-                    >
+                    Powered By: <a href="https://www.logic-square.com/" target="_blank" className="lsWebsite">
                       Logic Square
                     </a>
                   </div>
@@ -313,16 +226,16 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps=(state)=>{
-  return{
-    data:state.data
-  }
-}
+const mapStateToProps = (state) => {
+  return {
+    data: state.data
+  };
+};
 
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    logUser:(user)=>dispatch(logUser(user))
-  }
-}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logUser: (user) => dispatch(logUser(user))
+  };
+};
 
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
