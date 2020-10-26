@@ -15,6 +15,7 @@ import {
   Label,
 } from "reactstrap";
 import {Logging} from '../http/http-calls';
+import {logUser} from '../redux/action/action-data';
 
 const items = [
   {
