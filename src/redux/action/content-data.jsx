@@ -1,22 +1,22 @@
-import { ADD_CONTENT, EDIT_CONTENT, REMOVE_CONTENT } from "./actions";
+import { ADD_ENTRY, EDIT_ENTRY, REMOVE_ENTRY } from "./actions";
 
-export const addContent = (content) => {
+export const addEntry = (content) => {
   return {
-    type: ADD_CONTENT,
+    type: ADD_ENTRY,
     payload: content,
   };
 };
 
-export const editContent = (content) => {
+export const editEntry = (content) => {
   return {
-    type: EDIT_CONTENT,
+    type: EDIT_ENTRY,
     payload: content,
   };
 };
 
-export const removeContent = (content) => {
+export const removeEntry = (content) => {
   return {
-    type: REMOVE_CONTENT,
+    type: REMOVE_ENTRY,
     payload: content,
   };
 };

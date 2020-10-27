@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {Col, Container, Row, Button, Card, CardBody, CustomInput, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input} from 'reactstrap';
 import {getPages} from '../http/http-calls';
+import {connect} from "react-redux"
+import {addEntry} from '../redux/action/content-data'
 
 class Links extends Component {
   state = {
@@ -24,7 +26,7 @@ class Links extends Component {
 
   componentDidMount(){
     getPages().then(response=>{
-      console.log("In Links Page:",response.pages);
+      console.log("In Links Page:",response);
     })
   }
 
@@ -34,6 +36,11 @@ class Links extends Component {
     myLinks[name]=value;
     this.setState({myLinks});
     console.log("After setState:",myLinks)
+  }
+
+  handleAddEntry=()=>{
+    //Add the link to the api
+    console.log("Adding")
   }
 
   render() {
@@ -260,6 +267,12 @@ class Links extends Component {
         </Container>
       </div>
     );
+  }
+}
+
+const mapStateToProps=()=>{
+  return{
+    //send value to addEntry
   }
 }
 

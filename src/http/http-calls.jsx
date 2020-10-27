@@ -62,10 +62,10 @@ export const validPass=(mail)=>{
 
 export const getPages=()=>{
   return new Promise((resolve,reject)=>{
-    makeGetRequest(url+"/pages",true)
+    makeGetRequest(url+"/page",true)
     .then((res)=>{
       resolve(res);
-      console.log("Get Pages by token:",res.text());
+      console.log("Get Pages by token:",res);
     })
     .catch(err=>{
       console.log("Error in GET /page :",err);
