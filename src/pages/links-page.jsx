@@ -6,50 +6,40 @@ import {addEntry,editEntry,addId,deleteEntry} from '../redux/action/content-data
 
 class Links extends Component {
   state = {
-		modals: [
-      false,
-      false
-    ],
-    myLinks:{
-      title:"",
-      url:""
-    }
-	}
-	
-	_toggleModal = index => {
-		const { modals } = this.state;
-		modals[index] = !modals[index];
-		this.setState({
-			modals
-		})  
-  }
+    modals: [false, false],
+    myLinks: {
+      title: "",
+      url: "",
+    },
+  };
 
-  componentDidMount(){
-    getPages().then(response=>{
-      console.log("In Links Page:",response)
+  _toggleModal = (index) => {
+    const { modals } = this.state;
+    modals[index] = !modals[index];
+    this.setState({
+      modals,
+    });
+  };
+
+  componentDidMount() {
+    getPages().then((response) => {
+      console.log("In Links Page:", response);
+      //Conditions for contents in response "page"
       if (response.page.contents.length) {
-        let contentList = response.page.contents;
-        let content = {
-          content: contentList[0],
+        let linkList = response.page.contents;
+        let contentList = {
+          data: linkList[0],
         };
-        console.log(content);
-        this.props.addEntry(content);
+        //sent as parameters to actions
+        this.props.addEntry(contentList);
         this.props.addId(response.page.id);
       } else {
         this.props.deleteEntry();
       }
-    })
+    });
   }
 
-  handleChange=(name,value)=>{
-    // console.log(name,value);
-    const {myLinks}=this.state;
-    myLinks[name]=value;
-    this.setState({myLinks});
-    console.log("After setState:",myLinks)
-  }
-
-  handleAddEntry=()=>{
+  handleAddEntry = () => {
     if (!this.props.contentData.contents.length) {
       const contentData = {
         contents: [
@@ -63,13 +53,14 @@ class Links extends Component {
           },
         ],
       };
-      initialEntry(contentData).then((res) => {
-        if (!res.error) {
+      initialEntry(contentData).then((response) => {
+        if (!response.error) {
           const content = {
-            content: res.page.contents[0],
+            content: response.page.contents[0],
           };
+          //sending data to action creators
           this.props.addEntry(content);
-          this.props.addId(res.page.id);
+          this.props.addId(response.page.id);
           this.setState({
             content: {
               title: "",
@@ -91,10 +82,10 @@ class Links extends Component {
           subContentType: "facebook",
         },
       ];
-      const obj = {
+      const valList = {
         contents: contentData,
       };
-      addEntry(obj, this.props.contentData.id).then((res) => {
+      addEntry(valList, this.props.contentData.id).then((res) => {
         const lastContent = res.page.contents[res.page.contents.length - 1];
         const content = {
           content: lastContent,
@@ -103,7 +94,15 @@ class Links extends Component {
       });
     }
     this._toggleModal(1);
-  }
+  };
+
+  handleChange = (name, value) => {
+    // console.log(name,value);
+    const { myLinks } = this.state;
+    myLinks[name] = value;
+    this.setState({ myLinks });
+    console.log("After setState:", myLinks);
+  };
 
   render() {
     return (
@@ -125,14 +124,14 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {this.props.contentData.contents.map(item=>(
+                    {/* {this.props.contentData.contents.map(content => ( */}
                     <div className="addedLinksWrap">
                       <div className="moveLink">
                         <i className="fa fa-ellipsis-v"></i>
                       </div>
                       <div className="addedLinkDetails">
-                        <h5>{content.content.title}</h5>
-                        <p>{content.content.url}</p>
+                        {/* <h5>{content.content.title}</h5>
+                          <p>{content.content.url}</p> */}
                         <div className="actionBtnWrap">
                           <CustomInput
                             type="switch"
@@ -144,12 +143,7 @@ class Links extends Component {
                           />
 
                           <Button className="delLinkBtn">
-                            <i
-                              className="fa fa-pencil"
-                              onClick={() => {
-                                this._toggleModal(1);
-                              }}
-                            ></i>
+                            <i className="fa fa-pencil"></i>
                           </Button>
                           <Button
                             className="delLinkBtn"
@@ -160,63 +154,7 @@ class Links extends Component {
                         </div>
                       </div>
                     </div>
-
-                    // <div className="addedLinksWrap">
-                    //   <div className="moveLink">
-                    //     <i className="fa fa-ellipsis-v"></i>
-                    //   </div>
-                    //   <div className="addedLinkDetails">
-                    //     <h5>Facebook</h5>
-                    //     <p>https://facebook.com/in/john-doe</p>
-                    //     <div className="actionBtnWrap">
-                    //       <CustomInput
-                    //         type="switch"
-                    //         id="exampleCustomSwitch"
-                    //         name="customSwitch"
-                    //         label=""
-                    //         checked
-                    //         className="disableLink"
-                    //       />
-
-                    //       <Button className="delLinkBtn">
-                    //         <i
-                    //           className="fa fa-pencil"
-                    //           onClick={() => {
-                    //             this._toggleModal(1);
-                    //           }}
-                    //         ></i>
-                    //       </Button>
-                    //       <Button
-                    //         className="delLinkBtn"
-                    //         onClick={() => this._toggleModal(2)}
-                    //       >
-                    //         <i className="fa fa-trash-o text-danger"></i>
-                    //       </Button>
-                    //     </div>
-                    //   </div>
-                    //   /* addedLinkDetails */
-                    // </div>
-
-                    // /* <div className="addedLinksWrap">
-                    //   <div className="moveLink">
-                    //     <i className="fa fa-ellipsis-v"></i>
-                    //   </div> */
-                    // /* <div className="addedLinkDetails">
-                    //     <h5>Instagram</h5>
-                    //     <p>https://instagram.com/in/john-doe</p>
-                    //     <div className="actionBtnWrap">
-                    //       <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="" className="disableLink" /> */
-
-                    // /* <Button className="delLinkBtn">
-                    //         <i className="fa fa-pencil"></i>
-                    //       </Button>
-                    //       <Button className="delLinkBtn" onClick={() => this._toggleModal(2)}>
-                    //         <i className="fa fa-trash-o text-danger"></i>
-                    //       </Button>
-                    //     </div>
-                    //   </div> {/* addedLinkDetails */
-                    // /* </div> */
-                    ))}
+                    {/* ))} */}
                   </CardBody>
                 </Card>
               </div>
@@ -291,7 +229,7 @@ class Links extends Component {
               <Button
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(1)}
-                onClick={(e)=>this.handleAddEntry()}
+                onClick={(e) => this.handleAddEntry()}
               >
                 Create
               </Button>

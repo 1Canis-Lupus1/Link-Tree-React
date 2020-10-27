@@ -1,9 +1,9 @@
 import { ADD_ENTRY, EDIT_ENTRY, DELETE_ENTRY, ADD_ID } from "./actions";
 
-export const addEntry = (content) => {
+export const addEntry = (data) => {
   return {
     type: ADD_ENTRY,
-    payload: content,
+    payload: data,
   };
 };
 
@@ -20,11 +20,9 @@ export const deleteEntry = () => {
   };
 };
 
-export const addId = (_id) => {
+export const addId = (id) => {
   return {
     type: ADD_ID,
-    payload: {
-      _id,
-    },
+    payload: id,
   };
 };
