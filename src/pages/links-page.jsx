@@ -21,7 +21,7 @@ class Links extends Component {
     });
   };
 
-  componentDidMount() {
+  componentWillMount() {
     getPages().then((response) => {
       console.log("In Links Page:", response);
       //Conditions for contents in response "page"
@@ -236,7 +236,6 @@ class Links extends Component {
             </ModalFooter>
           </Modal>
 
-          {/* Modal for deleting an exisiting Link */}
           <Modal
             isOpen={this.state.modals[2]}
             toggle={() => this._toggleModal(2)}
