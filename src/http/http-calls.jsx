@@ -39,10 +39,6 @@ export const Logging = (data) => {
       .then((response) => {
         resolve(response);
         console.log("Token Response:",response);
-        //store
-        const state=store.getState();
-        const authToken=state.token;
-        console.log("MY TOKEN FROM STORE:",authToken);
       })
       .catch((err) => {
         console.log("Error in /login :", err);
@@ -69,7 +65,7 @@ export const getPages=()=>{
     makeGetRequest(url+"/pages",true)
     .then((res)=>{
       resolve(res);
-      console.log("In HTTP_CALLS:",res);
+      console.log("Get Pages by token:",res.text());
     })
     .catch(err=>{
       console.log("Error in GET /page :",err);
