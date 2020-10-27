@@ -7,9 +7,11 @@ const contentData = {
 
 export const contentReducer = (state = contentData, action) => {
   let newState = { ...state };
+  // console.log("MY State:",newState)
   switch (action.type) {
     case ADD_ENTRY: {
       newState.contents=[...newState.contents,action.payload.content]
+      console.log("After ADD_ENTRY:",newState);
       break;
     }
     case EDIT_ENTRY: {

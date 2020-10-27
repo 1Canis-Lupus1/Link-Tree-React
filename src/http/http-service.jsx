@@ -86,7 +86,7 @@ export const makeGetRequest = async (
       const authToken = await getToken();
       // console.log("MY TOKEN IS:",authToken)
       if (authToken) {
-        console.log("In http-service:",authToken);
+        // console.log("In http-service:",authToken);
         headers["Authorization"] = "Bearer " + authToken;
       }
     } catch (e) {

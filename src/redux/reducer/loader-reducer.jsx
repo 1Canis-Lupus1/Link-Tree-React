@@ -22,7 +22,7 @@ export const loaderReducer = (state = loaderInitialState, action) => {
     case HIDE_LOADER: {
       newState = {
         isFullPageLoaderVisible: false,
-        loaderText: "Loading...",
+        // loaderText: "Loading...",
       };
       break;
     }
