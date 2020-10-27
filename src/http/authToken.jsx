@@ -4,7 +4,7 @@ import {store} from '../redux/store';
 
 export const getToken=()=>{
     return new Promise((resolve,reject)=>{
-        let authToken;
+        let authToken=null;
         const prevState=store.getState();
         const state={...prevState};
 
@@ -12,6 +12,7 @@ export const getToken=()=>{
             authToken=state.userData["token"];
         }
         resolve(authToken);
+        console.log("In GetToken:",authToken)
     })
 }
 

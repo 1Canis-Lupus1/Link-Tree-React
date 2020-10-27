@@ -25,7 +25,6 @@ class Links extends Component {
   componentDidMount(){
     getPages().then(response=>{
       console.log("In Links Page:",response.pages);
-
     })
   }
 
