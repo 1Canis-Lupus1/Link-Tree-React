@@ -84,9 +84,8 @@ export const makeGetRequest = async (
   if (attachToken) {
     try {
       const authToken = await getToken();
-      // console.log("MY TOKEN IS:",authToken)
+      console.log("MY TOKEN IS:",authToken)
       if (authToken) {
-        // console.log("In http-service:",authToken);
         headers["Authorization"] = "Bearer " + authToken;
       }
     } catch (e) {
@@ -99,13 +98,15 @@ export const makeGetRequest = async (
         method: "GET",
         headers: headers,
       })
-        .then((res) => res.text())
+      //trying res.text()
+        .then((res) => res.json())
         .then((jsonResponse) => {
           if (jsonResponse.error === false) {
-            resolve("JSON RES:",jsonResponse);
+            resolve(jsonResponse);
+            console.log("JSON RESPONSE:",jsonResponse);
           } else {
-            console.log("JSON RES:",jsonResponse);
             reject(jsonResponse);
+            console.log("JSON RESPONSE:",jsonResponse);
           }
         })
         .catch((e) => {
