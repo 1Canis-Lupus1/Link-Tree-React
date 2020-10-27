@@ -125,13 +125,14 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
+                    {this.props.contentData.contents.map(item=>(
                     <div className="addedLinksWrap">
                       <div className="moveLink">
                         <i className="fa fa-ellipsis-v"></i>
                       </div>
                       <div className="addedLinkDetails">
-                        <h5>LinkedIn</h5>
-                        <p>https://linkedin.com/in/john-doe</p>
+                        <h5>{content.content.title}</h5>
+                        <p>{content.content.url}</p>
                         <div className="actionBtnWrap">
                           <CustomInput
                             type="switch"
@@ -157,65 +158,65 @@ class Links extends Component {
                             <i className="fa fa-trash-o text-danger"></i>
                           </Button>
                         </div>
-                      </div>{" "}
-                      {/* addedLinkDetails */}
-                    </div>
-
-                    <div className="addedLinksWrap">
-                      <div className="moveLink">
-                        <i className="fa fa-ellipsis-v"></i>
                       </div>
-                      <div className="addedLinkDetails">
-                        <h5>Facebook</h5>
-                        <p>https://facebook.com/in/john-doe</p>
-                        <div className="actionBtnWrap">
-                          <CustomInput
-                            type="switch"
-                            id="exampleCustomSwitch"
-                            name="customSwitch"
-                            label=""
-                            checked
-                            className="disableLink"
-                          />
-
-                          <Button className="delLinkBtn">
-                            <i
-                              className="fa fa-pencil"
-                              onClick={() => {
-                                this._toggleModal(1);
-                              }}
-                            ></i>
-                          </Button>
-                          <Button
-                            className="delLinkBtn"
-                            onClick={() => this._toggleModal(2)}
-                          >
-                            <i className="fa fa-trash-o text-danger"></i>
-                          </Button>
-                        </div>
-                      </div>{" "}
-                      {/* addedLinkDetails */}
                     </div>
 
-                    {/* <div className="addedLinksWrap">
-                      <div className="moveLink">
-                        <i className="fa fa-ellipsis-v"></i>
-                      </div> */}
-                    {/* <div className="addedLinkDetails">
-                        <h5>Instagram</h5>
-                        <p>https://instagram.com/in/john-doe</p>
-                        <div className="actionBtnWrap">
-                          <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="" className="disableLink" /> */}
+                    // <div className="addedLinksWrap">
+                    //   <div className="moveLink">
+                    //     <i className="fa fa-ellipsis-v"></i>
+                    //   </div>
+                    //   <div className="addedLinkDetails">
+                    //     <h5>Facebook</h5>
+                    //     <p>https://facebook.com/in/john-doe</p>
+                    //     <div className="actionBtnWrap">
+                    //       <CustomInput
+                    //         type="switch"
+                    //         id="exampleCustomSwitch"
+                    //         name="customSwitch"
+                    //         label=""
+                    //         checked
+                    //         className="disableLink"
+                    //       />
 
-                    {/* <Button className="delLinkBtn">
-                            <i className="fa fa-pencil"></i>
-                          </Button>
-                          <Button className="delLinkBtn" onClick={() => this._toggleModal(2)}>
-                            <i className="fa fa-trash-o text-danger"></i>
-                          </Button>
-                        </div>
-                      </div> {/* addedLinkDetails */}
-                    {/* </div> */}
+                    //       <Button className="delLinkBtn">
+                    //         <i
+                    //           className="fa fa-pencil"
+                    //           onClick={() => {
+                    //             this._toggleModal(1);
+                    //           }}
+                    //         ></i>
+                    //       </Button>
+                    //       <Button
+                    //         className="delLinkBtn"
+                    //         onClick={() => this._toggleModal(2)}
+                    //       >
+                    //         <i className="fa fa-trash-o text-danger"></i>
+                    //       </Button>
+                    //     </div>
+                    //   </div>
+                    //   /* addedLinkDetails */
+                    // </div>
+
+                    // /* <div className="addedLinksWrap">
+                    //   <div className="moveLink">
+                    //     <i className="fa fa-ellipsis-v"></i>
+                    //   </div> */
+                    // /* <div className="addedLinkDetails">
+                    //     <h5>Instagram</h5>
+                    //     <p>https://instagram.com/in/john-doe</p>
+                    //     <div className="actionBtnWrap">
+                    //       <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="" className="disableLink" /> */
+
+                    // /* <Button className="delLinkBtn">
+                    //         <i className="fa fa-pencil"></i>
+                    //       </Button>
+                    //       <Button className="delLinkBtn" onClick={() => this._toggleModal(2)}>
+                    //         <i className="fa fa-trash-o text-danger"></i>
+                    //       </Button>
+                    //     </div>
+                    //   </div> {/* addedLinkDetails */
+                    // /* </div> */
+                    ))}
                   </CardBody>
                 </Card>
               </div>
@@ -333,10 +334,19 @@ class Links extends Component {
   }
 }
 
-const mapStateToProps=()=>{
+const mapStateToProps=(state)=>{
   return{
     //send value to addEntry
+    contentData:state.contentData
   }
 }
 
-export default Links;
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    addEntry:(content)=>dispatch(addEntry(content)),
+    deleteEntry:(_id)=>dispatch(deleteEntry(_id)),
+    addId:(_id)=>dispatch(addId(_id))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Links);
