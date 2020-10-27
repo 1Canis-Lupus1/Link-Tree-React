@@ -99,7 +99,7 @@ export const makeGetRequest = async (
         method: "GET",
         headers: headers,
       })
-        .then((res) => res.json())
+        .then((res) => res.text())
         .then((jsonResponse) => {
           if (jsonResponse.error === false) {
             resolve("JSON RES:",jsonResponse);

@@ -68,6 +68,7 @@ export const getPages=()=>{
       resolve(res);
       console.log("Get Pages by token:",res);
     })
+    // .then((resp=>console.log("GET Pages by token:",resp)))
     .catch(err=>{
       console.log("Error in GET /page :",err);
       reject(err);
