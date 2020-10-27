@@ -149,6 +149,7 @@ class RequestDemo extends Component {
         if (!user.userName.trim().length) {
           errors[entry] = "*Field Cannot Be Empty!!";
         } else if (!(this.isValid(obj) && this.state.validUsername)) {
+          console.log()
           errors[entry] = "Enter Unique Username";
         } else {
           delete errors[entry];
@@ -169,6 +170,7 @@ class RequestDemo extends Component {
 
   isValid = (userName) => {
     validUsername(userName).then((res) => {
+      console.log("My response",res);
       if (res.isAvailable) {
         this.setState({
           validUsername: true,

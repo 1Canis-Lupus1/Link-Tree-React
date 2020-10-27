@@ -2,7 +2,8 @@
 import {store} from '../redux/store';
 import {
   makePostRequest,
-  makeGetRequest
+  makeGetRequest,
+  makePutRequest
 } from "./http-service";
 
 const url = "http://139.59.14.81:4000/api/v1";
@@ -73,3 +74,29 @@ export const getPages=()=>{
     })
   })
 }
+
+export const createEntry = (entryData, id) => {
+  return new Promise((resolve, reject) => {
+    makePutRequest(url + `/page/${id}`, true, entryData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((err) => {
+        console.log("Error in createEntry: ", err);
+        reject(err);
+      });
+  });
+};
+
+export const initialEntry = (entryData) => {
+  return new Promise((resolve, reject) => {
+    makePostRequest(url + "/page", true, entryData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((err) => {
+        reject(err);
+        console.log("Error in initialEntry: ", err);
+      });
+  });
+};

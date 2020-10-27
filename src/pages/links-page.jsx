@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Col, Container, Row, Button, Card, CardBody, CustomInput, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input} from 'reactstrap';
-import {getPages} from '../http/http-calls';
-import {connect} from "react-redux"
-import {addEntry} from '../redux/action/content-data'
+import {getPages, createEntry ,initialEntry} from '../http/http-calls';
+import {connect} from "react-redux";
+import {addEntry,editEntry,addId,deleteEntry} from '../redux/action/content-data';
 
 class Links extends Component {
   state = {
@@ -26,7 +26,18 @@ class Links extends Component {
 
   componentDidMount(){
     getPages().then(response=>{
-      console.log("In Links Page:",response);
+      console.log("In Links Page:",response)
+      if (response.page.contents.length) {
+        let contentList = response.page.contents;
+        let content = {
+          content: contentList[0],
+        };
+        console.log(content);
+        this.props.addEntry(content);
+        this.props.addId(response.page.id);
+      } else {
+        this.props.deleteEntry();
+      }
     })
   }
 
@@ -39,8 +50,59 @@ class Links extends Component {
   }
 
   handleAddEntry=()=>{
-    //Add the link to the api
-    console.log("Adding")
+    if (!this.props.contentData.contents.length) {
+      const contentData = {
+        contents: [
+          {
+            content: {
+              title: this.state.content.title,
+              url: this.state.content.url,
+            },
+            contentType: "socialLink",
+            subContentType: "facebook",
+          },
+        ],
+      };
+      initialEntry(contentData).then((res) => {
+        if (!res.error) {
+          const content = {
+            content: res.page.contents[0],
+          };
+          this.props.addEntry(content);
+          this.props.addId(res.page.id);
+          this.setState({
+            content: {
+              title: "",
+              url: "",
+            },
+          });
+        }
+      });
+    } else {
+      const contents = this.props.contentData.contents;
+      const contentData = [
+        ...contents,
+        {
+          content: {
+            title: this.state.content.title,
+            url: this.state.content.url,
+          },
+          contentType: "socialLink",
+          subContentType: "facebook",
+        },
+      ];
+      const obj = {
+        contents: contentData,
+      };
+      addEntry(obj, this.props.contentData.id).then((res) => {
+        const lastContent = res.page.contents[res.page.contents.length - 1];
+        const content = {
+          content: lastContent,
+        };
+        this.props.addEntry(content);
+      });
+    }
+    this._toggleModal(1);
   }
 
   render() {
@@ -228,6 +290,7 @@ class Links extends Component {
               <Button
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(1)}
+                onClick={(e)=>this.handleAddEntry()}
               >
                 Create
               </Button>
