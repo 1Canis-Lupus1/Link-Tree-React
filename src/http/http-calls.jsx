@@ -1,3 +1,5 @@
+// import { getToken } from "./authToken";
+import {store} from '../redux/store';
 import {
   makePostRequest,
   makeGetRequest
@@ -37,6 +39,10 @@ export const Logging = (data) => {
       .then((response) => {
         resolve(response);
         console.log("Token Response:",response);
+        //store
+        const state=store.getState();
+        const authToken=state.token;
+        console.log("MY TOKEN FROM STORE:",authToken);
       })
       .catch((err) => {
         console.log("Error in /login :", err);
@@ -54,6 +60,20 @@ export const validPass=(mail)=>{
     })
     .catch((err)=>{
       console.log("Error in /forgotPassword :",err);
+    })
+  })
+}
+
+export const getPages=()=>{
+  return new Promise((resolve,reject)=>{
+    makeGetRequest(url+"/pages",true)
+    .then((res)=>{
+      resolve(res);
+      console.log("In HTTP_CALLS:",res);
+    })
+    .catch(err=>{
+      console.log("Error in GET /page :",err);
+      reject(err);
     })
   })
 }

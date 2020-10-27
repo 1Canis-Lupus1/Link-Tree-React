@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import {Col, Container, Row, Button, Card, CardBody, CustomInput, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input} from 'reactstrap';
+import {getPages} from '../http/http-calls';
 
 class Links extends Component {
   state = {
 		modals: [
       false,
       false
-	  ]
+    ],
+    myLinks:{
+      title:"",
+      url:""
+    }
 	}
 	
 	_toggleModal = index => {
@@ -16,6 +21,22 @@ class Links extends Component {
 			modals
 		})  
   }
+
+  componentDidMount(){
+    getPages().then(response=>{
+      console.log("In LInks Page:",response.page);
+
+    })
+  }
+
+  handleChange=(name,value)=>{
+    // console.log(name,value);
+    const {myLinks}=this.state;
+    myLinks[name]=value;
+    this.setState({myLinks});
+    console.log("After setState:",myLinks)
+  }
+
   render() {
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
@@ -73,17 +94,17 @@ class Links extends Component {
                       </div> {/* addedLinkDetails */}
                     </div>
 
-                    <div className="addedLinksWrap">
+                    {/* <div className="addedLinksWrap">
                       <div className="moveLink">
                         <i className="fa fa-ellipsis-v"></i>
-                      </div>
-                      <div className="addedLinkDetails">
+                      </div> */}
+                      {/* <div className="addedLinkDetails">
                         <h5>Instagram</h5>
                         <p>https://instagram.com/in/john-doe</p>
                         <div className="actionBtnWrap">
-                          <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="" className="disableLink" />
+                          <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="" className="disableLink" /> */}
 
-                          <Button className="delLinkBtn">
+                          {/* <Button className="delLinkBtn">
                             <i className="fa fa-pencil"></i>
                           </Button>
                           <Button className="delLinkBtn" onClick={() => this._toggleModal(2)}>
@@ -91,7 +112,7 @@ class Links extends Component {
                           </Button>
                         </div>
                       </div> {/* addedLinkDetails */}
-                    </div>
+                    {/* </div> */}
                   </CardBody>
                 </Card>
               </div>
@@ -129,11 +150,11 @@ class Links extends Component {
             <ModalBody className="modalContent">
               <FormGroup>
                 <Label>Title</Label>
-                <Input type="text" placeholder="Enter Title" />
+                <Input type="text" placeholder="Enter Title" value={this.state.myLinks.title} name="title" onChange={(e)=>{this.handleChange(e.target.name,e.target.value)}} />
               </FormGroup>
               <FormGroup>
                 <Label>URL</Label>
-                <Input type="text" placeholder="Enter URL" />
+                <Input type="text" placeholder="Enter URL" value={this.state.myLinks.url} name="url" onChange={(e)=>{this.handleChange(e.target.name,e.target.value)}} />
               </FormGroup>
             </ModalBody>
             <ModalFooter>

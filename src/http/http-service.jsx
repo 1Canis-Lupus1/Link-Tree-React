@@ -1,3 +1,6 @@
+import {getToken} from './authToken'
+// import {connect} from 'react-redux';
+
 const queryParams = (params) => {
   let queryStrings = "?";
   const keys = Object.keys(params);
@@ -67,7 +70,7 @@ export const makePostRequest = async (
 
 export const makeGetRequest = async (
   url,
-  attachToken = false,
+  attachToken=false,
   params = null
 ) => {
   let queryString = "";
@@ -78,17 +81,18 @@ export const makeGetRequest = async (
     Accept: "application/json",
     "Content-Type": "application/json",
   };
-  // if (attachToken) {
-  //   try {
-  //     const authToken = await getToken();
-  //     if (authToken) {
-  //       console.log(authToken);
-  //       headers["Authorization"] = "Bearer " + authToken;
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
+  if (attachToken) {
+    try {
+      const authToken = await getToken();
+      // console.log("MY TOKEN IS:",authToken)
+      if (authToken) {
+        console.log("In http-service:",authToken);
+        headers["Authorization"] = "Bearer " + authToken;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return new Promise((resolve, reject) => {
     try {
       fetch(url + queryString, {
@@ -98,9 +102,9 @@ export const makeGetRequest = async (
         .then((res) => res.json())
         .then((jsonResponse) => {
           if (jsonResponse.error === false) {
-            resolve(jsonResponse);
+            resolve("JSON RES:",jsonResponse);
           } else {
-            console.log(jsonResponse);
+            console.log("JSON RES:",jsonResponse);
             reject(jsonResponse);
           }
         })
@@ -114,3 +118,11 @@ export const makeGetRequest = async (
     }
   });
 };
+
+// function mapStateToProps(state){
+//   return{
+//     user:state.user
+//   }
+// }
+
+// export default connect(mapStateToProps)(makePostRequest)
