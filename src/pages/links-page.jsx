@@ -25,7 +25,7 @@ class Links extends Component {
     getPages().then((response) => {
       console.log("In Links Page:", response);
       //Conditions for contents in response "page"
-      if (response.page.contents.length) {
+      // if (response.page.contents.length) {
         let linkList = response.page.contents;
         let contentList = {
           data: linkList[0],
@@ -33,9 +33,9 @@ class Links extends Component {
         //sent as parameters to actions
         this.props.addEntry(contentList);
         this.props.addId(response.page.id);
-      } else {
-        this.props.deleteEntry();
-      }
+      // } else {
+      //   this.props.deleteEntry();
+      // }
     });
   }
 
