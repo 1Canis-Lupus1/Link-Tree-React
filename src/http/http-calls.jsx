@@ -77,28 +77,29 @@ export const getPages=()=>{
   })
 }
 
-export const createEntry = (entryData, id) => {
+export const initialEntry = (entryData) => {
   return new Promise((resolve, reject) => {
-    makePutRequest(url + `/page/${id}`, true, entryData)
+    makePostRequest(url + "/page", true, entryData)
+    .then((response) => {
+      resolve(response);
+    })
+    .catch((err) => {
+      reject(err);
+      console.log("Error in initialEntry: ", err);
+    });
+  });
+};
+
+export const createEntry = (entryData, entryId) => {
+  return new Promise((resolve, reject) => {
+    makePutRequest(url + `/page/${entryId}`, true, entryData)
       .then((response) => {
-        resolve(response);
+        resolve("Response in createEntry:",response);
+        console.log(response);
       })
       .catch((err) => {
         console.log("Error in createEntry: ", err);
         reject(err);
-      });
-  });
-};
-
-export const initialEntry = (entryData) => {
-  return new Promise((resolve, reject) => {
-    makePostRequest(url + "/page", true, entryData)
-      .then((response) => {
-        resolve(response);
-      })
-      .catch((err) => {
-        reject(err);
-        console.log("Error in initialEntry: ", err);
       });
   });
 };

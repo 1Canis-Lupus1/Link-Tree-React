@@ -49,8 +49,10 @@ class Links extends Component {
   }
 
   handleAddEntry = () => {
-    if (!this.props.contentData.contents.length) {
-      const contentData = {
+    //If no links present in state
+    if (this.state._links.length) {
+      const linkEntry = {
+        //To be sent as parameter to /page
         contents: [
           {
             content: {
@@ -62,44 +64,39 @@ class Links extends Component {
           },
         ],
       };
-      initialEntry(contentData).then((response) => {
+      //Post request to /page
+      initialEntry(linkEntry).then((response) => {
         if (!response.error) {
           const content = {
-            content: response.page.contents[0],
+            _links: response.page.contents[0],
           };
-          //sending data to action creators
-          this.props.addEntry(content);
-          this.props.addId(response.page.id);
-          this.setState({
-            content: {
-              title: "",
-              url: "",
-            },
-          });
         }
       });
     } else {
-      const contents = this.props.contentData.contents;
-      const contentData = [
-        ...contents,
+      //If links present
+      const  newLinkEntry= [...this.state._links];
+      // To be sent as parameters to  /page/${id} 
+      const linkEntry = [
+        ...newLinkEntry,
         {
           content: {
-            title: this.state.content.title,
-            url: this.state.content.url,
+            title: this.state.myLinks.title,
+            url: this.state.myLinks.url,
           },
           contentType: "socialLink",
           subContentType: "facebook",
         },
       ];
+      //cretaing an object to send parameters
       const valList = {
-        contents: contentData,
+        contents: linkEntry,
       };
-      addEntry(valList, this.props.contentData.id).then((res) => {
-        const lastContent = res.page.contents[res.page.contents.length - 1];
-        const content = {
-          content: lastContent,
-        };
-        this.props.addEntry(content);
+      //entryData and entryId to createEntry
+      createEntry(valList, this.state._id).then((response) => {
+        const currentEntry = response.page.contents[response.page.contents.length - 1];
+        this.setState({
+          _links:response.page.contents
+        })
       });
     }
     this._toggleModal(1);
@@ -253,7 +250,7 @@ class Links extends Component {
 const mapStateToProps=(state)=>{
   return{
     //send value to addEntry
-    contentData:state.contentData
+    linkEntry:state.linkEntry
   }
 }
 
