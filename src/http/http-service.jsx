@@ -120,14 +120,6 @@ export const makeGetRequest = async (
   });
 };
 
-// function mapStateToProps(state){
-//   return{
-//     user:state.user
-//   }
-// }
-
-// export default connect(mapStateToProps)(makePostRequest)
-
 export const makePutRequest = async (url, attachToken = false, params = {}) => {
   let headers = {
     Accept: "application/json",
