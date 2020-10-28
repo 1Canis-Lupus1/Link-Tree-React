@@ -5,13 +5,19 @@ import {connect} from "react-redux";
 import {addEntry,editEntry,addId,deleteEntry} from '../redux/action/content-data';
 
 class Links extends Component {
-  state = {
-    modals: [false, false],
-    myLinks: {
-      title: "",
-      url: "",
-    },
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      modals: [false, false],
+      myLinks: {
+        title: "",
+        url: "",
+      },
+      _id:"",
+      _links:"",
+      linksNotPresent: false
+    };
+  }
 
   _toggleModal = (index) => {
     const { modals } = this.state;
@@ -21,25 +27,24 @@ class Links extends Component {
     });
   };
 
+  //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentWillMount() {
     getPages().then((response) => {
-      console.log("In Links Page:", response);
+      console.log("Response in Links Page:", response);
       //Conditions for contents in response "page"
-      if(response.page===null){
-        console.log("ERROR in reading data from API Response"); 
+      if(response.page===null || response.page===undefined){
+        console.log("IN links-page: No Links found for the current user!!"); 
+        //Setting state value to true as response page is null or undefined
+        this.setState({linksNotPresent:true})
       } 
-      else if (response.page.contents.length) {
-        let linkList = response.page.contents;
-        let contentList = {
-          data: linkList[0],
-        };
-        //sent as parameters to actions
-        this.props.addEntry(contentList);
-        this.props.addId(response.page.id);
-      // } else {
-      //   this.props.deleteEntry();
-      // }
-      }
+      //if response page not null add the response to the state
+      else{
+        this.setState({
+          _id:response.page._id,
+          _links:response.page.contents
+        })
+        console.log(`The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`)
+        }
     });
   }
 
