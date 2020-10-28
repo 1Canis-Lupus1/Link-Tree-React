@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import logger from "redux-logger";
+// import logger from "redux-logger";
 import { persistStore, persistReducer } from "redux-persist";
 import hardSet from "redux-persist/es/stateReconciler/hardSet";
 import storage from "redux-persist/lib/storage";
@@ -27,9 +27,9 @@ const perReducer = persistReducer(persistConfig, rootReducer);
 export const store=createStore(
     perReducer,
     undefined,
-    applyMiddleware(logger)
+    // applyMiddleware(logger)
 );
 
 export const persistor=persistStore(store);
 
-export default store; 
+// export default store; 

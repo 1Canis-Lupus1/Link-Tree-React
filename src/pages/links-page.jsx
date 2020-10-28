@@ -14,7 +14,7 @@ class Links extends Component {
         url: "",
       },
       _id:"",
-      _links:"",
+      _links:[],
       linksNotPresent: false
     };
   }
@@ -54,8 +54,8 @@ class Links extends Component {
         contents: [
           {
             content: {
-              title: this.state.content.title,
-              url: this.state.content.url,
+              title: this.state.myLinks.title,
+              url: this.state.myLinks.url,
             },
             contentType: "socialLink",
             subContentType: "facebook",
@@ -110,7 +110,7 @@ class Links extends Component {
     const { myLinks } = this.state;
     myLinks[name] = value;
     this.setState({ myLinks });
-    console.log("After setState:", myLinks);
+    console.log("After setState on User Entry:", myLinks);
   };
 
   render() {
@@ -133,37 +133,7 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {/* {this.props.contentData.contents.map(content => ( */}
-                    <div className="addedLinksWrap">
-                      <div className="moveLink">
-                        <i className="fa fa-ellipsis-v"></i>
-                      </div>
-                      <div className="addedLinkDetails">
-                        {/* <h5>{content.content.title}</h5>
-                          <p>{content.content.url}</p> */}
-                        <div className="actionBtnWrap">
-                          <CustomInput
-                            type="switch"
-                            id="exampleCustomSwitch"
-                            name="customSwitch"
-                            label=""
-                            checked
-                            className="disableLink"
-                          />
-
-                          <Button className="delLinkBtn">
-                            <i className="fa fa-pencil"></i>
-                          </Button>
-                          <Button
-                            className="delLinkBtn"
-                            onClick={() => this._toggleModal(2)}
-                          >
-                            <i className="fa fa-trash-o text-danger"></i>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                    {/* ))} */}
+                    {this.state.linksNotPresent ? <strong>LINKS EMPTY FOR CURRENT USER</strong>:<strong>All Links here</strong>}
                   </CardBody>
                 </Card>
               </div>
