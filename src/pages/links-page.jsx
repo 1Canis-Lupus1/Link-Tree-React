@@ -25,7 +25,10 @@ class Links extends Component {
     getPages().then((response) => {
       console.log("In Links Page:", response);
       //Conditions for contents in response "page"
-      // if (response.page.contents.length) {
+      if(response.page===null){
+        console.log("ERROR in reading data from API Response"); 
+      } 
+      else if (response.page.contents.length) {
         let linkList = response.page.contents;
         let contentList = {
           data: linkList[0],
@@ -36,6 +39,7 @@ class Links extends Component {
       // } else {
       //   this.props.deleteEntry();
       // }
+      }
     });
   }
 
