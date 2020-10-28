@@ -142,7 +142,7 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {this.state.linksNotPresent ? (<strong>LINKS EMPTY FOR CURRENT USER</strong>):addedLinks()}
+                    {this.state.linksNotPresent ? <strong>LINKS EMPTY FOR CURRENT USER</strong>:addedLinks()}
                   </CardBody>
                 </Card>
               </div>
@@ -163,8 +163,10 @@ class Links extends Component {
                   </div>
 
                   <div className="mt-4">
-                    <Button className="btnOrange">LinkedIn</Button>
-                    <Button className="btnOrange">Facebook</Button>
+                    <Button className="btnOrange">
+                      {this.state.linksNotPresent?<strong>LINKS EMPTY</strong>:<strong>Links Here</strong>}
+                    </Button>
+                    {/* <Button className="btnOrange">Facebook</Button> */}
                   </div>
                 </div>{" "}
                 {/* profilePreview */}
