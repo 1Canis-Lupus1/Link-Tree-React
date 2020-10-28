@@ -111,6 +111,18 @@ class Links extends Component {
   };
 
   render() {
+    const addedLinks=()=>{
+      if(this.state._links===null){
+        console.warn("No added Links.");
+      }
+      else{
+        return this.state._links.map(data=>{
+          <React.Fragment>
+            Display Links Here
+          </React.Fragment>
+        })
+      }
+    }
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -130,7 +142,7 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {this.state.linksNotPresent ? <strong>LINKS EMPTY FOR CURRENT USER</strong>:<strong>All Links here</strong>}
+                    {this.state.linksNotPresent ? (<strong>LINKS EMPTY FOR CURRENT USER</strong>):addedLinks()}
                   </CardBody>
                 </Card>
               </div>
