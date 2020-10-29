@@ -1,20 +1,20 @@
 // import {userReducer} from '../redux/reducer/user-reducer';
 // import {connect} from 'react-redux';
-import {store} from '../redux/store';
+import { store } from "../redux/store";
 
-export const getToken=()=>{ 
-    return new Promise((resolve) => {
-      let authToken = null;
-      const prevState = store.getState();
-      const state = { ...prevState };
+export const getToken = () => {
+  return new Promise((resolve) => {
+    let authToken = null;
+    const prevState = store.getState();
+    const state = { ...prevState };
 
-      if (state && state.userData && state.userData["token"]) {
-        authToken = state.userData["token"];
-      }
-      resolve(authToken);
-      console.log("In GetToken:", authToken);
-    });
-}
+    if (state && state.userData && state.userData["token"]) {
+      authToken = state.userData["token"];
+    }
+    resolve(authToken);
+    // console.log("In GetToken:", authToken);
+  });
+};
 
 // const mapStateToProps=(state)=>{
 //     return{

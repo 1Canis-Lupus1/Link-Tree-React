@@ -1,4 +1,4 @@
-import {getToken} from './authToken'
+import { getToken } from "./authToken";
 // import {connect} from 'react-redux';
 
 const queryParams = (params) => {
@@ -70,7 +70,7 @@ export const makePostRequest = async (
 
 export const makeGetRequest = async (
   url,
-  attachToken=false,
+  attachToken = false,
   params = null
 ) => {
   let queryString = "";
@@ -84,7 +84,7 @@ export const makeGetRequest = async (
   if (attachToken) {
     try {
       const authToken = await getToken();
-      console.log("MY TOKEN IS:",authToken)
+      // console.log("MY TOKEN IS:",authToken)
       if (authToken) {
         headers["Authorization"] = "Bearer " + authToken;
       }
@@ -98,15 +98,15 @@ export const makeGetRequest = async (
         method: "GET",
         headers: headers,
       })
-      //trying res.text()
+        //trying res.text()
         .then((res) => res.json())
         .then((jsonResponse) => {
           if (jsonResponse.error === false) {
             resolve(jsonResponse);
-            console.log("JSON RESPONSE:",jsonResponse);
+            console.log("JSON RESPONSE:", jsonResponse);
           } else {
             reject(jsonResponse);
-            console.log("JSON RESPONSE:",jsonResponse);
+            console.log("JSON RESPONSE:", jsonResponse);
           }
         })
         .catch((e) => {

@@ -53,22 +53,26 @@ class Links extends Component {
       console.log("Response in Links Page:", response);
       //Conditions for contents in response "page"
       if (response.page === null || response.page === undefined) {
-        console.log("IN links-page: No Links found for the current user!!");
+        console.log("In links-page: No Links found for the current user!!");
         //Setting state value to true as response page is null or undefined
         this.setState({ linksNotPresent: true });
       }
       //if response page not null add the response to the state
       else {
+        // const _linksList = [];
+        // response.page.contents.map((entry) => {
+        //   console.log("Entries from response:", entry.content.title);
+        //   _linksList.push(entry.content.title);
+        // });
         this.setState({
           _id: response.page._id,
           _links: response.page.contents,
         });
         console.log(
-          `The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`
+          `The Links Contained by the User: ID:${
+            this.state._id
+          } LINK:${this.state._links.map((item) => item.content.url)}`
         );
-        this.state._links.map((item) => {
-          console.log("Each URL", item.content.url);
-        });
         // console.log("Links in State:", this.state._links);
       }
     });
@@ -76,7 +80,7 @@ class Links extends Component {
 
   handleAddEntry = () => {
     //If no links present in state
-    if (this.state._links.length) {
+    if (this.state.linksNotPresent) {
       const linkEntry = {
         //To be sent as parameter to /page
         contents: [
@@ -92,10 +96,12 @@ class Links extends Component {
       };
       //Post request to /page
       initialEntry(linkEntry).then((response) => {
+        console.log("Response from /page", response);
+        //If Error is false
         if (!response.error) {
-          const content = {
-            _links: response.page.contents[0],
-          };
+          this.setState({
+            _links: response.page.contents,
+          });
         }
       });
     } else {
@@ -119,14 +125,16 @@ class Links extends Component {
       };
       //entryData and entryId to createEntry
       createEntry(valList, this.state._id).then((response) => {
-        const currentEntry =
-          response.page.contents[response.page.contents.length - 1];
-        this.setState({
-          _links: response.page.contents,
-        });
+        //currentEntry has the last entry which is to be pushed to the _links array
+        console.log("Creating Entry Reponse:", response.page);
+        // const currentEntry =
+        //   response.page.contents[response.page.contents.length - 1];
+        // this.setState({
+        //   _links: response.page.contents,
+        // });
       });
     }
-    this._toggleModal(1);
+    // this._toggleModal(1);
   };
 
   handleChange = (name, value) => {
@@ -144,6 +152,7 @@ class Links extends Component {
         console.warn("No added Links.");
       } else {
         return this.state._links.map((entry) => {
+          console.log("Inside Else of Render:", entry);
           <React.Fragment>
             Display Links Here
             <div className="addedLinksWrap">
@@ -151,7 +160,7 @@ class Links extends Component {
                 <i className="fa fa-ellipsis-v"></i>
               </div>
               <div className="addedLinksDetails">
-                <h4>{entry}</h4>
+                <h4>{entry.content.url}</h4>
               </div>
               <CustomInput
                 type="switch"
@@ -220,12 +229,11 @@ class Links extends Component {
                       {this.state.linksNotPresent ? (
                         <strong>LINKS EMPTY</strong>
                       ) : (
-                        <strong>Links Here</strong>
+                        <strong>LINKS HERE</strong>
                       )}
                     </Button>
-                    {/* <Button className="btnOrange">Facebook</Button> */}
                   </div>
-                </div>{" "}
+                </div>
                 {/* profilePreview */}
               </div>
             </Col>
@@ -269,6 +277,7 @@ class Links extends Component {
             <ModalFooter>
               <Button
                 className="modalBtnCancel"
+                onClick={() => this._toggleModal(1)}
                 toggle={() => this._toggleModal(1)}
               >
                 Cancel
@@ -300,6 +309,7 @@ class Links extends Component {
             <ModalFooter>
               <Button
                 className="modalBtnCancel"
+                onClick={() => this._toggleModal(2)}
                 toggle={() => this._toggleModal(2)}
               >
                 Cancel
