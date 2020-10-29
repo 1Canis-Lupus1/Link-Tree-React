@@ -1,11 +1,31 @@
-import React, { Component } from 'react';
-import {Col, Container, Row, Button, Card, CardBody, CustomInput, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label, Input} from 'reactstrap';
-import {getPages, createEntry ,initialEntry} from '../http/http-calls';
-import {connect} from "react-redux";
-import {addEntry,editEntry,addId,deleteEntry} from '../redux/action/content-data';
+import React, { Component } from "react";
+import {
+  Col,
+  Container,
+  Row,
+  Button,
+  Card,
+  CardBody,
+  CustomInput,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  FormGroup,
+  Label,
+  Input,
+} from "reactstrap";
+import { getPages, createEntry, initialEntry } from "../http/http-calls";
+import { connect } from "react-redux";
+import {
+  addEntry,
+  editEntry,
+  addId,
+  deleteEntry,
+} from "../redux/action/content-data";
 
 class Links extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       modals: [false, false],
@@ -13,9 +33,9 @@ class Links extends Component {
         title: "",
         url: "",
       },
-      _id:"",
-      _links:[],
-      linksNotPresent: false
+      _id: "",
+      _links: [],
+      linksNotPresent: false,
     };
   }
 
@@ -32,19 +52,21 @@ class Links extends Component {
     getPages().then((response) => {
       console.log("Response in Links Page:", response);
       //Conditions for contents in response "page"
-      if(response.page===null || response.page===undefined){
-        console.log("IN links-page: No Links found for the current user!!"); 
+      if (response.page === null || response.page === undefined) {
+        console.log("IN links-page: No Links found for the current user!!");
         //Setting state value to true as response page is null or undefined
-        this.setState({linksNotPresent:true})
-      } 
+        this.setState({ linksNotPresent: true });
+      }
       //if response page not null add the response to the state
-      else{
+      else {
         this.setState({
-          _id:response.page._id,
-          _links:response.page.contents
-        })
-        console.log(`The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`)
-        }
+          _id: response.page._id,
+          _links: response.page.contents,
+        });
+        console.log(
+          `The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`
+        );
+      }
     });
   }
 
@@ -74,8 +96,8 @@ class Links extends Component {
       });
     } else {
       //If links present
-      const  newLinkEntry= [...this.state._links];
-      // To be sent as parameters to  /page/${id} 
+      const newLinkEntry = [...this.state._links];
+      // To be sent as parameters to  /page/${id}
       const linkEntry = [
         ...newLinkEntry,
         {
@@ -93,10 +115,11 @@ class Links extends Component {
       };
       //entryData and entryId to createEntry
       createEntry(valList, this.state._id).then((response) => {
-        const currentEntry = response.page.contents[response.page.contents.length - 1];
+        const currentEntry =
+          response.page.contents[response.page.contents.length - 1];
         this.setState({
-          _links:response.page.contents
-        })
+          _links: response.page.contents,
+        });
       });
     }
     this._toggleModal(1);
@@ -111,18 +134,39 @@ class Links extends Component {
   };
 
   render() {
-    const addedLinks=()=>{
-      if(this.state._links===null){
+    const addedLinks = () => {
+      if (this.state._links === null) {
         console.warn("No added Links.");
-      }
-      else{
-        return this.state._links.map(data=>{
+      } else {
+        return this.state._links.map((entry) => {
           <React.Fragment>
             Display Links Here
-          </React.Fragment>
-        })
+            <div className="addedLinksWrap">
+              <div className="moveLink">
+                <i className="fa fa-ellipsis-v"></i>
+              </div>
+              <div className="addedLinksDetails">
+                <h4>{entry.myLinks.title}</h4>
+              </div>
+              <CustomInput
+                type="switch"
+                id="exampleCustomSwitch"
+                name="customSwitch"
+                label=""
+                checked
+                className="disableLink"
+              />
+              <Button className="delLinkBtn">
+                <i className="fa fa-pencil"></i>
+              </Button>
+              <Button className="delLinkBtn">
+                <i className="fa fa-trash-o text-danger"></i>
+              </Button>
+            </div>
+          </React.Fragment>;
+        });
       }
-    }
+    };
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -142,7 +186,11 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {this.state.linksNotPresent ? <strong>LINKS EMPTY FOR CURRENT USER</strong>:addedLinks()}
+                    {this.state.linksNotPresent ? (
+                      <strong>LINKS EMPTY FOR CURRENT USER</strong>
+                    ) : (
+                      addedLinks()
+                    )}
                   </CardBody>
                 </Card>
               </div>
@@ -164,7 +212,11 @@ class Links extends Component {
 
                   <div className="mt-4">
                     <Button className="btnOrange">
-                      {this.state.linksNotPresent?<strong>LINKS EMPTY</strong>:<strong>Links Here</strong>}
+                      {this.state.linksNotPresent ? (
+                        <strong>LINKS EMPTY</strong>
+                      ) : (
+                        <strong>Links Here</strong>
+                      )}
                     </Button>
                     {/* <Button className="btnOrange">Facebook</Button> */}
                   </div>
@@ -261,19 +313,19 @@ class Links extends Component {
   }
 }
 
-const mapStateToProps=(state)=>{
-  return{
+const mapStateToProps = (state) => {
+  return {
     //send value to addEntry
-    linkEntry:state.linkEntry
-  }
-}
+    linkEntry: state.linkEntry,
+  };
+};
 
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    addEntry:(content)=>dispatch(addEntry(content)),
-    deleteEntry:(_id)=>dispatch(deleteEntry(_id)),
-    addId:(_id)=>dispatch(addId(_id))
-  }
-}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addEntry: (content) => dispatch(addEntry(content)),
+    deleteEntry: (_id) => dispatch(deleteEntry(_id)),
+    addId: (_id) => dispatch(addId(_id)),
+  };
+};
 
-export default connect(mapStateToProps,mapDispatchToProps)(Links);
+export default connect(mapStateToProps, mapDispatchToProps)(Links);
