@@ -222,12 +222,15 @@ class Links extends Component {
     };
 
     const handleLinks = () => {
-      console.log("Handle Links Clicked.");
-      if (this.state._links.length) {
+      // console.log("Handle Links Clicked.", this.state._links);
+      if (this.state._links) {
         this.state._links.map((item) => {
+          console.log("Handle Links Preview", item.content.title);
+          //Not being rendered in the preview section
           return (
             <>
-              <strong>{item.content.title.toUpperCase()}</strong>
+              <strong>Something</strong>
+              <strong>{item.content.title}</strong>
             </>
           );
         });
