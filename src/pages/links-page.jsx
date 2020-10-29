@@ -127,11 +127,11 @@ class Links extends Component {
       createEntry(valList, this.state._id).then((response) => {
         //currentEntry has the last entry which is to be pushed to the _links array
         console.log("Creating Entry Reponse:", response.page);
-        // const currentEntry =
-        //   response.page.contents[response.page.contents.length - 1];
-        // this.setState({
-        //   _links: response.page.contents,
-        // });
+        const currentEntry =
+          response.page.contents[response.page.contents.length - 1];
+        this.setState({
+          _links: response.page.contents,
+        });
       });
     }
     // this._toggleModal(1);
@@ -146,39 +146,43 @@ class Links extends Component {
   };
 
   render() {
-    console.log("In Render:", this.state._links);
+    // console.log("In Render:", this.state._links);
     const addedLinks = () => {
       if (this.state._links === null) {
         console.warn("No added Links.");
       } else {
-        return this.state._links.map((entry) => {
-          console.log("Inside Else of Render:", entry);
-          <React.Fragment>
-            Display Links Here
-            <div className="addedLinksWrap">
-              <div className="moveLink">
-                <i className="fa fa-ellipsis-v"></i>
-              </div>
-              <div className="addedLinksDetails">
-                <h4>{entry.content.url}</h4>
-              </div>
-              <CustomInput
-                type="switch"
-                id="exampleCustomSwitch"
-                name="customSwitch"
-                label=""
-                checked
-                className="disableLink"
-              />
-              <Button className="delLinkBtn">
-                <i className="fa fa-pencil"></i>
-              </Button>
-              <Button className="delLinkBtn">
-                <i className="fa fa-trash-o text-danger"></i>
-              </Button>
-            </div>
-          </React.Fragment>;
-        });
+        return (
+          <>
+            <h3>Hello World</h3>
+            <h3>Hello World @</h3>
+            {/* {this.state._links.map((entry) => {
+              console.log("Inside Else of Render:", entry); */}
+            {/* <div className="addedLinksWrap">
+                <div className="moveLink">
+                  <i className="fa fa-ellipsis-v"></i>
+                </div>
+                <div className="addedLinksDetails">
+                  <h4>SOME VALUE</h4>
+                </div>
+                <CustomInput
+                  type="switch"
+                  id="exampleCustomSwitch"
+                  name="customSwitch"
+                  label=""
+                  checked
+                  className="disableLink"
+                />
+                <Button className="delLinkBtn">
+                  <i className="fa fa-pencil"></i>
+                </Button>
+                <Button className="delLinkBtn">
+                  <i className="fa fa-trash-o text-danger"></i>
+                </Button>
+              </div> */}
+            {/*  }
+            })} */}
+          </>
+        );
       }
     };
     return (
@@ -234,7 +238,6 @@ class Links extends Component {
                     </Button>
                   </div>
                 </div>
-                {/* profilePreview */}
               </div>
             </Col>
           </Row>
@@ -284,8 +287,8 @@ class Links extends Component {
               </Button>
               <Button
                 className="modalBtnSave"
-                toggle={() => this._toggleModal(1)}
                 onClick={(e) => this.handleAddEntry()}
+                toggle={() => this._toggleModal(1)}
               >
                 Create
               </Button>
