@@ -150,13 +150,16 @@ class Links extends Component {
     const addedLinks = () => {
       return (
         <>
-          <h3>Hello World</h3>
-          <h3>Hello World</h3>
           {console.log("MY LINKS ARE:", this.state._links)}
           {this.state._links.map((entry) => {
             {
-              console.log("Each ENTRY:", entry._id);
-              <h3>{entry._id}</h3>;
+              console.log("Each ENTRY:", entry);
+              return (
+                <>
+                  <h3>LINK NAME: {entry.content.title}</h3>
+                  <h3>LINK URL: {entry.content.url}</h3>
+                </>
+              );
             }
           })}
           {/* {this.state._links.map((entry) => {
