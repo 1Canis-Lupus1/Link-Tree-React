@@ -100,6 +100,7 @@ class Links extends Component {
         //If Error is false
         if (!response.error) {
           this.setState({
+            ...this.state._links,
             _links: response.page.contents,
           });
         }
@@ -172,11 +173,17 @@ class Links extends Component {
                       checked
                       className="disableLink"
                     />
-                    <Button className="delLinkBtn">
+                    <Button
+                      className="delLinkBtn"
+                      onClick={() => this._toggleModal(1)}
+                    >
                       <i className="fa fa-pencil"></i>
                     </Button>
                     &nbsp;&nbsp;
-                    <Button className="delLinkBtn">
+                    <Button
+                      className="delLinkBtn"
+                      onClick={() => this._toggleModal(2)}
+                    >
                       <i className="fa fa-trash-o text-danger"></i>
                     </Button>
                   </div>
@@ -212,6 +219,19 @@ class Links extends Component {
             })} */}
         </>
       );
+    };
+
+    const handleLinks = () => {
+      console.log("Handle Links Clicked.");
+      if (this.state._links.length) {
+        this.state._links.map((item) => {
+          return (
+            <>
+              <strong>{item.content.title.toUpperCase()}</strong>
+            </>
+          );
+        });
+      }
     };
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
@@ -261,7 +281,7 @@ class Links extends Component {
                       {this.state.linksNotPresent ? (
                         <strong>LINKS EMPTY</strong>
                       ) : (
-                        <strong>LINKS HERE</strong>
+                        <strong>{handleLinks()}</strong>
                       )}
                     </Button>
                   </div>
