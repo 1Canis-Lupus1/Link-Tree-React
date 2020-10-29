@@ -66,6 +66,10 @@ class Links extends Component {
         console.log(
           `The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`
         );
+        this.state._links.map((item) => {
+          console.log("Each URL", item.content.url);
+        });
+        // console.log("Links in State:", this.state._links);
       }
     });
   }
@@ -134,6 +138,7 @@ class Links extends Component {
   };
 
   render() {
+    console.log("In Render:", this.state._links);
     const addedLinks = () => {
       if (this.state._links === null) {
         console.warn("No added Links.");
@@ -146,7 +151,7 @@ class Links extends Component {
                 <i className="fa fa-ellipsis-v"></i>
               </div>
               <div className="addedLinksDetails">
-                <h4>{entry.title}</h4>
+                <h4>{entry}</h4>
               </div>
               <CustomInput
                 type="switch"
