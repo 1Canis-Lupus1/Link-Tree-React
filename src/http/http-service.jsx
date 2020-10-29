@@ -22,16 +22,16 @@ export const makePostRequest = async (
     Accept: "application/json",
     "Content-Type": "application/json",
   };
-  // if (attachToken) {
-  //   try {
-  //     const authToken = await getToken();
-  //     if (authToken) {
-  //       headers["Authorization"] = "Bearer " + authToken;
-  //     }
-  //   } catch (e) {
-  //     console.log("Error fetching auth token: ", e);
-  //   }
-  // }
+  if (attachToken) {
+    try {
+      const authToken = await getToken();
+      if (authToken) {
+        headers["Authorization"] = "Bearer " + authToken;
+      }
+    } catch (e) {
+      console.log("Error fetching auth token: ", e);
+    }
+  }
   return new Promise((resolve, reject) => {
     try {
       fetch(url, {

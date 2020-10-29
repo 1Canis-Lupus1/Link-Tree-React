@@ -148,16 +148,20 @@ class Links extends Component {
   render() {
     // console.log("In Render:", this.state._links);
     const addedLinks = () => {
-      if (this.state._links === null) {
-        console.warn("No added Links.");
-      } else {
-        return (
-          <>
-            <h3>Hello World</h3>
-            <h3>Hello World @</h3>
-            {/* {this.state._links.map((entry) => {
+      return (
+        <>
+          <h3>Hello World</h3>
+          <h3>Hello World</h3>
+          {console.log("MY LINKS ARE:", this.state._links)}
+          {this.state._links.map((entry) => {
+            {
+              console.log("Each ENTRY:", entry._id);
+              <h3>{entry._id}</h3>;
+            }
+          })}
+          {/* {this.state._links.map((entry) => {
               console.log("Inside Else of Render:", entry); */}
-            {/* <div className="addedLinksWrap">
+          {/* <div className="addedLinksWrap">
                 <div className="moveLink">
                   <i className="fa fa-ellipsis-v"></i>
                 </div>
@@ -179,11 +183,10 @@ class Links extends Component {
                   <i className="fa fa-trash-o text-danger"></i>
                 </Button>
               </div> */}
-            {/*  }
+          {/*  }
             })} */}
-          </>
-        );
-      }
+        </>
+      );
     };
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
