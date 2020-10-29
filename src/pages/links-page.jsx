@@ -30,8 +30,8 @@ class Links extends Component {
     this.state = {
       modals: [false, false],
       myLinks: {
-        title: "",
         url: "",
+        title: "",
       },
       _id: "",
       _links: [],
@@ -104,6 +104,12 @@ class Links extends Component {
             _links: response.page.contents,
           });
         }
+        this.setState({
+          myLinks: {
+            url: "",
+            title: "",
+          },
+        });
       });
     } else {
       //If links present
@@ -133,9 +139,16 @@ class Links extends Component {
         this.setState({
           _links: response.page.contents,
         });
+        this.setState({
+          myLinks: {
+            url: "",
+            title: "",
+          },
+        });
       });
     }
-    // this._toggleModal(1);
+    //Close the modal after entering link
+    this._toggleModal(1);
   };
 
   handleChange = (name, value) => {
@@ -352,6 +365,16 @@ class Links extends Component {
               <Button
                 className="modalBtnSave"
                 onClick={(e) => this.handleAddEntry()}
+                //****Not clearing the entry fields on Create
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  this.setState({
+                    myLinks: {
+                      url: "",
+                      title: "",
+                    },
+                  });
+                }}
                 toggle={() => this._toggleModal(1)}
               >
                 Create
