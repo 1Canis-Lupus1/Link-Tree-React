@@ -159,6 +159,12 @@ class Links extends Component {
     console.log("After setState on User Entry:", myLinks);
   };
 
+  handleDelete = (e) => {
+    console.log("handleDelete");
+    createEntry();
+    this._toggleModal(2);
+  };
+
   render() {
     // console.log("In Render:", this.state._links);
     const addedLinks = () => {
@@ -407,6 +413,7 @@ class Links extends Component {
               <Button
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(2)}
+                onClick={(e) => this.handleDelete()}
               >
                 Delete
               </Button>
