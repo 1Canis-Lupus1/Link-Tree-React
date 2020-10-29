@@ -156,8 +156,30 @@ class Links extends Component {
               console.log("Each ENTRY:", entry);
               return (
                 <>
-                  <h3>LINK NAME: {entry.content.title}</h3>
-                  <h3>LINK URL: {entry.content.url}</h3>
+                  <div className="addedLinksWrap">
+                    <div className="moveLink">
+                      <i className="fa fa-ellipsis-v"></i>
+                    </div>
+                    <div className="addedLinksDetails">
+                      <h5>&nbsp;{entry.content.title.toUpperCase()}</h5>
+                      <h5>&nbsp;{entry.content.url}</h5>
+                    </div>
+                    <CustomInput
+                      type="switch"
+                      id="exampleCustomSwitch"
+                      name="customSwitch"
+                      label=""
+                      checked
+                      className="disableLink"
+                    />
+                    <Button className="delLinkBtn">
+                      <i className="fa fa-pencil"></i>
+                    </Button>
+                    &nbsp;&nbsp;
+                    <Button className="delLinkBtn">
+                      <i className="fa fa-trash-o text-danger"></i>
+                    </Button>
+                  </div>
                 </>
               );
             }
