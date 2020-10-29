@@ -61,7 +61,7 @@ class Links extends Component {
       else {
         this.setState({
           _id: response.page._id,
-          _links: response.page.contents[0].content.url,
+          _links: response.page.contents,
         });
         console.log(
           `The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`
