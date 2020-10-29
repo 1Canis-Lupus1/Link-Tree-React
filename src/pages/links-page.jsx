@@ -61,7 +61,7 @@ class Links extends Component {
       else {
         this.setState({
           _id: response.page._id,
-          _links: response.page.contents,
+          _links: response.page.contents.content[0].url,
         });
         console.log(
           `The Links Contained by the User: ID:${this.state._id} LINK:${this.state._links}`
@@ -146,7 +146,7 @@ class Links extends Component {
                 <i className="fa fa-ellipsis-v"></i>
               </div>
               <div className="addedLinksDetails">
-                <h4>{entry.myLinks.title}</h4>
+                <h4>{entry.title}</h4>
               </div>
               <CustomInput
                 type="switch"
