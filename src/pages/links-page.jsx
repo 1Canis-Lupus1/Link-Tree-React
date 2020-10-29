@@ -222,19 +222,34 @@ class Links extends Component {
     };
 
     const handleLinks = () => {
-      // console.log("Handle Links Clicked.", this.state._links);
-      if (this.state._links) {
-        this.state._links.map((item) => {
-          console.log("Handle Links Preview", item.content.title);
-          //Not being rendered in the preview section
-          return (
-            <>
-              <strong>Something</strong>
-              <strong>{item.content.title}</strong>
-            </>
-          );
-        });
-      }
+      // console.log("Handle Links.", this.state._links);
+      return (
+        <>
+          {this.state._links.map((item) => {
+            return (
+              <>
+                <Button className="btnOrange">
+                  <strong>{item.content.title.toUpperCase()}</strong>
+                  <br />
+                </Button>
+              </>
+            );
+          })}
+        </>
+      );
+      //   return(<>
+      //     {this.state._links.map((item) => {
+      //       console.log("Handle Links Preview", item.content.title);
+      //       //Not being rendered in the preview section
+      //       return (
+      //         <>
+      //           <strong>Something</strong>
+      //           <strong>{item.content.title}</strong>
+      //         </>
+      //       );
+      //     });
+      //     </>
+      // })
     };
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
@@ -280,13 +295,11 @@ class Links extends Component {
                   </div>
 
                   <div className="mt-4">
-                    <Button className="btnOrange">
-                      {this.state.linksNotPresent ? (
-                        <strong>LINKS EMPTY</strong>
-                      ) : (
-                        <strong>{handleLinks()}</strong>
-                      )}
-                    </Button>
+                    {this.state.linksNotPresent ? (
+                      <strong>LINKS EMPTY</strong>
+                    ) : (
+                      <strong>{handleLinks()}</strong>
+                    )}
                   </div>
                 </div>
               </div>
