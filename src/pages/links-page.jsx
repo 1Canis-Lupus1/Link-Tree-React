@@ -214,87 +214,90 @@ class Links extends Component {
     console.log("handleDelete");
     // createEntry();
     this._toggleModal(2);
+    alert("Delete Functionality under fixing!!");
   };
 
   handleEdit = () => {
     console.log("Editing");
-    return (
-      // Modal for edit not visible
-      <>
-        {/* Modal for showing "Edit Link" */}
-        <Modal
-          isOpen={this.state.modals[1]}
-          toggle={() => this._toggleModal(1)}
-          className="modal-dialog-centered"
-        >
-          <Form onSubmit={(e) => this.handleSubmit(e)}>
-            <ModalHeader toggle={() => this._toggleModal(1)}>
-              Edit Link
-            </ModalHeader>
-            <ModalBody className="modalContent">
-              <FormGroup>
-                <Label>Title</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter Title"
-                  value={this.state.myLinks.title}
-                  name="title"
-                  onChange={(e) => {
-                    this.handleChange(e.target.name, e.target.value);
-                  }}
-                />
-                {this.state.errors && (
-                  <React.Fragment>
-                    <p
-                      className="d-flex"
-                      style={{ color: "red", fontSize: "12px" }}
-                    >
-                      {this.state.errors.title}
-                    </p>
-                  </React.Fragment>
-                )}
-              </FormGroup>
-              <FormGroup>
-                <Label>URL</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter URL"
-                  value={this.state.myLinks.url}
-                  name="url"
-                  onChange={(e) => {
-                    this.handleChange(e.target.name, e.target.value);
-                  }}
-                />
-                {this.state.errors && (
-                  <p className="d-flex" style={{ color: "red" }}>
-                    {this.state.errors.url}
-                  </p>
-                )}
-              </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                className="modalBtnCancel"
-                type="submit"
-                onClick={() => this._toggleModal(1)}
-                toggle={() => this._toggleModal(1)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="modalBtnSave"
-                type="submit"
-                onClick={(e) => this.handleAddEntry()}
-                onSubmit={(e) => this.handleSubmit(e)}
-              >
-                Create
-              </Button>
-            </ModalFooter>
-          </Form>
-        </Modal>
-      </>
-    );
+
+    // return (
+    //   // Modal for edit not visible
+    //   <>
+    //     {/* Modal for showing "Edit Link" */}
+    //     <Modal
+    //       isOpen={this.state.modals[1]}
+    //       toggle={() => this._toggleModal(1)}
+    //       className="modal-dialog-centered"
+    //     >
+    //       <Form onSubmit={(e) => this.handleSubmit(e)}>
+    //         <ModalHeader toggle={() => this._toggleModal(1)}>
+    //           Edit Link
+    //         </ModalHeader>
+    //         <ModalBody className="modalContent">
+    //           <FormGroup>
+    //             <Label>Title</Label>
+    //             <Input
+    //               type="text"
+    //               placeholder="Enter Title"
+    //               value={this.state.myLinks.title}
+    //               name="title"
+    //               onChange={(e) => {
+    //                 this.handleChange(e.target.name, e.target.value);
+    //               }}
+    //             />
+    //             {this.state.errors && (
+    //               <React.Fragment>
+    //                 <p
+    //                   className="d-flex"
+    //                   style={{ color: "red", fontSize: "12px" }}
+    //                 >
+    //                   {this.state.errors.title}
+    //                 </p>
+    //               </React.Fragment>
+    //             )}
+    //           </FormGroup>
+    //           <FormGroup>
+    //             <Label>URL</Label>
+    //             <Input
+    //               type="text"
+    //               placeholder="Enter URL"
+    //               value={this.state.myLinks.url}
+    //               name="url"
+    //               onChange={(e) => {
+    //                 this.handleChange(e.target.name, e.target.value);
+    //               }}
+    //             />
+    //             {this.state.errors && (
+    //               <p className="d-flex" style={{ color: "red" }}>
+    //                 {this.state.errors.url}
+    //               </p>
+    //             )}
+    //           </FormGroup>
+    //         </ModalBody>
+    //         <ModalFooter>
+    //           <Button
+    //             className="modalBtnCancel"
+    //             type="submit"
+    //             onClick={() => this._toggleModal(1)}
+    //             toggle={() => this._toggleModal(1)}
+    //           >
+    //             Cancel
+    //           </Button>
+    //           <Button
+    //             className="modalBtnSave"
+    //             type="submit"
+    //             onClick={(e) => this.handleAddEntry()}
+    //             onSubmit={(e) => this.handleSubmit(e)}
+    //           >
+    //             Create
+    //           </Button>
+    //         </ModalFooter>
+    //       </Form>
+    //     </Modal>
+    //   </>
+    // );
     this._toggleModal(1);
+    alert("Edit Functionality under fixing!!");
   };
 
   handleSubmit = (e) => {
