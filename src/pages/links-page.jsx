@@ -95,9 +95,11 @@ class Links extends Component {
       console.log("ERROR WARINGS", errors);
       if (!errors) {
         if (this.state.linksNotPresent) {
+          const initialLink = [...this.state._links];
           const linkEntry = {
             //To be sent as parameter to /page
             contents: [
+              // ...initialLink,
               {
                 content: {
                   title: this.state.myLinks.title,
@@ -114,7 +116,7 @@ class Links extends Component {
             //If Error is false
             if (!response.error) {
               this.setState({
-                ...this.state._links,
+                // ...this.state._links,
                 _links: response.page.contents,
               });
             }
@@ -125,6 +127,8 @@ class Links extends Component {
               },
             });
           });
+          //Reload the page for displaying initial entry link
+          window.location.reload(true);
         } else {
           //If links present
           const newLinkEntry = [...this.state._links];
