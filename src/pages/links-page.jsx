@@ -14,6 +14,7 @@ import {
   FormGroup,
   Label,
   Input,
+  Form,
 } from "reactstrap";
 import { getPages, createEntry, initialEntry } from "../http/http-calls";
 import { connect } from "react-redux";
@@ -33,9 +34,14 @@ class Links extends Component {
         url: "",
         title: "",
       },
+      isTrue: {
+        url: "",
+        title: "",
+      },
       _id: "",
       _links: [],
       linksNotPresent: false,
+      errors: {},
     };
   }
 
@@ -80,89 +86,160 @@ class Links extends Component {
 
   handleAddEntry = () => {
     //If no links present in state
-    if (this.state.linksNotPresent) {
-      const linkEntry = {
-        //To be sent as parameter to /page
-        contents: [
-          {
-            content: {
-              title: this.state.myLinks.title,
-              url: this.state.myLinks.url,
+    let isTrue = {
+      url: true,
+      title: true,
+    };
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      console.log("ERROR WARINGS", errors);
+      if (!errors) {
+        if (this.state.linksNotPresent) {
+          const linkEntry = {
+            //To be sent as parameter to /page
+            contents: [
+              {
+                content: {
+                  title: this.state.myLinks.title,
+                  url: this.state.myLinks.url,
+                },
+                contentType: "socialLink",
+                subContentType: "facebook",
+              },
+            ],
+          };
+          //Post request to /page
+          initialEntry(linkEntry).then((response) => {
+            console.log("Response from /page", response);
+            //If Error is false
+            if (!response.error) {
+              this.setState({
+                ...this.state._links,
+                _links: response.page.contents,
+              });
+            }
+            this.setState({
+              myLinks: {
+                url: "",
+                title: "",
+              },
+            });
+          });
+        } else {
+          //If links present
+          const newLinkEntry = [...this.state._links];
+          // To be sent as parameters to  /page/${id}
+          const linkEntry = [
+            ...newLinkEntry,
+            {
+              content: {
+                title: this.state.myLinks.title,
+                url: this.state.myLinks.url,
+              },
+              contentType: "socialLink",
+              subContentType: "facebook",
             },
-            contentType: "socialLink",
-            subContentType: "facebook",
-          },
-        ],
-      };
-      //Post request to /page
-      initialEntry(linkEntry).then((response) => {
-        console.log("Response from /page", response);
-        //If Error is false
-        if (!response.error) {
-          this.setState({
-            ...this.state._links,
-            _links: response.page.contents,
+          ];
+          //cretaing an object to send parameters
+          const valList = {
+            contents: linkEntry,
+          };
+          //entryData and entryId to createEntry
+          createEntry(valList, this.state._id).then((response) => {
+            //currentEntry has the last entry which is to be pushed to the _links array
+            console.log("Creating Entry Reponse:", response.page);
+            const currentEntry =
+              response.page.contents[response.page.contents.length - 1];
+            this.setState({
+              _links: response.page.contents,
+            });
+            this.setState({
+              myLinks: {
+                url: "",
+                title: "",
+              },
+            });
           });
         }
-        this.setState({
-          myLinks: {
-            url: "",
-            title: "",
-          },
-        });
-      });
-    } else {
-      //If links present
-      const newLinkEntry = [...this.state._links];
-      // To be sent as parameters to  /page/${id}
-      const linkEntry = [
-        ...newLinkEntry,
-        {
-          content: {
-            title: this.state.myLinks.title,
-            url: this.state.myLinks.url,
-          },
-          contentType: "socialLink",
-          subContentType: "facebook",
-        },
-      ];
-      //cretaing an object to send parameters
-      const valList = {
-        contents: linkEntry,
-      };
-      //entryData and entryId to createEntry
-      createEntry(valList, this.state._id).then((response) => {
-        //currentEntry has the last entry which is to be pushed to the _links array
-        console.log("Creating Entry Reponse:", response.page);
-        const currentEntry =
-          response.page.contents[response.page.contents.length - 1];
-        this.setState({
-          _links: response.page.contents,
-        });
-        this.setState({
-          myLinks: {
-            url: "",
-            title: "",
-          },
-        });
-      });
-    }
+      }
+    });
+    //
     //Close the modal after entering link
     this._toggleModal(1);
   };
 
   handleChange = (name, value) => {
     // console.log(name,value);
-    const { myLinks } = this.state;
+    const { myLinks, isTrue } = this.state;
     myLinks[name] = value;
-    this.setState({ myLinks });
     console.log("After setState on User Entry:", myLinks);
+    isTrue[name] = true;
+    this.setState({ myLinks, isTrue }, () => {
+      this.validation();
+    });
+    return;
+  };
+
+  validation = () => {
+    const { myLinks, isTrue, errors } = this.state;
+    Object.keys(myLinks).forEach((link) => {
+      switch (link) {
+        case "title": {
+          if (isTrue.title) {
+            if (myLinks.title.trim().length) {
+              errors[link] = "*Field cannot be empty!!";
+            } else {
+              delete errors[link];
+              isTrue.title = false;
+            }
+          }
+          break;
+        }
+        case "url": {
+          if (isTrue.url) {
+            if (
+              myLinks.url.trim().length &&
+              !new RegExp(
+                "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
+              ).test(myLinks.url)
+            ) {
+              errors.url = "*InValid URL!!";
+            } else {
+              delete errors[link];
+              isTrue.url = false;
+            }
+          }
+          break;
+        }
+        default: {
+          console.warn("Error!!");
+          break;
+        }
+      }
+    });
+    this.setState({ errors });
+    return Object.keys(errors).length ? errors : null;
   };
 
   handleDelete = (e) => {
     console.log("handleDelete");
     createEntry();
     this._toggleModal(2);
+  };
+
+  handleSubmit = (e) => {
+    console.log("Submitting");
+    e.preventDefault(e);
+    let isTrue = {
+      url: true,
+      title: true,
+    };
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      if (!errors) {
+        console.log("Links On Submit:", this.state.myLinks);
+      }
+    });
   };
 
   render() {
@@ -331,61 +408,81 @@ class Links extends Component {
             toggle={() => this._toggleModal(1)}
             className="modal-dialog-centered"
           >
-            <ModalHeader toggle={() => this._toggleModal(1)}>
-              Add New Link
-            </ModalHeader>
-            <ModalBody className="modalContent">
-              <FormGroup>
-                <Label>Title</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter Title"
-                  value={this.state.myLinks.title}
-                  name="title"
-                  onChange={(e) => {
-                    this.handleChange(e.target.name, e.target.value);
-                  }}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label>URL</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter URL"
-                  value={this.state.myLinks.url}
-                  name="url"
-                  onChange={(e) => {
-                    this.handleChange(e.target.name, e.target.value);
-                  }}
-                />
-              </FormGroup>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                className="modalBtnCancel"
-                onClick={() => this._toggleModal(1)}
-                toggle={() => this._toggleModal(1)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="modalBtnSave"
-                onClick={(e) => this.handleAddEntry()}
-                //****Not clearing the entry fields on Create
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  this.setState({
-                    myLinks: {
-                      url: "",
-                      title: "",
-                    },
-                  });
-                }}
-                toggle={() => this._toggleModal(1)}
-              >
-                Create
-              </Button>
-            </ModalFooter>
+            <Form onSubmit={(e) => this.handleSubmit(e)}>
+              <ModalHeader toggle={() => this._toggleModal(1)}>
+                Add New Link
+              </ModalHeader>
+              <ModalBody className="modalContent">
+                <FormGroup>
+                  <Label>Title</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter Title"
+                    value={this.state.myLinks.title}
+                    name="title"
+                    onChange={(e) => {
+                      this.handleChange(e.target.name, e.target.value);
+                    }}
+                  />
+                  {this.state.errors && (
+                    <React.Fragment>
+                      <p
+                        className="d-flex"
+                        style={{ color: "red", fontSize: "12px" }}
+                      >
+                        {this.state.errors.title}
+                      </p>
+                    </React.Fragment>
+                  )}
+                </FormGroup>
+                <FormGroup>
+                  <Label>URL</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter URL"
+                    value={this.state.myLinks.url}
+                    name="url"
+                    onChange={(e) => {
+                      this.handleChange(e.target.name, e.target.value);
+                    }}
+                  />
+                  {this.state.errors && (
+                    <p className="d-flex" style={{ color: "red" }}>
+                      {this.state.errors.url}
+                    </p>
+                  )}
+                </FormGroup>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  className="modalBtnCancel"
+                  type="submit"
+                  onClick={() => this._toggleModal(1)}
+                  toggle={() => this._toggleModal(1)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="modalBtnSave"
+                  type="submit"
+                  onClick={(e) => this.handleAddEntry()}
+                  onSubmit={(e) => this.handleSubmit(e)}
+                  //****Not clearing the entry fields on Create
+                  // onSubmit={(e) => {
+                  //   e.preventDefault();
+                  //   this.setState({
+                  //     myLinks: {
+                  //       url: "",
+                  //       title: "",
+                  //     },
+                  //   });
+                  // }}
+                  toggle={() => this._toggleModal(1)}
+                >
+                  Create
+                </Button>
+              </ModalFooter>
+            </Form>
           </Modal>
 
           <Modal
