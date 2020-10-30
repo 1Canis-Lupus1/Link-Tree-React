@@ -224,23 +224,21 @@ class Links extends Component {
     console.log("handleDelete");
     // createEntry();
     this._toggleModal(2);
-    if (this._toggleModal(2)) {
-      this.state._links.map((entry) => {
-        this.setState({ modalClick: entry._id });
-        if (this.state._links) {
-          let delId = this.state._links.findIndex((entry) => {
-            return entry._id === this.state.modalClick;
-          });
-          this.state._links.splice(delId, 1);
-          const newVal = {
-            contents: this.state._links,
-          };
-          createEntry(newVal, this.state._id).then((response) => {
-            console.log("New List After Deleting:", response);
-          });
-        }
-      });
-    }
+    this.state._links.map((entry) => {
+      this.setState({ modalClick: entry._id });
+      if (this.state._links) {
+        let delId = this.state._links.findIndex((entry) => {
+          return entry._id === this.state.modalClick;
+        });
+        this.state._links.splice(delId, 1);
+        const newVal = {
+          contents: this.state._links,
+        };
+        createEntry(newVal, this.state._id).then((response) => {
+          console.log("New List After Deleting:", response);
+        });
+      }
+    });
   };
 
   handleEdit = () => {
