@@ -446,6 +446,7 @@ class Links extends Component {
           {this.state._links.map((item, index) => {
             let btns = [];
             btns.push(item.content.title.toUpperCase());
+            console.log("Button", btns);
             var myBtns = JSON.stringify(btns);
             localStorage.setItem("buttons", myBtns);
             return (
