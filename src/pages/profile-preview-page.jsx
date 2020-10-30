@@ -39,9 +39,9 @@ class ProfilePreview extends Component {
                   </div>
 
                   <div className="mt-4">
-                    <Button className="btnOrange">LinkedIn</Button>
-                    <Button className="btnOrange">Facebook</Button>
-                    <Button className="btnOrange">Instagram</Button>
+                    <Button className="btnOrange">
+                      {JSON.parse(localStorage.getItem("Buttons"))}
+                    </Button>
                   </div>
                 </CardBody>
               </Card>

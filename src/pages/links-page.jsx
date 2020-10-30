@@ -121,7 +121,7 @@ class Links extends Component {
             //If Error is false
             if (!response.error) {
               this.setState({
-                // ...this.state._links,
+                ...this.state._links,
                 _links: response.page.contents,
               });
             }
@@ -408,7 +408,10 @@ class Links extends Component {
       // console.log("Handle Links.", this.state._links);
       return (
         <>
-          {this.state._links.map((item) => {
+          {this.state._links.map((item, index) => {
+            let btns = [];
+            btns.push(item.content.title.toUpperCase());
+            localStorage.setItem("Buttons", JSON.stringify(btns));
             return (
               <>
                 <Button className="btnOrange">
