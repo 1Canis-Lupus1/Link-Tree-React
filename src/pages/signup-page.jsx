@@ -122,7 +122,7 @@ class RequestDemo extends Component {
     Object.keys(user).forEach((entry) => {
       if (entry === "email" && isTrue.email) {
         if (!user.email.trim().length) {
-          errors.email = "*Field Cannot Be Empty!!";
+          errors.email = "*Field Cannot Be Empty";
         } else if (
           user.email.trim().length &&
           !new RegExp(
@@ -136,7 +136,7 @@ class RequestDemo extends Component {
         }
       } else if (entry === "password" && isTrue.password) {
         if (!user.password.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty!!";
+          errors[entry] = "*Field Cannot Be Empty";
         } else {
           delete errors[entry];
           isTrue.password = false;
@@ -146,7 +146,7 @@ class RequestDemo extends Component {
           userName: user.userName,
         };
         if (!user.userName.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty!!";
+          errors[entry] = "*Field Cannot Be Empty";
         } else if (!(this.isValid(obj) && this.state.validUsername)) {
           console.log();
           errors[entry] = "Enter Unique Username";
@@ -156,7 +156,7 @@ class RequestDemo extends Component {
         }
       } else if (entry === "rptPassword" && isTrue.rptPassword) {
         if (!(user.rptPassword === user.password)) {
-          errors[entry] = "*Password Does Not Match!!";
+          errors[entry] = "*Password Does Not Match";
         } else {
           delete errors[entry];
           isTrue.rptPassword = false;

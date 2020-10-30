@@ -195,21 +195,21 @@ class Links extends Component {
     Object.keys(myLinks).forEach((link) => {
       if (link === "title" && isTrue.title) {
         if (!myLinks.title.trim().length) {
-          errors[link] = "*Field cannot be empty!!";
+          errors[link] = "*Field cannot be empty";
         } else {
           delete errors[link];
           isTrue.title = false;
         }
       } else if (link === "url" && isTrue.url) {
         if (!myLinks.url.trim().length) {
-          errors[link] = "*Field cannot be empty!!";
+          errors[link] = "*Field cannot be empty";
         } else if (
           myLinks.url.trim().length &&
           !new RegExp(
             "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
           ).test(myLinks.url)
         ) {
-          errors.url = "*InValid URL!!";
+          errors.url = "Invalid URL";
         } else {
           delete errors[link];
           isTrue.url = false;

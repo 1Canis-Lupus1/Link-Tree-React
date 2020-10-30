@@ -1,14 +1,28 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Col, Container, Row, Carousel, CarouselIndicators, CarouselItem, CarouselCaption, Button, Form, Input, FormGroup, Label } from 'reactstrap';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import {
+  Col,
+  Container,
+  Row,
+  Carousel,
+  CarouselIndicators,
+  CarouselItem,
+  CarouselCaption,
+  Button,
+  Form,
+  Input,
+  FormGroup,
+  Label,
+} from "reactstrap";
 import { Logging } from "../http/http-calls";
 import { logUser } from "../redux/action/user-data";
 import { connect } from "react-redux";
 
 const items = [
   {
-    header: 'Title',
-    caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.',
+    header: "Title",
+    caption:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.",
   },
 ];
 
@@ -18,15 +32,15 @@ class Login extends Component {
     this.state = {
       activeIndex: 0,
       user: {
-        userName: '',
-        password: '',
-        token: ''
+        userName: "",
+        password: "",
+        token: "",
       },
       isTrue: {
         userName: false,
-        password: false
+        password: false,
       },
-      errors: {}
+      errors: {},
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -45,13 +59,19 @@ class Login extends Component {
 
   next() {
     if (this.animating) return;
-    const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
+    const nextIndex =
+      this.state.activeIndex === items.length - 1
+        ? 0
+        : this.state.activeIndex + 1;
     this.setState({ activeIndex: nextIndex });
   }
 
   previous() {
     if (this.animating) return;
-    const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
+    const nextIndex =
+      this.state.activeIndex === 0
+        ? items.length - 1
+        : this.state.activeIndex - 1;
     this.setState({ activeIndex: nextIndex });
   }
 
@@ -61,38 +81,40 @@ class Login extends Component {
   }
 
   forgotPassword = () => {
-    this.props.history.push('/forgot-password')
-  }
+    this.props.history.push("/forgot-password");
+  };
 
   requestDemo = () => {
-    this.props.history.push('/signup')
-  }
+    this.props.history.push("/signup");
+  };
 
   users = () => {
     let user = {};
-    let isTrue={
-      userName:true,
-      password:true
-    }
+    let isTrue = {
+      userName: true,
+      password: true,
+    };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
-      console.log("Error:",errors);
+      console.log("Error:", errors);
       if (!errors) {
         const data = {
           handle: this.state.user.userName,
-          password: this.state.user.password
+          password: this.state.user.password,
         };
-    Logging(data).then(response => {
-      user = {
-        userName: response.handle,
-        token: response.token
+        Logging(data)
+          .then((response) => {
+            user = {
+              userName: response.handle,
+              token: response.token,
+            };
+            this.props.logUser({ user });
+            this.props.history.push("/links");
+          })
+          .catch((err) => console.log(err));
       }
-      this.props.logUser({ user });
-      this.props.history.push('/links')
-    }).catch(err => console.log(err));
-  }
-})
-}
+    });
+  };
 
   handleChange = (name, value) => {
     const { user, isTrue } = this.state;
@@ -108,14 +130,14 @@ class Login extends Component {
     Object.keys(user).forEach((entry) => {
       if (entry === "password" && isTrue.password) {
         if (!user.password.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty!!";
+          errors[entry] = "*Field Cannot Be Empty";
         } else {
           delete errors[entry];
           isTrue.password = false;
         }
       } else if (entry === "userName" && isTrue.userName) {
         if (!user.userName.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty!!";
+          errors[entry] = "*Field Cannot Be Empty";
         } else {
           delete errors[entry];
           isTrue.userName = false;
@@ -136,7 +158,10 @@ class Login extends Component {
           onExited={this.onExited}
           key={item.src}
         >
-          <CarouselCaption captionText={item.caption} captionHeader={item.header} />
+          <CarouselCaption
+            captionText={item.caption}
+            captionHeader={item.header}
+          />
         </CarouselItem>
       );
     });
@@ -279,13 +304,13 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data
+    data: state.data,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logUser: (user) => dispatch(logUser(user))
+    logUser: (user) => dispatch(logUser(user)),
   };
 };
 
