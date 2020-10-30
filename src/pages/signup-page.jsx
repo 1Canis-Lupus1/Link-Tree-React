@@ -89,7 +89,7 @@ class RequestDemo extends Component {
     };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
-      console.log("Error:",errors);
+      console.log("Error:", errors);
       if (!errors) {
         const signupData = {
           email: this.state.user.email,
@@ -102,9 +102,9 @@ class RequestDemo extends Component {
     });
   };
 
-  userLogin=()=>{
+  userLogin = () => {
     this.props.history.push("/login");
-  }
+  };
 
   //handling input here
   handleChange = (name, value) => {
@@ -126,7 +126,7 @@ class RequestDemo extends Component {
         } else if (
           user.email.trim().length &&
           !new RegExp(
-            "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
+            "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
           ).test(user.email)
         ) {
           errors.email = "Enter a valid email ID";
@@ -141,15 +141,14 @@ class RequestDemo extends Component {
           delete errors[entry];
           isTrue.password = false;
         }
-      }
-      else if (entry === "userName" && isTrue.userName) {
+      } else if (entry === "userName" && isTrue.userName) {
         const obj = {
           userName: user.userName,
         };
         if (!user.userName.trim().length) {
           errors[entry] = "*Field Cannot Be Empty!!";
         } else if (!(this.isValid(obj) && this.state.validUsername)) {
-          console.log()
+          console.log();
           errors[entry] = "Enter Unique Username";
         } else {
           delete errors[entry];
@@ -170,7 +169,7 @@ class RequestDemo extends Component {
 
   isValid = (userName) => {
     validUsername(userName).then((res) => {
-      console.log("My response",res);
+      console.log("My response", res);
       if (res.isAvailable) {
         this.setState({
           validUsername: true,

@@ -183,39 +183,61 @@ class Links extends Component {
   validation = () => {
     const { myLinks, isTrue, errors } = this.state;
     Object.keys(myLinks).forEach((link) => {
-      switch (link) {
-        case "title": {
-          if (isTrue.title) {
-            if (myLinks.title.trim().length) {
-              errors[link] = "*Field cannot be empty!!";
-            } else {
-              delete errors[link];
-              isTrue.title = false;
-            }
-          }
-          break;
+      if (link === "title" && isTrue.title) {
+        if (!myLinks.title.trim().length) {
+          errors[link] = "*Field cannot be empty!!";
+        } else {
+          delete errors[link];
+          isTrue.title = false;
         }
-        case "url": {
-          if (isTrue.url) {
-            if (
-              myLinks.url.trim().length &&
-              !new RegExp(
-                "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
-              ).test(myLinks.url)
-            ) {
-              errors.url = "*InValid URL!!";
-            } else {
-              delete errors[link];
-              isTrue.url = false;
-            }
-          }
-          break;
-        }
-        default: {
-          console.warn("Error!!");
-          break;
+      } else if (link === "url" && isTrue.url) {
+        if (!myLinks.url.trim().length) {
+          errors[link] = "*Field cannot be empty!!";
+        } else if (
+          myLinks.url.trim().length &&
+          !new RegExp(
+            "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
+          ).test(myLinks.url)
+        ) {
+          errors.url = "*InValid URL!!";
+        } else {
+          delete errors[link];
+          isTrue.url = false;
         }
       }
+      // switch (link) {
+      //   case "title": {
+      //     if (isTrue.title) {
+      //       if (myLinks.title.trim().length) {
+      //         errors[link] = "*Field cannot be empty!!";
+      //       } else {
+      //         delete errors[link];
+      //         isTrue.title = false;
+      //       }
+      //     }
+      //     break;
+      //   }
+      //   case "url": {
+      //     if (isTrue.url) {
+      //       if (
+      //         myLinks.url.trim().length &&
+      //         !new RegExp(
+      //           "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
+      //         ).test(myLinks.url)
+      //       ) {
+      //         errors.url = "*InValid URL!!";
+      //       } else {
+      //         delete errors[link];
+      //         isTrue.url = false;
+      //       }
+      //     }
+      //     break;
+      //   }
+      //   default: {
+      //     console.warn("Error!!");
+      //     break;
+      //   }
+      // }
     });
     this.setState({ errors });
     return Object.keys(errors).length ? errors : null;
@@ -239,6 +261,7 @@ class Links extends Component {
       if (!errors) {
         console.log("Links On Submit:", this.state.myLinks);
       }
+      this._toggleModal(1);
     });
   };
 
@@ -477,7 +500,7 @@ class Links extends Component {
                   //     },
                   //   });
                   // }}
-                  toggle={() => this._toggleModal(1)}
+                  // toggle={() => this._toggleModal(1)}
                 >
                   Create
                 </Button>
