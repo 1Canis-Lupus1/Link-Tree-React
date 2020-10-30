@@ -1,7 +1,19 @@
-import React, { Component } from 'react';
-import {Col, Container, Row, Button, Label, Card, CardBody} from 'reactstrap';
+import React, { Component } from "react";
+import { Col, Container, Row, Button, Label, Card, CardBody } from "reactstrap";
 
 class ProfilePreview extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+    };
+  }
+  componentDidMount() {
+    const user = localStorage.getItem("username");
+    this.setState({
+      username: user,
+    });
+  }
   render() {
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
@@ -16,22 +28,20 @@ class ProfilePreview extends Component {
                 <CardBody>
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
-                      <input type="file" style={{display: 'none'}} />
-                      <img alt="" className="" src={'assets/img/user-img-default.png'} />
+                      <input type="file" style={{ display: "none" }} />
+                      <img
+                        alt=""
+                        className=""
+                        src={"assets/img/user-img-default.png"}
+                      />
                     </Label>
-                    <h5>@johndoe</h5>
+                    <h5>@{this.state.username}</h5>
                   </div>
-                  
+
                   <div className="mt-4">
-                    <Button className="btnOrange">
-                      LinkedIn
-                    </Button>
-                    <Button className="btnOrange">
-                      Facebook
-                    </Button>
-                    <Button className="btnOrange">
-                      Instagram
-                    </Button>
+                    <Button className="btnOrange">LinkedIn</Button>
+                    <Button className="btnOrange">Facebook</Button>
+                    <Button className="btnOrange">Instagram</Button>
                   </div>
                 </CardBody>
               </Card>

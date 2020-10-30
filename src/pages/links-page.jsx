@@ -42,6 +42,7 @@ class Links extends Component {
       _links: [],
       linksNotPresent: false,
       errors: {},
+      username: "",
     };
   }
 
@@ -80,6 +81,10 @@ class Links extends Component {
           } LINK:${this.state._links.map((item) => item.content.url)}`
         );
         // console.log("Links in State:", this.state._links);
+        this.setState({
+          username: localStorage.getItem("username"),
+        });
+        console.log("UNAME", this.state.username);
       }
     });
   }
@@ -395,6 +400,10 @@ class Links extends Component {
       );
     };
 
+    // const handleUser = () => {
+    //   return <strong>{getUser()}</strong>;
+    // };
+
     const handleLinks = () => {
       // console.log("Handle Links.", this.state._links);
       return (
@@ -472,7 +481,8 @@ class Links extends Component {
                         src={"assets/img/user-img-default.png"}
                       />
                     </Label>
-                    <h5>@johndoe</h5>
+
+                    <h5>@{this.state.username}</h5>
                   </div>
 
                   <div className="mt-4">
