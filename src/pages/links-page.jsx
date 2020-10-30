@@ -43,6 +43,7 @@ class Links extends Component {
       linksNotPresent: false,
       errors: {},
       username: "",
+      modalClick: "",
     };
   }
 
@@ -223,7 +224,23 @@ class Links extends Component {
     console.log("handleDelete");
     // createEntry();
     this._toggleModal(2);
-    alert("Delete Functionality under fixing!!");
+    if (this._toggleModal(2)) {
+      this.state._links.map((entry) => {
+        this.setState({ modalClick: entry._id });
+        if (this.state._links) {
+          let delId = this.state._links.findIndex((entry) => {
+            return entry._id === this.state.modalClick;
+          });
+          this.state._links.splice(delId, 1);
+          const newVal = {
+            contents: this.state._links,
+          };
+          createEntry(newVal, this.state._id).then((response) => {
+            console.log("New List After Deleting:", response);
+          });
+        }
+      });
+    }
   };
 
   handleEdit = () => {
@@ -326,6 +343,24 @@ class Links extends Component {
 
   render() {
     // console.log("In Render:", this.state._links);
+
+    //Deleting Links
+    const deleteEntry = () => {
+      if (this.state._links) {
+        let delId = this.state._links.findIndex((entry) => {
+          return entry._id === this.state.modalClick;
+        });
+        this.state._links.splice(delId, 1);
+        const newVal = {
+          contents: this.state._links,
+        };
+        createEntry(newVal, this.state._id).then((response) => {
+          console.log("New List After Deleting:", response);
+        });
+      }
+    };
+
+    //Adding Links
     const addedLinks = () => {
       return (
         <>
@@ -361,7 +396,9 @@ class Links extends Component {
                     &nbsp;&nbsp;
                     <Button
                       className="delLinkBtn"
-                      onClick={() => this._toggleModal(2)}
+                      onClick={() => {
+                        this.handleDelete();
+                      }}
                     >
                       <i className="fa fa-trash-o text-danger"></i>
                     </Button>
@@ -411,7 +448,8 @@ class Links extends Component {
           {this.state._links.map((item, index) => {
             let btns = [];
             btns.push(item.content.title.toUpperCase());
-            localStorage.setItem("Buttons", JSON.stringify(btns));
+            var myBtns = JSON.stringify(btns);
+            localStorage.setItem("buttons", myBtns);
             return (
               <>
                 <Button className="btnOrange">
@@ -608,7 +646,7 @@ class Links extends Component {
               <Button
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(2)}
-                onClick={(e) => this.handleDelete()}
+                onClick={() => console.log("Delete")}
               >
                 Delete
               </Button>
