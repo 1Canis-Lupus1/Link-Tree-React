@@ -228,7 +228,6 @@ class Links extends Component {
       if (!errors) {
         console.log("Links On Submit:", this.state.myLinks);
       }
-      this._toggleModal(1);
     });
   };
 
@@ -366,7 +365,14 @@ class Links extends Component {
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn">Share</Button>
+                <Button
+                  className="shareProfileBtn"
+                  onClick={() => {
+                    this.props.history.push("/profile-preview");
+                  }}
+                >
+                  Share
+                </Button>
                 <div className="profilePreview">
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
