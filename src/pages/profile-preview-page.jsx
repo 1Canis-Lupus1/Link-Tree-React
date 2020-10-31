@@ -6,15 +6,42 @@ class ProfilePreview extends Component {
     super(props);
     this.state = {
       username: "",
+      button: [],
     };
   }
   componentDidMount() {
     const user = localStorage.getItem("username");
+    const btns = JSON.parse(localStorage.getItem("button"));
+    console.log("USERNAME", user);
+    console.log("Buttons", btns);
     this.setState({
       username: user,
+      button: [...this.state.button, localStorage.getItem("button")],
     });
+    // this.setState({
+    //   username: user,
+    // });
+    console.log("USERNAME in profile-preview:", this.state.username);
+    console.log("Buttons in profile-preview:", this.state.button);
   }
+
   render() {
+    const handlePreviewLinks = () => {
+      return (
+        <>
+          {this.state.button.map((item) => {
+            return (
+              <>
+                <Button className="btnOrange">
+                  <strong>{item.toUpperCase()}</strong>
+                  <br />
+                </Button>
+              </>
+            );
+          })}
+        </>
+      );
+    };
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -39,9 +66,11 @@ class ProfilePreview extends Component {
                   </div>
 
                   <div className="mt-4">
-                    <Button className="btnOrange">
-                      {JSON.parse(localStorage.getItem("Buttons"))}
-                    </Button>
+                    {this.state.button ? (
+                      <strong>LINKS EMPTY</strong>
+                    ) : (
+                      <strong>{handlePreviewLinks()}</strong>
+                    )}
                   </div>
                 </CardBody>
               </Card>

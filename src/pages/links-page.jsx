@@ -44,6 +44,7 @@ class Links extends Component {
       errors: {},
       username: "",
       modalClick: "",
+      myBtn: [],
     };
   }
 
@@ -126,6 +127,13 @@ class Links extends Component {
                 _links: response.page.contents,
               });
             }
+            this.state._links.map((entry) => {
+              this.setState({
+                myBtn: [...this.state.myBtn, entry.content.title.toUpperCase()],
+              });
+              const myNewBtn = JSON.stringify(this.state.myBtn);
+              localStorage.setItem("button", myNewBtn);
+            });
             this.setState({
               myLinks: {
                 url: "",
@@ -163,6 +171,16 @@ class Links extends Component {
             this.setState({
               _links: response.page.contents,
             });
+            this.state._links.map((entry) => {
+              // console.log("Entry::", entry);
+              this.setState({
+                ...this.state.myBtn,
+                myBtn: [entry.content.title.toUpperCase()],
+              });
+              const myNewBtn = JSON.stringify(this.state.myBtn);
+              localStorage.setItem("button", myNewBtn);
+            });
+            console.log("Checking state:::", this.state.myBtn);
             this.setState({
               myLinks: {
                 url: "",
@@ -395,7 +413,7 @@ class Links extends Component {
                     <Button
                       className="delLinkBtn"
                       onClick={() => {
-                        this.handleDelete();
+                        this._toggleModal(2);
                       }}
                     >
                       <i className="fa fa-trash-o text-danger"></i>
@@ -444,11 +462,6 @@ class Links extends Component {
       return (
         <>
           {this.state._links.map((item, index) => {
-            let btns = [];
-            btns.push(item.content.title.toUpperCase());
-            console.log("Button", btns);
-            var myBtns = JSON.stringify(btns);
-            localStorage.setItem("buttons", myBtns);
             return (
               <>
                 <Button className="btnOrange">
