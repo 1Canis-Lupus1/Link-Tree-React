@@ -48,7 +48,11 @@ class Links extends Component {
     };
   }
 
-  _toggleModal = (index) => {
+  _toggleModal = (index, e) => {
+    // console.log("e.target", e.target.name);
+    // if (e.target.name === "del") {
+    //   this.handleDelete(e.target.name);
+    // }
     const { modals } = this.state;
     modals[index] = !modals[index];
     this.setState({
@@ -240,23 +244,25 @@ class Links extends Component {
 
   handleDelete = (e) => {
     console.log("handleDelete");
-    // createEntry();
-    this._toggleModal(2);
-    this.state._links.map((entry) => {
-      this.setState({ modalClick: entry._id });
-      if (this.state._links) {
-        let delId = this.state._links.findIndex((entry) => {
-          return entry._id === this.state.modalClick;
-        });
-        this.state._links.splice(delId, 1);
-        const newVal = {
-          contents: this.state._links,
-        };
-        createEntry(newVal, this.state._id).then((response) => {
-          console.log("New List After Deleting:", response);
-        });
-      }
-    });
+    if (e.target.name === "del") {
+      // createEntry();
+      this._toggleModal(2);
+      this.state._links.map((entry) => {
+        this.setState({ modalClick: entry._id });
+        if (this.state._links) {
+          let delId = this.state._links.findIndex((entry) => {
+            return entry._id === this.state.modalClick;
+          });
+          this.state._links.splice(delId, 1);
+          const newVal = {
+            contents: this.state._links,
+          };
+          createEntry(newVal, this.state._id).then((response) => {
+            console.log("New List After Deleting:", response);
+          });
+        }
+      });
+    }
   };
 
   handleEdit = () => {
@@ -412,7 +418,8 @@ class Links extends Component {
                     &nbsp;&nbsp;
                     <Button
                       className="delLinkBtn"
-                      onClick={() => {
+                      name="del"
+                      onClick={(e) => {
                         this._toggleModal(2);
                       }}
                     >
@@ -487,6 +494,11 @@ class Links extends Component {
       //     </>
       // })
     };
+
+    const delLink = (e) => {
+      console.log("Delete");
+    };
+
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -658,7 +670,10 @@ class Links extends Component {
               <Button
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(2)}
-                onClick={() => console.log("Delete")}
+                name="del"
+                onClick={(e) => {
+                  this.handleDelete(e);
+                }}
               >
                 Delete
               </Button>
