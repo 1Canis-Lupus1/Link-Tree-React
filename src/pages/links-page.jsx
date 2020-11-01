@@ -265,87 +265,9 @@ class Links extends Component {
     }
   };
 
-  handleEdit = () => {
-    console.log("Editing");
-
-    // return (
-    //   // Modal for edit not visible
-    //   <>
-    //     {/* Modal for showing "Edit Link" */}
-    //     <Modal
-    //       isOpen={this.state.modals[1]}
-    //       toggle={() => this._toggleModal(1)}
-    //       className="modal-dialog-centered"
-    //     >
-    //       <Form onSubmit={(e) => this.handleSubmit(e)}>
-    //         <ModalHeader toggle={() => this._toggleModal(1)}>
-    //           Edit Link
-    //         </ModalHeader>
-    //         <ModalBody className="modalContent">
-    //           <FormGroup>
-    //             <Label>Title</Label>
-    //             <Input
-    //               type="text"
-    //               placeholder="Enter Title"
-    //               value={this.state.myLinks.title}
-    //               name="title"
-    //               onChange={(e) => {
-    //                 this.handleChange(e.target.name, e.target.value);
-    //               }}
-    //             />
-    //             {this.state.errors && (
-    //               <React.Fragment>
-    //                 <p
-    //                   className="d-flex"
-    //                   style={{ color: "red", fontSize: "12px" }}
-    //                 >
-    //                   {this.state.errors.title}
-    //                 </p>
-    //               </React.Fragment>
-    //             )}
-    //           </FormGroup>
-    //           <FormGroup>
-    //             <Label>URL</Label>
-    //             <Input
-    //               type="text"
-    //               placeholder="Enter URL"
-    //               value={this.state.myLinks.url}
-    //               name="url"
-    //               onChange={(e) => {
-    //                 this.handleChange(e.target.name, e.target.value);
-    //               }}
-    //             />
-    //             {this.state.errors && (
-    //               <p className="d-flex" style={{ color: "red" }}>
-    //                 {this.state.errors.url}
-    //               </p>
-    //             )}
-    //           </FormGroup>
-    //         </ModalBody>
-    //         <ModalFooter>
-    //           <Button
-    //             className="modalBtnCancel"
-    //             type="submit"
-    //             onClick={() => this._toggleModal(1)}
-    //             toggle={() => this._toggleModal(1)}
-    //           >
-    //             Cancel
-    //           </Button>
-    //           <Button
-    //             className="modalBtnSave"
-    //             type="submit"
-    //             onClick={(e) => this.handleAddEntry()}
-    //             onSubmit={(e) => this.handleSubmit(e)}
-    //           >
-    //             Create
-    //           </Button>
-    //         </ModalFooter>
-    //       </Form>
-    //     </Modal>
-    //   </>
-    // );
+  handleEdit = (e) => {
+    console.log("Editing", e.target);
     this._toggleModal(1);
-    alert("Edit Functionality under fixing!!");
   };
 
   handleSubmit = (e) => {
@@ -397,34 +319,36 @@ class Links extends Component {
                       <i className="fa fa-ellipsis-v"></i>
                     </div>
                     <div className="addedLinksDetails">
-                      <h5>&nbsp;{entry.content.title.toUpperCase()}</h5>
-                      <h5>&nbsp;{entry.content.url}</h5>
+                      <h5>&nbsp;&nbsp;{entry.content.title.toUpperCase()}</h5>
+                      <p>&nbsp;&nbsp;{entry.content.url}</p>
+                      <div className="actionBtnWrap">
+                        &nbsp;&nbsp;
+                        <CustomInput
+                          type="switch"
+                          id="exampleCustomSwitch"
+                          name="customSwitch"
+                          label=""
+                          checked
+                          className="disableLink"
+                        />
+                        <Button
+                          className="delLinkBtn"
+                          // onClick={() => this._toggleModal(1)}
+                          onClick={(e) => this.handleEdit(e)}
+                        >
+                          <i className="fa fa-pencil"></i>
+                        </Button>
+                        <Button
+                          className="delLinkBtn"
+                          name="del"
+                          onClick={(e) => {
+                            this._toggleModal(2);
+                          }}
+                        >
+                          <i className="fa fa-trash-o text-danger"></i>
+                        </Button>
+                      </div>
                     </div>
-                    <CustomInput
-                      type="switch"
-                      id="exampleCustomSwitch"
-                      name="customSwitch"
-                      label=""
-                      checked
-                      className="disableLink"
-                    />
-                    <Button
-                      className="delLinkBtn"
-                      // onClick={() => this._toggleModal(1)}
-                      onClick={() => this.handleEdit()}
-                    >
-                      <i className="fa fa-pencil"></i>
-                    </Button>
-                    &nbsp;&nbsp;
-                    <Button
-                      className="delLinkBtn"
-                      name="del"
-                      onClick={(e) => {
-                        this._toggleModal(2);
-                      }}
-                    >
-                      <i className="fa fa-trash-o text-danger"></i>
-                    </Button>
                   </div>
                 </>
               );
@@ -495,9 +419,9 @@ class Links extends Component {
       // })
     };
 
-    const delLink = (e) => {
-      console.log("Delete");
-    };
+    // const delLink = (e) => {
+    //   console.log("Delete");
+    // };
 
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
@@ -519,7 +443,7 @@ class Links extends Component {
                 <Card className="userDetails mb-4">
                   <CardBody>
                     {!this.state._links.length ? (
-                      <strong>LINKS EMPTY FOR CURRENT USER</strong>
+                      <>LINKS EMPTY FOR CURRENT USER</>
                     ) : (
                       addedLinks()
                     )}
