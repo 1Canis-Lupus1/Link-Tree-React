@@ -6,7 +6,7 @@ class ProfilePreview extends Component {
     super(props);
     this.state = {
       username: "",
-      button: ["some"],
+      button: [],
     };
   }
   componentDidMount() {
@@ -14,22 +14,40 @@ class ProfilePreview extends Component {
     const btns = JSON.parse(localStorage.getItem("button"));
     console.log("USERNAME", user);
     console.log("Buttons", btns);
-    this.setState({
-      username: user,
-      button: [...this.state.button, localStorage.getItem("button")],
-    });
-    // this.setState({
-    //   username: user,
-    // });
-    console.log("USERNAME in profile-preview:", this.state.username);
-    console.log("Buttons in profile-preview:", this.state.button);
+    const newBtn = this.state.button.concat(btns);
+    console.log("New Buttonns:", newBtn);
+    this.setState(
+      {
+        username: user,
+        button: newBtn,
+      },
+      () => console.log("My buttons are:", this.state.button)
+    );
   }
 
   render() {
-    const handlePreviewLinks = () => {
+    const showLink = () => {
       return (
         <>
-          <h1>Hello</h1>
+          {this.state.button.map((item, index) => {
+            if (item === undefined) {
+              return (
+                <Button className="btnOrange">
+                  <strong>LINKS EMPTY</strong>
+                  <br />
+                </Button>
+              );
+            } else {
+              return (
+                <>
+                  <Button className="btnOrange">
+                    <strong>{item}</strong>
+                    <br />
+                  </Button>
+                </>
+              );
+            }
+          })}
         </>
       );
     };
@@ -57,11 +75,14 @@ class ProfilePreview extends Component {
                   </div>
 
                   <div className="mt-4">
-                    {this.state.button ? (
-                      <strong>LINKS EMPTY</strong>
+                    <strong>{showLink()}</strong>
+                    {/* {!this.state.button.length ? (
+                      <Button className="btnOrange">
+                        <strong>LINKS EMPTY</strong>
+                      </Button>
                     ) : (
-                      <strong>Hello</strong>
-                    )}
+                      <strong>{showLink()}</strong>
+                    )} */}
                   </div>
                 </CardBody>
               </Card>
