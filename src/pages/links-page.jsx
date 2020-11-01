@@ -49,10 +49,6 @@ class Links extends Component {
   }
 
   _toggleModal = (index, e) => {
-    // console.log("e.target", e.target.name);
-    // if (e.target.name === "del") {
-    //   this.handleDelete(e.target.name);
-    // }
     const { modals } = this.state;
     modals[index] = !modals[index];
     this.setState({
@@ -131,6 +127,7 @@ class Links extends Component {
                 _links: response.page.contents,
               });
             }
+            console.log("My links:", this.state._links);
             this.state._links.map((entry) => {
               this.setState({
                 myBtn: [...this.state.myBtn, entry.content.title.toUpperCase()],
@@ -175,16 +172,19 @@ class Links extends Component {
             this.setState({
               _links: response.page.contents,
             });
+            console.log("My Links:", this.state._links);
             this.state._links.map((entry) => {
-              // console.log("Entry::", entry);
+              console.log("Entry::", entry.content.title);
+              // console.log("My Btn", this.state.myBtn);
               this.setState({
-                ...this.state.myBtn,
-                myBtn: [entry.content.title.toUpperCase()],
+                // ...this.state.myBtn,
+                myBtn: [...this.state.myBtn, entry.content.title.toUpperCase()],
               });
+              console.log("My btn:", this.state.myBtn);
               const myNewBtn = JSON.stringify(this.state.myBtn);
               localStorage.setItem("button", myNewBtn);
             });
-            console.log("Checking state:::", this.state.myBtn);
+            // console.log("Checking state:::", this.state.myBtn);
             this.setState({
               myLinks: {
                 url: "",
@@ -518,7 +518,7 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {this.state.linksNotPresent ? (
+                    {!this.state._links.length ? (
                       <strong>LINKS EMPTY FOR CURRENT USER</strong>
                     ) : (
                       addedLinks()
@@ -551,8 +551,10 @@ class Links extends Component {
                   </div>
 
                   <div className="mt-4">
-                    {this.state.linksNotPresent ? (
-                      <strong>LINKS EMPTY</strong>
+                    {!this.state._links.length ? (
+                      <Button className="btnOrange">
+                        <strong>LINKS EMPTY</strong>
+                      </Button>
                     ) : (
                       <strong>{handleLinks()}</strong>
                     )}

@@ -6,7 +6,7 @@ class ProfilePreview extends Component {
     super(props);
     this.state = {
       username: "",
-      button: [],
+      button: ["some"],
     };
   }
   componentDidMount() {
@@ -29,16 +29,7 @@ class ProfilePreview extends Component {
     const handlePreviewLinks = () => {
       return (
         <>
-          {this.state.button.map((item) => {
-            return (
-              <>
-                <Button className="btnOrange">
-                  <strong>{item.toUpperCase()}</strong>
-                  <br />
-                </Button>
-              </>
-            );
-          })}
+          <h1>Hello</h1>
         </>
       );
     };
@@ -69,7 +60,7 @@ class ProfilePreview extends Component {
                     {this.state.button ? (
                       <strong>LINKS EMPTY</strong>
                     ) : (
-                      <strong>{handlePreviewLinks()}</strong>
+                      <strong>Hello</strong>
                     )}
                   </div>
                 </CardBody>
