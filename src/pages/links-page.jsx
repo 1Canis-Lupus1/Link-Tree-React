@@ -297,6 +297,40 @@ class Links extends Component {
   editMyModal = (e) => {
     console.log("Editing");
     this._toggleModal(3);
+    if (this.state._links === null || this.state._links === undefined) {
+      return console.log("No Link item present");
+    } else {
+      var index = this.state._links.findIndex(
+        (item) => item._id === this.state.editCurrEntry
+      );
+      console.log("THE INDEX IS:", index);
+      const editedContent = {
+        content: {
+          title: this.state.myLinks.title,
+          url: this.state.myLinks.url,
+        },
+      };
+      this.state._links.splice(index, 1, editedContent);
+      console.log("My Links:", this.state._links);
+      const obj = {
+        contents: this.state._links,
+      };
+      createEntry(obj, this.state._id).then((res) => {
+        console.log("createContentLst: ", res);
+        const lastContent = res.page.contents[res.page.contents.length - 1];
+        console.log("newAddedContent:", lastContent);
+        // this.props.addContent(content);
+        this.setState({ _links: res.page.contents });
+        console.log("added data list: ", this.state._links);
+      });
+      this.setState({
+        myLinks: {
+          title: "",
+          url: "",
+        },
+        editFlag: false,
+      });
+    }
   };
 
   render() {
