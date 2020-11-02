@@ -62,6 +62,10 @@ class Links extends Component {
     });
   };
 
+  share = () => {
+    this.props.history.push("/profile-preview");
+  };
+
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentDidMount() {
     //Fetching Current Added Links for user
@@ -117,11 +121,16 @@ class Links extends Component {
             }
             console.log("My links:", this.state._links);
             this.state._links.map((entry) => {
-              this.setState({
-                myBtn: [...this.state.myBtn, entry.content.title.toUpperCase()],
-              });
-              const myNewBtn = JSON.stringify(this.state.myBtn);
-              localStorage.setItem("button", myNewBtn);
+              if (entry.status === true) {
+                this.setState({
+                  myBtn: [
+                    ...this.state.myBtn,
+                    entry.content.title.toUpperCase(),
+                  ],
+                });
+                const myNewBtn = JSON.stringify(this.state.myBtn);
+                localStorage.setItem("button", myNewBtn);
+              }
             });
             this.setState({
               myLinks: {
@@ -162,15 +171,16 @@ class Links extends Component {
             });
             console.log("My Links:", this.state._links);
             this.state._links.map((entry) => {
-              console.log("Entry::", entry.content.title);
-              // console.log("My Btn", this.state.myBtn);
-              this.setState({
-                // ...this.state.myBtn,
-                myBtn: [...this.state.myBtn, entry.content.title.toUpperCase()],
-              });
-              console.log("My btn:", this.state.myBtn);
-              const myNewBtn = JSON.stringify(this.state.myBtn);
-              localStorage.setItem("button", myNewBtn);
+              if (entry.status === true) {
+                this.setState({
+                  myBtn: [
+                    ...this.state.myBtn,
+                    entry.content.title.toUpperCase(),
+                  ],
+                });
+                const myNewBtn = JSON.stringify(this.state.myBtn);
+                localStorage.setItem("button", myNewBtn);
+              }
             });
             // console.log("Checking state:::", this.state.myBtn);
             this.setState({
@@ -369,7 +379,7 @@ class Links extends Component {
                 className="btnOrange"
                 onClick={() => window.open(`${data.content.url}`, "_blank")}
               >
-                {data.content.title}
+                {data.content.title.toUpperCase()}
               </Button>
             )}
           </Fragment>
@@ -430,7 +440,9 @@ class Links extends Component {
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn">Share</Button>
+                <Button className="shareProfileBtn" onClick={this.share}>
+                  Share
+                </Button>
                 <div className="profilePreview">
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
@@ -521,7 +533,7 @@ class Links extends Component {
               toggle={() => this._toggleModal(3)}
               className="modal-dialog-centered"
             >
-              {console.log("InEDIT MODAL:", entry)}
+              {console.log("InEDIT MODAL:", entry.content.title)}
               <ModalHeader toggle={() => this._toggleModal(3)}>
                 Edit Link
               </ModalHeader>
