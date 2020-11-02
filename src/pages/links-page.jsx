@@ -31,7 +31,7 @@ class Links extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modals: [false, false],
+      modals: [false, false, false],
       myLinks: {
         url: "",
         title: "",
@@ -284,6 +284,11 @@ class Links extends Component {
     console.log(_links);
   };
 
+  editMyModal = (e) => {
+    console.log("Editing");
+    this._toggleModal(3);
+  };
+
   render() {
     //Destructuring state values
     const {
@@ -295,6 +300,7 @@ class Links extends Component {
       editCurrEntry,
       myLinks,
     } = this.state;
+
     const cardBodyData = () => {
       console.log("MY LINKS:", _links);
       if (_links === undefined || _links === null) {
@@ -308,7 +314,7 @@ class Links extends Component {
                 <i className="fa fa-ellipsis-v"></i>
               </div>
               <div className="addedLinkDetails">
-                <h5>{data.content.title}</h5>
+                <h5>{data.content.title.toUpperCase()}</h5>
                 <p>{data.content.url}</p>
                 <div className="actionBtnWrap">
                   <CustomInput
@@ -326,13 +332,12 @@ class Links extends Component {
 
                   <Button
                     className="delLinkBtn"
-                    onClick={() => {
-                      this.setState({
-                        editCurrEntry: data._id,
-                        editFlag: true,
-                      });
-                      this._toggleModal(1);
-                    }}
+                    onClick={(e) => this.editMyModal(e)}
+                    // this.setState({
+                    //   editCurrEntry: data._id,
+                    //   editFlag: true,
+                    // });
+                    // this._toggleModal(1);
                   >
                     <i className="fa fa-pencil"></i>
                   </Button>
@@ -374,7 +379,6 @@ class Links extends Component {
     const deleteModal = (e) => {
       console.log("handleDelete");
       if (e.target.name === "del") {
-        // createEntry();
         this._toggleModal(2);
         this.state._links.map((entry) => {
           this.setState({ modalClick: entry._id });
@@ -392,38 +396,6 @@ class Links extends Component {
           }
         });
       }
-    };
-
-    const editModal = () => {
-      var index = _links.findIndex((item) => item._id === deleteCurrEntry);
-      console.log(index);
-      const editedContent = {
-        content: {
-          title: myLinks.title,
-          url: myLinks.url,
-        },
-        contentType: "socialLink",
-        subContentType: "facebook",
-      };
-      _links.splice(index, 1, editedContent);
-      console.log(_links);
-      const obj = {
-        contents: _links,
-      };
-      createEntry(obj, _id).then((res) => {
-        const newContent = res.page.contents[res.page.contents.length - 1];
-        console.log("newAddedContent:", newContent);
-        // this.props.addContent(content);
-        this.setState({ _links: res.page.contents });
-        console.log("added data list: ", _links);
-      });
-      this.setState({
-        myLinks: {
-          title: "",
-          url: "",
-        },
-        editFlag: false,
-      });
     };
 
     return (
@@ -534,13 +506,79 @@ class Links extends Component {
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(1)}
                 onClick={() => {
-                  addFlag ? this.handleAddEntry() : editModal();
+                  addFlag ? this.handleAddEntry() : this.editMyModal();
                 }}
               >
                 Create
               </Button>
             </ModalFooter>
           </Modal>
+
+          {/* Modal for showing "Editing Link" */}
+          {this.state._links.map((entry) => {
+            <Modal
+              isOpen={this.state.modals[3]}
+              toggle={() => this._toggleModal(3)}
+              className="modal-dialog-centered"
+            >
+              {console.log("InEDIT MODAL:", entry)}
+              <ModalHeader toggle={() => this._toggleModal(3)}>
+                Edit Link
+              </ModalHeader>
+              <ModalBody className="modalContent">
+                <FormGroup>
+                  <Label>Title</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter Title"
+                    value={entry.content.title}
+                    onChange={(e) => this.handleChange("title", e.target.value)}
+                  />
+                  {errors && (
+                    <Fragment>
+                      <small className="d-flex" style={{ color: "red" }}>
+                        {errors.title}
+                      </small>
+                    </Fragment>
+                  )}
+                </FormGroup>
+                <FormGroup>
+                  <Label>URL</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter URL"
+                    value={entry.content.url}
+                    onChange={(e) => this.handleChange("url", e.target.value)}
+                  />
+                  {errors && (
+                    <Fragment>
+                      <small className="d-flex" style={{ color: "red" }}>
+                        {errors.url}
+                      </small>
+                    </Fragment>
+                  )}
+                </FormGroup>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  className="modalBtnCancel"
+                  toggle={() => this._toggleModal(1)}
+                  onClick={() => this._toggleModal(1)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="modalBtnSave"
+                  toggle={() => this._toggleModal(1)}
+                  onClick={() => {
+                    addFlag ? this.handleAddEntry() : this.editMyModal();
+                  }}
+                >
+                  Edit
+                </Button>
+              </ModalFooter>
+            </Modal>;
+          })}
 
           {/* Modal for deleting an exisiting Link */}
           <Modal

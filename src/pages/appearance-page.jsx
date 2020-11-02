@@ -69,9 +69,6 @@ const Appearance = () => {
                     />
                     {myImg ? (
                       <div>
-                        <p>
-                          Image Url: <b>{myImg}</b>
-                        </p>
                         <img
                           src={myImg}
                           width="100"
