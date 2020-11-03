@@ -75,14 +75,16 @@ class ProfilePreview extends Component {
                   </div>
 
                   <div className="mt-4">
-                    <strong>{showLink()}</strong>
-                    {/* {!this.state.button.length ? (
-                      <Button className="btnOrange">
-                        <strong>LINKS EMPTY</strong>
-                      </Button>
+                    {this.state.button === [] ? (
+                      <>
+                        <Button className="btnOrange">
+                          <strong>LINKS EMPTY</strong>
+                          <br />
+                        </Button>
+                      </>
                     ) : (
                       <strong>{showLink()}</strong>
-                    )} */}
+                    )}
                   </div>
                 </CardBody>
               </Card>

@@ -8,6 +8,9 @@ import {
 } from "./http-service";
 
 const url = "http://139.59.14.81:4000/api/v1";
+const profileCloudinary = {
+  preset: "ml_default",
+};
 
 export const SignUp = (data) => {
   return new Promise((resolve, reject) => {
@@ -119,7 +122,7 @@ export const updatePic = (picURL) => {
 export const uploadProfilePic = (data) => {
   return new Promise((resolve, reject) => {
     uploadUserAvatar(
-      "https://api.cloudinary.com/v1_1/djt6ve0ac/image/upload",
+      `https://api.cloudinary.com/v1_1/cirus/auto/upload/upload_preset=${profileCloudinary.preset}`,
       false,
       data,
       `image`

@@ -29,14 +29,14 @@ class Appearance extends Component {
     formD.append("file", img);
     uploadProfilePic(formD)
       .then((res) => {
-        console.log("cloudinary res", res);
+        console.log("Res:", res);
         if (!res.error) {
           const obj = {
             avatarLink: res.url,
           };
           updatePic(obj)
             .then((res) => {
-              console.log("cloudinary res upload", res);
+              console.log("upload Response: ", res);
               if (!res.error) {
                 this.props.picUpload(res.user.avatarLink);
               }
