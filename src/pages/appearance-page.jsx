@@ -9,7 +9,19 @@ class Appearance extends Component {
     modals: [false, false],
     defaultChange: "Light",
     selectChange: "",
+    myBtn: [],
   };
+
+  componentDidMount() {
+    this.setState(
+      {
+        myBtn: JSON.parse(localStorage.getItem("button")),
+      },
+      () => {
+        console.log("After Set State Btns:", this.state.myBtn);
+      }
+    );
+  }
 
   _uploadImage = (e) => {
     const img = e.target.files[0];
@@ -46,16 +58,11 @@ class Appearance extends Component {
   render() {
     const { selectChange, defaultChange } = this.state;
     const showButton = () => {
-      if (
-        this.props.contentData.contents === undefined ||
-        this.props.contentData.contents === null
-      ) {
-        console.log("page is empty while displaying");
-      } else {
-        return this.props.contentData.contents.map((data) => (
+      return this.state.myBtn.map((btn) => {
+        return (
           <Fragment>
+            {console.log("Buttons:", btn)}
             <Button
-              key={data.content._id}
               className={
                 selectChange === "Moon"
                   ? "btnOrange btn btnMoon"
@@ -65,13 +72,12 @@ class Appearance extends Component {
                   ? "btnOrange btn btnLeaf"
                   : "btnOrange"
               }
-              onClick={() => window.open(`${data.content.url}`, "_blank")}
             >
-              {data.content.title}
+              {btn}
             </Button>
           </Fragment>
-        ));
-      }
+        );
+      });
     };
 
     return (
