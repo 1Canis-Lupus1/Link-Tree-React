@@ -11,7 +11,7 @@ class ProfilePreview extends Component {
   }
   componentDidMount() {
     const user = localStorage.getItem("username");
-    const btns = JSON.parse(localStorage.getItem("buttons"));
+    const btns = JSON.parse(localStorage.getItem("button"));
     console.log("USERNAME", user);
     console.log("Buttons", btns);
     const newBtn = this.state.button.concat(btns);
