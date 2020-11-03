@@ -4,6 +4,7 @@ import {
   makePostRequest,
   makeGetRequest,
   makePutRequest,
+  uploadUserAvatar,
 } from "./http-service";
 
 const url = "http://139.59.14.81:4000/api/v1";
@@ -100,6 +101,35 @@ export const createEntry = (entryData, entryId) => {
       .catch((err) => {
         console.log("Error in createEntry: ", err);
         reject(err);
+      });
+  });
+};
+
+export const updatePic = (picURL) => {
+  return new Promise((resolve, reject) => {
+    makePutRequest(url + "/user", picURL)
+      .then((res) => resolve(res))
+      .catch((e) => {
+        console.log("Error in updatePic", e);
+        reject(e);
+      });
+  });
+};
+
+export const uploadProfilePic = (data) => {
+  return new Promise((resolve, reject) => {
+    uploadUserAvatar(
+      "https://api.cloudinary.com/v1_1/djt6ve0ac/image/upload",
+      false,
+      data,
+      `image`
+    )
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((e) => {
+        console.log("API error: ", e);
+        reject(e);
       });
   });
 };

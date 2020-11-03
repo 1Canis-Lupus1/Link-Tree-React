@@ -1,4 +1,4 @@
-import { ADD_DATA, DEL_DATA } from "./actions";
+import { ADD_DATA, DEL_DATA, ADD_PIC } from "./actions";
 
 export const logUser = (user) => {
   return {
@@ -10,5 +10,14 @@ export const logUser = (user) => {
 export const unlogUser = () => {
   return {
     type: DEL_DATA,
+  };
+};
+
+export const picUpload = (picURL) => {
+  return {
+    type: ADD_PIC,
+    payload: {
+      picURL,
+    },
   };
 };

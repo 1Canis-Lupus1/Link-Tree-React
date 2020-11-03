@@ -1,10 +1,11 @@
-import { ADD_DATA, DEL_DATA } from "../action";
-import {getToken} from '../../http/authToken';
+import { ADD_DATA, DEL_DATA, ADD_PIC } from "../action";
+import { getToken } from "../../http/authToken";
 
 const userData = {
   userName: "",
   token: "",
   isActive: false,
+  uploadURL: "",
 };
 
 export const userReducer = (state = userData, action) => {
@@ -15,6 +16,7 @@ export const userReducer = (state = userData, action) => {
         userName: action.payload.user.userName,
         token: action.payload.user.token,
         isActive: true,
+        uploadURL: "",
       };
       // console.log("User-Reducer:",newState.token);
       getToken(newState.token);
@@ -25,7 +27,12 @@ export const userReducer = (state = userData, action) => {
         userName: "",
         token: "",
         isActive: false,
+        uploadURL: "",
       };
+      break;
+    }
+    case ADD_PIC: {
+      newState.uploadURL = action.payload.uploadURL;
       break;
     }
     default: {

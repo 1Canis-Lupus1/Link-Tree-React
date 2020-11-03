@@ -170,3 +170,51 @@ export const makePutRequest = async (url, attachToken = false, params = {}) => {
     }
   });
 };
+
+export const uploadUserAvatar = async (
+  url,
+  attachToken = false,
+  data,
+  mediaType = "image"
+) => {
+  let headers = {};
+  if (attachToken) {
+    try {
+      const authToken = await getToken();
+      if (authToken) {
+        headers["Authorization"] = "Bearer " + authToken;
+      }
+    } catch (err) {
+      console.log("Error in uploadUserAvatar");
+    }
+  }
+  return new Promise((resolve, reject) => {
+    try {
+      fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: data,
+      })
+        .then(
+          (res) => res.json(),
+          (error) => {
+            reject(error);
+          }
+        )
+        .then(
+          (jsonResponse) => {
+            resolve(jsonResponse);
+          },
+          (error) => {
+            reject(error);
+          }
+        )
+        .catch((error) => {
+          reject(error);
+        });
+    } catch (e) {
+      console.log(e);
+      reject();
+    }
+  });
+};
