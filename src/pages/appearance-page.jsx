@@ -55,29 +55,43 @@ class Appearance extends Component {
     });
   };
 
+  handleShare = () => {
+    this.props.history.push("/profile-preview");
+  };
+
   render() {
     const { selectChange, defaultChange } = this.state;
     const showButton = () => {
-      return this.state.myBtn.map((btn) => {
+      if (this.state.myBtn !== null) {
+        return this.state.myBtn.map((btn) => {
+          return (
+            <Fragment>
+              {console.log("Buttons:", btn)}
+              <Button
+                className={
+                  selectChange === "Moon"
+                    ? "btnOrange btn btnMoon"
+                    : selectChange === "Dark" || selectChange === "Scooter"
+                    ? "btnOrange btn btnLight"
+                    : selectChange === "Leaf"
+                    ? "btnOrange btn btnLeaf"
+                    : "btnOrange"
+                }
+              >
+                {btn}
+              </Button>
+            </Fragment>
+          );
+        });
+      } else {
         return (
-          <Fragment>
-            {console.log("Buttons:", btn)}
-            <Button
-              className={
-                selectChange === "Moon"
-                  ? "btnOrange btn btnMoon"
-                  : selectChange === "Dark" || selectChange === "Scooter"
-                  ? "btnOrange btn btnLight"
-                  : selectChange === "Leaf"
-                  ? "btnOrange btn btnLeaf"
-                  : "btnOrange"
-              }
-            >
-              {btn}
+          <>
+            <Button className="btnOrange">
+              <strong>LINKS EMPTY</strong>
             </Button>
-          </Fragment>
+          </>
         );
-      });
+      }
     };
 
     return (
@@ -206,7 +220,12 @@ class Appearance extends Component {
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn">Share</Button>
+                <Button
+                  className="shareProfileBtn"
+                  onClick={() => this.handleShare()}
+                >
+                  Share
+                </Button>
                 <div
                   className={`profilePreview` + ` ` + `preview${selectChange}`}
                 >
