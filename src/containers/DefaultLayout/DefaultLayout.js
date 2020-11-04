@@ -32,6 +32,7 @@ class DefaultLayout extends Component {
 
   signOut(e) {
     e.preventDefault()
+    localStorage.clear(); 
     this.props.history.push('/login')
   }
 
@@ -77,7 +78,7 @@ class DefaultLayout extends Component {
                 component={Appearance}
                 redirectRoute={"/login"}
               />
-              <Route path="/" render={() => <Redirect to="/index" />} />
+              <Route path="/" render={() => <Redirect to="/links" />} />
             </Switch>
           </main>
         </div>

@@ -1,12 +1,23 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import {Col, Container, Row, Carousel, CarouselIndicators, CarouselItem, CarouselCaption, Button, Form, Input, FormGroup, Label } from 'reactstrap';
+import React, { Component, Fragment } from "react";
+import {
+  Col,
+  Container,
+  Row,
+  Carousel,
+  CarouselItem,
+  CarouselCaption,
+  Button,
+  Form,
+  Input,
+  FormGroup,
+  Label,
+} from "reactstrap";
 import { validPass } from "../http/http-calls";
-
 const items = [
   {
-    header: 'Title',
-    caption: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.',    
+    header: "Title",
+    caption:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.",
   },
 ];
 
@@ -61,74 +72,100 @@ class ForgotPassword extends Component {
     if (this.animating) return;
     this.setState({ activeIndex: newIndex });
   }
+  sudoLogin = () => {
+    this.props.history.push("/login");
+  };
 
-  login = () => {
+  login = (e) => {
+    const { user } = this.state;
     let isTrue = {
       mail: true,
     };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
-      console.log("Error:", errors);
+      console.log(errors);
       if (!errors) {
+        const forgot_passData = {
+          handle: user.mail,
+        };
+        validPass(forgot_passData).then((res) => console.log(res));
         alert("Password Reset Link Sent Successfully");
         this.props.history.push("/login");
       }
     });
   };
 
-  sudologin=()=>{
-    this.props.history.push("/login");
-  }
-
-  handleChange = (name, value) => {
+  handleChange = (field, value) => {
     const { user, isTrue } = this.state;
-    user[name] = value;
-    isTrue[name] = true;
+    if (!value && typeof value === "number") {
+      user[field] = "";
+      isTrue[field] = true;
+      this.setState({ user, isTrue }, () => {
+        this.validation();
+      });
+      return;
+    } else {
+      user[field] = value;
+    }
+    isTrue[field] = true;
     this.setState({ user, isTrue }, () => {
       this.validation();
     });
   };
 
-  validation = () => {
-    const { user, errors, isTrue } = this.state;
+  validation() {
+    // debugger;
+    const { user, isTrue, errors } = this.state;
     Object.keys(user).forEach((entry) => {
-      if (entry === "mail" && isTrue.mail) {
-        const obj = {
-          handle: user.mail,
-        };
-        if (!user.mail.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty!!";
-        } else if (!(this.isValid(obj) && this.state.validMail)) {
-          errors[entry] = "*Enter Registered Email";
-        } else {
-          delete errors[entry];
-          isTrue.mail = false;
+      switch (entry) {
+        case "mail": {
+          if (isTrue.mail) {
+            if (!user.mail.trim().length) {
+              errors.mail = "*Filed Cannot Be Empty";
+            } else if (
+              user.mail.trim().length &&
+              !new RegExp(
+                "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
+              ).test(user.mail)
+            ) {
+              errors.mail = "*Enter Registered Email";
+            } else {
+              delete errors[entry];
+              isTrue.mail = false;
+            }
+          }
+          break;
+        }
+        default: {
+          console.log("Error in validation()");
+          break;
         }
       }
     });
     this.setState({ errors });
     return Object.keys(errors).length ? errors : null;
-  };
+  }
 
-  isValid = (email) => {
-    validPass(email).then((response) => {
-      if (!response.error) {
-        this.setState({
-          validMail: true,
-        });
-      } else {
-        this.setState({
-          validMail: false,
-        });
+  handleSubmit = (e) => {
+    e.preventDefault();
+    let isTrue = {
+      mail: true,
+    };
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      console.log(errors);
+      if (!errors) {
+        const { user } = this.state;
+        this.login();
+        console.log("State value of 'user':", user);
       }
     });
-    return true;
   };
 
   render() {
-    const { activeIndex } = this.state;
+    const { activeIndex, user, errors } = this.state;
 
-    const slides2 = items.map((item) => {
+    const slides2 = items.map((item, i) => {
       return (
         <CarouselItem
           onExiting={this.onExiting}
@@ -182,36 +219,37 @@ class ForgotPassword extends Component {
                 <a
                   href="javascript:void(0)"
                   className="backToLogin"
-                  onClick={this.sudologin}
+                  onClick={this.sudoLogin}
                 >
                   Back to Login
                 </a>
               </div>
 
               <div className="w-100 justify-content-center d-flex flex-column align-items-center">
-                <Form className="loginFormWrapper">
+                <Form className="loginFormWrapper" onSubmit={this.handleSubmit}>
                   <h4>Forgot Password?</h4>
                   <FormGroup>
                     <Label>Email</Label>
                     <Input
-                      type="email"
-                      placeholder="Your Email"
-                      name="mail"
-                      value={this.state.user.mail}
+                      type="mail"
+                      placeholder="Your mail"
+                      value={user.mail}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("mail", e.target.value.trim())
                       }
                     />
-                    {this.state.errors && (
-                      <p style={{ color: "red" }}>{this.state.errors.mail}</p>
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex" style={{ color: "red" }}>
+                          {errors.mail}
+                        </small>
+                      </Fragment>
                     )}
-                    {/* error msg, currently hidden */}
-                    {/* <small className="d-none">Enter a valid email ID</small> */}
                   </FormGroup>
 
                   <Button
                     className="recruitechThemeBtn loginBtn"
-                    onClick={this.login}
+                    onClick={this.handleSubmit}
                   >
                     Reset Password
                   </Button>

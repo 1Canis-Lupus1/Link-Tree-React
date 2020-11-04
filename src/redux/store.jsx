@@ -1,35 +1,29 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
-// import logger from "redux-logger";
-import { persistStore, persistReducer } from "redux-persist";
 import hardSet from "redux-persist/es/stateReconciler/hardSet";
-import storage from "redux-persist/lib/storage";
-import {
-  userReducer,
-  contentReducer,
-  loaderReducer,
-} from "./reducer";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from 'redux-persist/lib/storage';
+import { userDataReducer, contentDataReducer, loaderDataReducer } from './reducers';
+import logger from "redux-logger";
 
 const rootReducer = combineReducers({
-  userData: userReducer,
-  loaderData: loaderReducer,
-  contentData: contentReducer,
-});
+    userData: userDataReducer,
+    loaderData: loaderDataReducer,
+    contentData: contentDataReducer
+})
 
 const persistConfig = {
-  key: "root",
-  storage,
-  keyPrefix: "",
-  stateReconciler: hardSet,
-};
+    key: 'root',
+    storage,
+    keyPrefix: "",
+    stateReconciler: hardSet
+}
 
-const perReducer = persistReducer(persistConfig, rootReducer);
+const pReducer = persistReducer(persistConfig, rootReducer);
 
-export const store=createStore(
-    perReducer,
+export const store = createStore(
+    pReducer,
     undefined,
-    // applyMiddleware(logger)
+    applyMiddleware(logger)
 );
 
-export const persistor=persistStore(store);
-
-// export default store; 
+export const persistor = persistStore(store);

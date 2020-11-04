@@ -1,91 +1,71 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Col, Container, Row, Button, Label, Card, CardBody } from "reactstrap";
+import { connect } from "react-redux";
 
 class ProfilePreview extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      button: [],
-    };
-  }
-  componentDidMount() {
-    const user = localStorage.getItem("username");
-    const btns = JSON.parse(localStorage.getItem("button"));
-    console.log("USERNAME", user);
-    console.log("Buttons", btns);
-    const newBtn = this.state.button.concat(btns);
-    console.log("New Buttonns:", newBtn);
-    this.setState(
-      {
-        username: user,
-        button: newBtn,
-      },
-      () => console.log("My buttons are:", this.state.button)
-    );
-  }
-
   render() {
-    const showLink = () => {
-      return (
-        <>
-          {this.state.button.map((item, index) => {
-            if (item === undefined) {
-              return (
-                <Button className="btnOrange">
-                  <strong>LINKS EMPTY</strong>
-                  <br />
+    const showButton = () => {
+      if (
+        this.props.contentData.contents === undefined ||
+        this.props.contentData.contents === null
+      ) {
+        console.log("page is empty while displaying");
+      } else {
+        // this.props.userContents(pageContents)
+        return this.props.contentData.contents.map((data) => {
+          if (data.status) {
+            return (
+              <Fragment>
+                <Button
+                  key={data.content._id}
+                  className='btnOrange'
+                  onClick={() => window.open(`${data.content.url}`, "_blank")}>
+                  {data.content.title}
                 </Button>
-              );
-            } else {
-              return (
-                <>
-                  <Button className="btnOrange">
-                    <strong>{item}</strong>
-                    <br />
-                  </Button>
-                </>
-              );
-            }
-          })}
-        </>
-      );
+              </Fragment>
+            );
+          }
+        });
+      }
     };
+
     return (
-      <div className="app flex-row animated fadeIn innerPagesBg">
+      <div className='app flex-row animated fadeIn innerPagesBg'>
         <Container>
-          <Row className="justify-content-center">
-            <Col md="10" xl="8">
-              <div className="d-flex justify-content-start align-items-center my-3">
-                <h4 className="pg-title">Profile</h4>
+          <Row className='justify-content-center'>
+            <Col md='10' xl='8'>
+              <div className='d-flex justify-content-start align-items-center my-3'>
+                <h4 className='pg-title'>Profile</h4>
               </div>
 
-              <Card className="userDetails mb-4">
+              <Card className='userDetails mb-4'>
                 <CardBody>
-                  <div className="text-center">
-                    <Label className="btn uploadBtnProfile">
-                      <input type="file" style={{ display: "none" }} />
-                      <img
-                        alt=""
-                        className=""
+                  <div className='text-center'>
+                    <Label className='btn uploadBtnProfile'>
+                      <input type='file' style={{ display: "none" }} />
+                      {/* <img
+                        alt=''
+                        className=''
                         src={"assets/img/user-img-default.png"}
-                      />
+                      /> */}
+                      {this.props.contentData.avatarLink ? (
+                        <img
+                          src={this.props.contentData.avatarLink}
+                          alt='chosen'
+                          style={{ height: "100px", width: "100px" }}
+                        />
+                      ) : (
+                        <img
+                          alt=''
+                          className=''
+                          src={"assets/img/user-img-default.png"}
+                        />
+                      )}
                     </Label>
-                    <h5>@{this.state.username}</h5>
+                    <h5>{`@${this.props.userData.userName}`}</h5>
                   </div>
 
-                  <div className="mt-4">
-                    {this.state.button === [] ? (
-                      <>
-                        <Button className="btnOrange">
-                          <strong>LINKS EMPTY</strong>
-                          <br />
-                        </Button>
-                      </>
-                    ) : (
-                      <strong>{showLink()}</strong>
-                    )}
-                  </div>
+                  <div className='mt-4'>{showButton()}</div>
                 </CardBody>
               </Card>
             </Col>
@@ -96,4 +76,11 @@ class ProfilePreview extends Component {
   }
 }
 
-export default ProfilePreview;
+const mapStateToProps = (state) => {
+  return {
+    contentData: state.contentData,
+    userData: state.userData,
+  };
+};
+export default connect(mapStateToProps)(ProfilePreview);
+// export default ProfilePreview;

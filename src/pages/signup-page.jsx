@@ -1,11 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component, Fragment } from "react";
 import {
   Col,
   Container,
   Row,
   Carousel,
-  CarouselIndicators,
   CarouselItem,
   CarouselCaption,
   Button,
@@ -15,7 +13,6 @@ import {
   Label,
 } from "reactstrap";
 import { SignUp, validUsername } from "../http/http-calls";
-
 const items = [
   {
     header: "Title",
@@ -31,18 +28,20 @@ class RequestDemo extends Component {
       activeIndex: 0,
       user: {
         email: "",
-        userName: "",
+        username: "",
         password: "",
         rptPassword: "",
       },
       isTrue: {
         email: false,
-        userName: false,
+        username: false,
         password: false,
         rptPassword: false,
       },
       errors: {},
       validUsername: false,
+      /////////
+      type: "password",
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -82,18 +81,19 @@ class RequestDemo extends Component {
     this.setState({ activeIndex: newIndex });
   }
 
-  login = () => {
+  login = (e) => {
+    e.preventDefault();
     let isTrue = {
       email: true,
       password: true,
     };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
-      console.log("Error:", errors);
+      console.log("Errors:", errors);
       if (!errors) {
         const signupData = {
           email: this.state.user.email,
-          userName: this.state.user.userName,
+          userName: this.state.user.username,
           password: this.state.user.password,
         };
         SignUp(signupData).then((res) => console.log(res));
@@ -102,64 +102,101 @@ class RequestDemo extends Component {
     });
   };
 
-  userLogin = () => {
+  login = () => {
     this.props.history.push("/login");
   };
 
-  //handling input here
-  handleChange = (name, value) => {
+  handleChange = (field, value) => {
     const { user, isTrue } = this.state;
-    user[name] = value;
-    isTrue[name] = true;
+    if (!value && typeof value === "number") {
+      user[field] = "";
+      isTrue[field] = true;
+      this.setState({ user, isTrue }, () => {
+        this.validation();
+        console.log(this.state);
+      });
+      return;
+    } else {
+      user[field] = value;
+    }
+    isTrue[field] = true;
     this.setState({ user, isTrue }, () => {
       this.validation();
+      console.log(this.state);
     });
   };
 
-  //for validation
   validation() {
-    const { user, errors, isTrue } = this.state;
+    const { user, isTrue, errors, validUsername } = this.state;
     Object.keys(user).forEach((entry) => {
-      if (entry === "email" && isTrue.email) {
-        if (!user.email.trim().length) {
-          errors.email = "*Field Cannot Be Empty";
-        } else if (
-          user.email.trim().length &&
-          !new RegExp(
-            "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
-          ).test(user.email)
-        ) {
-          errors.email = "Enter a valid email ID";
-        } else {
-          delete errors[entry];
-          isTrue.email = false;
+      switch (entry) {
+        case "email": {
+          if (isTrue.email) {
+            if (!user.email.trim().length) {
+              errors.email = "*Required";
+            } else if (
+              user.email.trim().length &&
+              !new RegExp(
+                "^[a-zA-Z0-9]{1}[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,3}$"
+              ).test(user.email)
+            ) {
+              errors.email = "*Invalid Email ID";
+            } else {
+              delete errors[entry];
+              isTrue.email = false;
+            }
+          }
+          break;
         }
-      } else if (entry === "password" && isTrue.password) {
-        if (!user.password.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty";
-        } else {
-          delete errors[entry];
-          isTrue.password = false;
+
+        case "password": {
+          if (isTrue.password) {
+            if (!user.password.trim().length) {
+              errors.password = "*Field Cannot Be Empty";
+            } else {
+              delete errors[entry];
+              isTrue.password = false;
+            }
+          }
+          break;
         }
-      } else if (entry === "userName" && isTrue.userName) {
-        const obj = {
-          userName: user.userName,
-        };
-        if (!user.userName.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty";
-        } else if (!(this.isValid(obj) && this.state.validUsername)) {
-          console.log();
-          errors[entry] = "Enter Unique Username";
-        } else {
-          delete errors[entry];
-          isTrue.userName = false;
+
+        case "username": {
+          const obj = {
+            userName: user.username,
+          };
+          if (isTrue.username) {
+            if (!user.username.trim().length) {
+              errors[entry] = "*Field Cannot Be Empty";
+            } else if (!(this.isValid(obj) && validUsername)) {
+              errors[entry] = "Username Already Exists";
+            } else {
+              delete errors[entry];
+              isTrue.username = false;
+            }
+          }
+          break;
         }
-      } else if (entry === "rptPassword" && isTrue.rptPassword) {
-        if (!(user.rptPassword === user.password)) {
-          errors[entry] = "*Password Does Not Match";
-        } else {
-          delete errors[entry];
-          isTrue.rptPassword = false;
+
+        case "rptPassword": {
+          if (isTrue.rptPassword) {
+            if (!user.rptPassword.trim().length) {
+              errors.rptPassword = "*Field Cannot Be Empty";
+            } else if (
+              user.rptPassword.trim().length &&
+              user.rptPassword !== user.password
+            ) {
+              errors.rptPassword = "*Password Does Not Match";
+            } else {
+              delete errors[entry];
+              isTrue.rptPassword = false;
+            }
+          }
+          break;
+        }
+        default: {
+          console.log("Error in validation():");
+          break;
         }
       }
     });
@@ -169,7 +206,6 @@ class RequestDemo extends Component {
 
   isValid = (userName) => {
     validUsername(userName).then((res) => {
-      console.log("My response", res);
       if (res.isAvailable) {
         this.setState({
           validUsername: true,
@@ -183,8 +219,32 @@ class RequestDemo extends Component {
     return true;
   };
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    let isTrue = {
+      email: true,
+      username: true,
+      password: true,
+      rptPassword: true,
+    };
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      console.log(errors);
+      if (!errors) {
+        const { user } = this.state;
+        console.log("Value in State 'user':", user);
+        this.login();
+      }
+    });
+  };
+
+  handleClick = () =>
+    this.setState(({ type }) => ({
+      type: type === "password" ? "text" : "password",
+    }));
+
   render() {
-    const { activeIndex } = this.state;
+    const { activeIndex, user, errors, validUsername, type } = this.state;
 
     const slides2 = items.map((item) => {
       return (
@@ -223,7 +283,6 @@ class RequestDemo extends Component {
                   next={this.next}
                   previous={this.previous}
                 >
-                  {/* <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} /> */}
                   {slides2}
                 </Carousel>
               </div>
@@ -237,94 +296,95 @@ class RequestDemo extends Component {
               />
 
               <div className="w-100 justify-content-center d-flex flex-column align-items-center">
-                <Form className="loginFormWrapper requestDemoForm">
+                <Form
+                  className="loginFormWrapper requestDemoForm"
+                  onSubmit={this.handleSubmit}
+                >
                   <h4>Sign Up</h4>
 
                   <FormGroup>
                     <Label>Email</Label>
                     <Input
                       type="email"
-                      placeholder="Enter Email"
-                      name="email"
-                      value={this.state.user.email}
+                      placeholder="New Email"
+                      value={user.email}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("email", e.target.value.trim())
                       }
                     />
-                    {this.state.errors && (
-                      <small style={{ color: "red" }}>
-                        {this.state.errors.email}
-                      </small>
+                    {/* error msg, currently hidden */}
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex" style={{ color: "red" }}>
+                          {errors.email}
+                        </small>
+                      </Fragment>
                     )}
                   </FormGroup>
 
-                  <FormGroup>
+                  <FormGroup className="position-relative">
                     <Label>Username</Label>
                     <Input
                       type="text"
-                      placeholder="Enter userName"
-                      name="userName"
-                      value={this.state.user.userName}
+                      placeholder="Enter Unique Username"
+                      value={user.username}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("username", e.target.value)
                       }
                     />
-                    {this.state.errors && (
-                      <small style={{ color: "red" }}>
-                        {this.state.errors.userName}
-                      </small>
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex" style={{ color: "red" }}>
+                          {errors.username}
+                        </small>
+                      </Fragment>
                     )}
                   </FormGroup>
 
                   <FormGroup className="position-relative">
                     <Label>Password</Label>
                     <Input
-                      type="password"
-                      placeholder="Enter Password"
+                      type={type}
+                      placeholder="Enter a Password"
                       style={{ paddingRight: 35 }}
-                      name="password"
-                      value={this.state.user.password}
+                      value={user.password}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("password", e.target.value)
                       }
+                      required
                     />
-                    {this.state.errors && (
-                      <small style={{ color: "red" }}>
-                        {this.state.errors.password}
-                      </small>
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex" style={{ color: "red" }}>
+                          {errors.password}
+                        </small>
+                      </Fragment>
                     )}
-                    {/* eye icon for viewing the entered password */}
-                    {/* <span className="fa fa-eye-slash eyeIcon"></span> */}
-                    {/* toggle the above icon with the below icon */}
-                    {/* <span className="fa fa-eye eyeIcon d-none"></span> */}
                   </FormGroup>
                   <FormGroup className="position-relative">
                     <Label>Repeat Password</Label>
                     <Input
-                      type="password"
-                      placeholder="Repeat Password"
-                      style={{ paddingRight: 35 }}
-                      name="rptPassword"
-                      value={this.state.user.rptPassword}
+                      type={type}
+                      placeholder="Enter Password Again"
+                      value={user.rptPassword}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("rptPassword", e.target.value)
                       }
+                      required
                     />
-                    {this.state.errors && (
-                      <small style={{ color: "red" }}>
-                        {this.state.errors.rptPassword}
-                      </small>
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex" style={{ color: "red" }}>
+                          {errors.rptPassword}
+                        </small>
+                      </Fragment>
                     )}
-                    {/* eye icon for viewing the entered password */}
-                    {/* <span className="fa fa-eye-slash eyeIcon"></span> */}
-                    {/* toggle the above icon with the below icon */}
-                    {/* <span className="fa fa-eye eyeIcon d-none"></span> */}
                   </FormGroup>
 
                   <Button
                     className="recruitechThemeBtn loginBtn"
                     style={{ marginTop: 30 }}
-                    onClick={this.login}
+                    onClick={this.handleSubmit}
                   >
                     Get Started
                   </Button>
@@ -332,7 +392,7 @@ class RequestDemo extends Component {
 
                 <div className="register mt-0 mb-3">
                   Already have an account?{" "}
-                  <a href="javascript:void(0)" onClick={this.userLogin}>
+                  <a href="javascript:void(0)" onClick={this.login}>
                     Login
                   </a>
                 </div>

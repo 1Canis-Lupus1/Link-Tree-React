@@ -1,55 +1,47 @@
 import React, { Component, Fragment } from "react";
-import { Col, Container, Row, Button, Card, CardBody, Label } from "reactstrap";
+import {
+  Col,
+  Container,
+  Row,
+  Button,
+  Card,
+  CardBody,
+  CustomInput,
+  Label,
+} from "reactstrap";
 import { uploadProfilePic, updatePic } from "../http/http-calls";
-import { picUpload } from "../redux/action/user-data";
+import { addUserAvatar } from "../redux/actions/user_data";
 import { connect } from "react-redux";
 
 class Appearance extends Component {
   state = {
     modals: [false, false],
-    defaultChange: "Light",
-    selectChange: "",
-    myBtn: [],
-    myImg: "",
+    defaultTheme: "Light",
+    selectedTheme: "",
   };
 
-  componentDidMount() {
-    this.setState(
-      {
-        myBtn: JSON.parse(localStorage.getItem("button")),
-      },
-      () => {
-        console.log("After Set State Btns:", this.state.myBtn);
-      }
-    );
-  }
-
-  _uploadImage = (e) => {
-    if (e) {
-      const uploadFile = e.target.files[0];
-      const formData = new FormData();
-
-      formData.append("file", uploadFile);
-      formData.append("upload_preset", "companyImages");
-
-      // setLoading(true)
-
-      fetch("https://api.cloudinary.com/v1_1/cirus/image/upload", {
-        method: "POST",
-        body: formData,
+  uploadImage = (e) => {
+    const file = e.target.files[0];
+    const fd = new FormData();
+    fd.append("file", file);
+    uploadProfilePic(fd)
+      .then((res) => {
+        console.log("cloudinary res", res);
+        if (!res.error) {
+          const obj = {
+            avatarLink: res.url,
+          };
+          updatePic(obj)
+            .then((res) => {
+              console.log("cloudinary res upload", res);
+              if (!res.error) {
+                this.props.addUserAvatar(res.user.avatarLink);
+              }
+            })
+            .catch((err) => console.log(err));
+        }
       })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("api res: ", res);
-          this.setState({
-            myImg: res.url,
-          });
-        })
-        .catch((err) => {
-          alert("something went wrong");
-          console.log("api error: ", err);
-        });
-    }
+      .catch((err) => console.log(err));
   };
 
   _toggleModal = (index) => {
@@ -60,37 +52,33 @@ class Appearance extends Component {
     });
   };
 
-  handleShare = () => {
-    this.props.history.push("/profile-preview");
-  };
-
   render() {
-    const { selectChange, defaultChange } = this.state;
+    const { selectedTheme } = this.state;
     const showButton = () => {
-      if (this.state.myBtn !== null) {
-        return this.state.myBtn.map((btn) => {
-          return (
-            <Fragment>
-              {console.log("Buttons:", btn)}
-              <Button
-                className={
-                  selectChange === "Moon"
-                    ? "btnOrange btn btnMoon"
-                    : selectChange === "Dark" || selectChange === "Scooter"
-                    ? "btnOrange btn btnLight"
-                    : selectChange === "Leaf"
-                    ? "btnOrange btn btnLeaf"
-                    : "btnOrange"
-                }
-              >
-                {btn}
-              </Button>
-            </Fragment>
-          );
+      if (
+        this.props.contentData.contents === undefined ||
+        this.props.contentData.contents === null
+      ) {
+        console.log("page is empty while displaying");
+      } else {
+        // this.props.userContents(pageContents)
+        return this.props.contentData.contents.map((data) => {
+          if (data.status) {
+            return (
+              <Fragment>
+                <Button
+                  key={data.content._id}
+                  className="btnOrange"
+                  onClick={() => window.open(`${data.content.url}`, "_blank")}
+                >
+                  {data.content.title.toUpperCase()}
+                </Button>
+              </Fragment>
+            );
+          }
         });
       }
     };
-
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -110,23 +98,28 @@ class Appearance extends Component {
                       <Label className="btn uploadBtnProfile">
                         <input
                           type="file"
-                          name="file"
-                          placeholder="Upload an Image"
-                          onChange={this._uploadImage()}
+                          style={{ display: "none" }}
+                          onChange={(e) => this.uploadImage(e)}
                         />
-                        {this.state.myImg ? (
-                          <div>
-                            <p>
-                              Image Url: <b>{this.state.myImg}</b>
-                            </p>
-                            <img
-                              src={this.state.myImg}
-                              width="100"
-                              height="100"
-                              alt="uploaded img"
-                            />
-                          </div>
-                        ) : null}
+                        {/* <img
+                          alt=''
+                          className=''
+                          src={"assets/img/user-img-default.png"}
+                        /> */}
+                        {this.props.contentData.avatarLink ? (
+                          <img
+                            src={this.props.contentData.avatarLink}
+                            alt="chosen"
+                            style={{ height: "100px", width: "100px" }}
+                          />
+                        ) : (
+                          <img
+                            alt=""
+                            className=""
+                            src={"assets/img/user-img-default.png"}
+                          />
+                        )}
+                        <i className="fa fa-pencil uploadIcon"></i>
                       </Label>
                     </div>
                   </CardBody>
@@ -140,7 +133,7 @@ class Appearance extends Component {
                         <Button
                           className="selectTheme themeSeleted"
                           onClick={() =>
-                            this.setState({ selectChange: "Light" })
+                            this.setState({ selectedTheme: "Light" })
                           }
                         >
                           <div className="themeLight">
@@ -155,7 +148,7 @@ class Appearance extends Component {
                         <Button
                           className="selectTheme"
                           onClick={() =>
-                            this.setState({ selectChange: "Dark" })
+                            this.setState({ selectedTheme: "Dark" })
                           }
                         >
                           <div className="themeDark">
@@ -170,7 +163,7 @@ class Appearance extends Component {
                         <Button
                           className="selectTheme"
                           onClick={() =>
-                            this.setState({ selectChange: "Scooter" })
+                            this.setState({ selectedTheme: "Scooter" })
                           }
                         >
                           <div className="themeScooter">
@@ -185,7 +178,7 @@ class Appearance extends Component {
                         <Button
                           className="selectTheme"
                           onClick={() =>
-                            this.setState({ selectChange: "Leaf" })
+                            this.setState({ selectedTheme: "Leaf" })
                           }
                         >
                           <div className="themeLeaf">
@@ -200,7 +193,7 @@ class Appearance extends Component {
                         <Button
                           className="selectTheme"
                           onClick={() =>
-                            this.setState({ selectChange: "Moon" })
+                            this.setState({ selectedTheme: "Moon" })
                           }
                         >
                           <div className="themeMoon">
@@ -217,18 +210,22 @@ class Appearance extends Component {
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn" onClick={this.handleShare}>
-                  Share
-                </Button>
+                <Button className="shareProfileBtn">Share</Button>
+                {/* change the theme class name accordingly, default is previewLight */}
                 <div
-                  className={`profilePreview` + ` ` + `preview${selectChange}`}
+                  className={`profilePreview` + ` ` + `preview${selectedTheme}`}
                 >
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
                       <input type="file" style={{ display: "none" }} />
-                      {this.props.userData.avatarLink ? (
+                      {/* <img
+                        alt=''
+                        className=''
+                        src={"assets/img/user-img-default.png"}
+                      /> */}
+                      {this.props.contentData.avatarLink ? (
                         <img
-                          src={this.props.userData.avatarLink}
+                          src={this.props.contentData.avatarLink}
                           alt="chosen"
                           style={{ height: "100px", width: "100px" }}
                         />
@@ -240,9 +237,11 @@ class Appearance extends Component {
                         />
                       )}
                     </Label>
+                    {/* use class text-white in Dark and Scooter theme*/}
+                    {/* <h5 className='text-black'>{`@${this.props.userData.userName}`}</h5> */}
                     <h5
                       className={
-                        selectChange === "Dark" || selectChange === "Scooter"
+                        selectedTheme === "Dark" || selectedTheme === "Scooter"
                           ? "text-white"
                           : "text-black"
                       }
@@ -251,6 +250,7 @@ class Appearance extends Component {
 
                   <div className="mt-4">{showButton()}</div>
                 </div>{" "}
+                {/* profilePreview */}
               </div>
             </Col>
           </Row>
@@ -268,7 +268,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    picUpload: (avatarLink) => dispatch(picUpload(avatarLink)),
+    addUserAvatar: (avatarLink) => dispatch(addUserAvatar(avatarLink)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Appearance);
+// export default Appearance;

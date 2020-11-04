@@ -15,17 +15,17 @@ import "./App.scss";
 import SignUp from "./pages/signup-page";
 import LoginPage from "./pages/login-page";
 import ForgotPasswordPage from "./pages/forgot-password-page";
-import ProfilePreview from "./pages/profile-preview-page";
 import DefaultLayout from "./containers/DefaultLayout/DefaultLayout";
 import { store, persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
+import ProtectedRoute from "./components/protected-routes";
+import PublicRoute from "./components/public-route";
 
 function App() {
-  const username = localStorage.getItem("username");
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
+      <PersistGate loading={<div></div>} persistor={persistor}>
         <Router>
           <div>
             <ToastsContainer
@@ -33,26 +33,27 @@ function App() {
               position={ToastsContainerPosition.BOTTOM_RIGHT}
             />
             <Switch>
-              <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/login" component={LoginPage} />
-              <Route
+              <PublicRoute
                 exact
-                path="/forgot-password"
+                path='/signup'
+                component={SignUp}
+                redirectRoute={'/links'}
+              />
+              <PublicRoute exact path='/login' component={LoginPage} redirectRoute={'/links'}/>
+              <PublicRoute
+                exact
+                path='/forgot-password'
                 component={ForgotPasswordPage}
+                redirectRoute={'/links'}
               />
               <Route
                 exact
-                path="/index"
-                render={() => <Redirect to="/login" />}
+                path='/index'
+                render={() => <Redirect to='/login' />}
               />
 
-              <Route path="/" component={DefaultLayout} />
-              <Route
-                exact
-                path="/profile-preview/"
-                component={ProfilePreview}
-              />
-              <Route path="*" render={() => <Redirect to="/" />} />
+              <Route path='/' component={DefaultLayout} />
+              <Route path='*' render={() => <Redirect to='/' />} />
             </Switch>
           </div>
         </Router>

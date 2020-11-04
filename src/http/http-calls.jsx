@@ -1,5 +1,3 @@
-// import { getToken } from "./authToken";
-import { store } from "../redux/store";
 import {
   makePostRequest,
   makeGetRequest,
@@ -12,15 +10,15 @@ const profileCloudinary = {
   preset: "ml_default",
 };
 
-export const SignUp = (data) => {
+export const SignUp = (signupData) => {
   return new Promise((resolve, reject) => {
-    makePostRequest(url + "/signup", false, data)
+    makePostRequest(url + "/signup", false, signupData)
       .then((response) => {
         resolve(response);
       })
-      .catch((err) => {
-        reject(err);
-        console.log("Error: ", err);
+      .catch((e) => {
+        console.log("API call error: ", e);
+        reject(e);
       });
   });
 };
@@ -31,36 +29,35 @@ export const validUsername = (userName) => {
       .then((response) => {
         resolve(response);
       })
-      .catch((err) => {
-        reject(err);
-        console.log("Error in /check-userName:", err);
+      .catch((e) => {
+        console.log("API call error: ", e);
+        reject(e);
       });
   });
 };
 
-export const Logging = (data) => {
+export const Logging = (loginData) => {
   return new Promise((resolve, reject) => {
-    makePostRequest(url + "/login", false, data)
+    makePostRequest(url + "/login", false, loginData)
       .then((response) => {
         resolve(response);
-        console.log("Token Response:", response);
       })
-      .catch((err) => {
-        console.log("Error in /login :", err);
-        reject(err);
+      .catch((e) => {
+        console.log("API call error: ", e);
+        reject(e);
       });
   });
 };
 
-export const validPass = (mail) => {
+export const validPass = (forgot_passData) => {
   return new Promise((resolve, reject) => {
-    makePostRequest(url + "/forgotPassword", false, mail)
+    makePostRequest(url + "/forgotPassword", false, forgot_passData)
       .then((response) => {
         resolve(response);
-        console.log("Forgot Password:", response);
       })
-      .catch((err) => {
-        console.log("Error in /forgotPassword :", err);
+      .catch((e) => {
+        console.log("API call error: ", e);
+        reject(e);
       });
   });
 };
@@ -68,70 +65,81 @@ export const validPass = (mail) => {
 export const getPages = () => {
   return new Promise((resolve, reject) => {
     makeGetRequest(url + "/page", true)
-      .then((res) => {
-        resolve(res);
-        console.log("Get Pages by token:", res);
-      })
-      // .then((resp=>console.log("GET Pages by token:",resp)))
-      .catch((err) => {
-        //error here
-        console.log("Error in GET /page :", err);
-        reject(err);
-      });
-  });
-};
-
-export const initialEntry = (entryData) => {
-  return new Promise((resolve, reject) => {
-    makePostRequest(url + "/page", true, entryData)
       .then((response) => {
         resolve(response);
       })
-      .catch((err) => {
-        reject(err);
-        console.log("Error in initialEntry: ", err);
-      });
-  });
-};
-
-export const createEntry = (entryData, entryId) => {
-  return new Promise((resolve, reject) => {
-    makePutRequest(url + `/page/${entryId}`, true, entryData)
-      .then((response) => {
-        resolve(response);
-        console.log("Response in createEntry", response);
-      })
-      .catch((err) => {
-        console.log("Error in createEntry: ", err);
-        reject(err);
-      });
-  });
-};
-
-export const updatePic = (picURL) => {
-  return new Promise((resolve, reject) => {
-    makePutRequest(url + "/user", picURL)
-      .then((res) => resolve(res))
       .catch((e) => {
-        console.log("Error in updatePic", e);
+        console.log("API call error: ", e);
         reject(e);
       });
   });
 };
 
-export const uploadProfilePic = (data) => {
+export const initialEntry = (createData) => {
   return new Promise((resolve, reject) => {
-    uploadUserAvatar(
-      `https://api.cloudinary.com/v1_1/cirus/auto/upload/upload_preset=${profileCloudinary.preset}`,
-      false,
-      data,
-      `image`
-    )
-      .then((res) => {
-        resolve(res);
+    makePostRequest(url + "/page", true, createData)
+      .then((response) => {
+        resolve(response);
       })
       .catch((e) => {
-        console.log("API error: ", e);
+        console.log("API call error: ", e);
+        reject(e);
+      });
+  });
+};
+
+export const createEntry = (contentData, id) => {
+  return new Promise((resolve, reject) => {
+    makePutRequest(url + `/page/${id}`, true, contentData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((e) => {
+        console.log("API call error: ", e);
+        reject(e);
+      });
+  });
+};
+
+export const uploadProfilePic = (cloudData) => {
+  return new Promise((resolve, reject) => {
+    uploadUserAvatar(
+      `https://api.cloudinary.com/v1_1/cirus/auto/upload?upload_preset=${profileCloudinary.preset}`,
+      false,
+      cloudData,
+      `image`
+    )
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((e) => {
+        console.log("Cloudinary API call error: ", e);
+        reject(e);
+      });
+  });
+};
+
+export const updatePic = (userData) => {
+  return new Promise((resolve, reject) => {
+    makePutRequest(url + "/user", true, userData)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((e) => {
+        console.log("Cloudinary update API call error: ", e);
+        reject(e);
+      });
+  });
+};
+
+export const getUserData = () => {
+  return new Promise((resolve, reject) => {
+    makeGetRequest(url + "/user", true)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((e) => {
+        console.log("Cloudinary update API call error: ", e);
         reject(e);
       });
   });

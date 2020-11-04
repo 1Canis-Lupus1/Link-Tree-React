@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/company-logo.png'
 import sygnet from '../../assets/img/brand/sygnet.svg'
+import { connect } from "react-redux";
 
 const propTypes = {
   children: PropTypes.node,
@@ -44,14 +45,14 @@ class DefaultHeader extends Component {
         <Nav className="ml-auto pt-1" navbar>
           <UncontrolledDropdown nav direction="down" className="mr-3 ml-1">
             <DropdownToggle nav>
-              <img src={'../../assets/img/user-img-default.png'} className="img-avatar mr-1" alt="User Img" />
+              <img src={this.props.contentData.avatarLink?this.props.contentData.avatarLink:`../../assets/img/user-img-default.png`} className="img-avatar mr-1" alt="User Img" />
               <i className="fa fa-caret-down"></i>
             </DropdownToggle>
             <DropdownMenu right className="mt-2">
             <DropdownItem>
               <Link to="/profile-preview"><i className="fa fa-user"></i> Profile</Link>
               </DropdownItem>
-              <DropdownItem onClick={e => this.props.onLogout(e)}><i className="fa fa-power-off"></i> Logout</DropdownItem>
+              <DropdownItem onClick={e =>{this.props.onLogout(e); window.location.reload()} }><i className="fa fa-power-off"></i> Logout</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
@@ -65,4 +66,11 @@ class DefaultHeader extends Component {
 DefaultHeader.propTypes = propTypes;
 DefaultHeader.defaultProps = defaultProps;
 
-export default DefaultHeader;
+const mapStateToProps = (state) => {
+  return {
+    userData: state.userData,
+    contentData:state.contentData
+  };
+};
+export default connect(mapStateToProps)(DefaultHeader);
+// export default DefaultHeader;

@@ -1,11 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component, Fragment } from "react";
 import {
   Col,
   Container,
   Row,
   Carousel,
-  CarouselIndicators,
   CarouselItem,
   CarouselCaption,
   Button,
@@ -15,9 +13,8 @@ import {
   Label,
 } from "reactstrap";
 import { Logging } from "../http/http-calls";
-import { logUser } from "../redux/action/user-data";
 import { connect } from "react-redux";
-
+import { logUser } from "../redux/actions/user_data";
 const items = [
   {
     header: "Title",
@@ -32,12 +29,12 @@ class Login extends Component {
     this.state = {
       activeIndex: 0,
       user: {
-        userName: "",
+        username: "",
         password: "",
         token: "",
       },
       isTrue: {
-        userName: false,
+        username: false,
         password: false,
       },
       errors: {},
@@ -89,58 +86,76 @@ class Login extends Component {
   };
 
   users = () => {
-    let user = {};
-    let isTrue = {
-      userName: true,
-      password: true,
+    const { username, password } = this.state.user;
+    const userLoginData = {
+      handle: username,
+      password: password,
     };
-    this.setState({ isTrue }, () => {
-      let errors = this.validation();
-      console.log("Error:", errors);
-      if (!errors) {
-        const data = {
-          handle: this.state.user.userName,
-          password: this.state.user.password,
+    Logging(userLoginData)
+      .then((res) => {
+        let userLoginData = {
+          userName: res.handle,
+          token: res.token,
         };
-        Logging(data)
-          .then((response) => {
-            user = {
-              userName: response.handle,
-              token: response.token,
-            };
-            this.props.logUser({ user });
-            this.props.history.push("/links");
-          })
-          .catch((err) => console.log(err));
-      }
-    });
+        console.log("userLoginData: ", userLoginData);
+        this.props.logUser({ userLoginData });
+        this.props.history.push("/links");
+      })
+      .catch((err) => {
+        console.log(err);
+        this.props.history.push("/login");
+      });
   };
 
-  handleChange = (name, value) => {
+  handleChange = (field, value) => {
     const { user, isTrue } = this.state;
-    user[name] = value;
-    isTrue[name] = true;
+    if (!value && typeof value === "number") {
+      user[field] = "";
+      isTrue[field] = true;
+      this.setState({ user, isTrue }, () => {
+        this.validation();
+        console.log(this.state);
+      });
+      return;
+    } else {
+      user[field] = value;
+    }
+    isTrue[field] = true;
     this.setState({ user, isTrue }, () => {
       this.validation();
+      console.log(this.state);
     });
   };
 
   validation() {
-    const { user, errors, isTrue } = this.state;
-    Object.keys(user).forEach((entry) => {
-      if (entry === "password" && isTrue.password) {
-        if (!user.password.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty";
-        } else {
-          delete errors[entry];
-          isTrue.password = false;
+    const { user, isTrue, errors } = this.state;
+    Object.keys(user).forEach((each) => {
+      switch (each) {
+        case "username": {
+          if (isTrue.username) {
+            if (!user.username.trim().length) {
+              errors[each] = "*Field Cannot Be Empty";
+            } else {
+              delete errors[each];
+              isTrue.username = false;
+            }
+          }
+          break;
         }
-      } else if (entry === "userName" && isTrue.userName) {
-        if (!user.userName.trim().length) {
-          errors[entry] = "*Field Cannot Be Empty";
-        } else {
-          delete errors[entry];
-          isTrue.userName = false;
+        case "password": {
+          if (isTrue.password) {
+            if (!user.password.trim().length) {
+              errors.password = "*Field Cannot Be Empty";
+            } else {
+              delete errors[each];
+              isTrue.password = false;
+            }
+          }
+          break;
+        }
+        default: {
+          console.log("Error");
+          break;
         }
       }
     });
@@ -148,8 +163,25 @@ class Login extends Component {
     return Object.keys(errors).length ? errors : null;
   }
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    let isTrue = {
+      username: true,
+      password: true,
+    };
+    this.setState({ isTrue }, () => {
+      let errors = this.validation();
+      console.log(errors);
+      if (!errors) {
+        const { user } = this.state;
+        console.log("Final API call: ", user);
+        this.users();
+      }
+    });
+  };
+
   render() {
-    const { activeIndex } = this.state;
+    const { activeIndex, user, errors } = this.state;
 
     const slides2 = items.map((item) => {
       return (
@@ -202,59 +234,51 @@ class Login extends Component {
               />
 
               <div className="w-100 justify-content-center d-flex flex-column align-items-center">
-                <Form className="loginFormWrapper">
+                <Form className="loginFormWrapper" onSubmit={this.handleSubmit}>
                   <h4>Login to your account</h4>
                   <FormGroup>
                     <Label>Username</Label>
                     <Input
                       type="text"
                       placeholder="Your Username"
-                      value={this.state.user.userName}
-                      name="userName"
+                      value={user.username}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("username", e.target.value)
                       }
                     />
-                    {this.state.errors && (
-                      <p style={{ color: "red" }}>
-                        {this.state.errors.userName}
-                      </p>
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex">{errors.username}</small>
+                      </Fragment>
                     )}
-                    {/* error msg, currently hidden */}
-                    {/* <small className="d-none">Enter a valid Username</small> */}
                   </FormGroup>
                   <FormGroup>
                     <Label>Password</Label>
                     <Input
                       type="password"
                       placeholder="Your Password"
-                      value={this.state.user.password}
-                      name="password"
+                      value={user.email}
                       onChange={(e) =>
-                        this.handleChange(e.target.name, e.target.value)
+                        this.handleChange("password", e.target.value.trim())
                       }
                     />
-                    {this.state.errors && (
-                      <p style={{ color: "red" }}>
-                        {this.state.errors.password}
-                      </p>
+                    {errors && (
+                      <Fragment>
+                        <small className="d-flex">{errors.password}</small>
+                      </Fragment>
                     )}
-                    {/* error msg, currently hidden */}
-                    {/* <small className="d-none">Enter a valid </small> */}
                   </FormGroup>
+
                   <Button
                     className="recruitechThemeBtn loginBtn"
-                    onClick={this.users}
+                    onClick={this.handleSubmit}
                   >
                     Login
                   </Button>
                 </Form>
 
                 <div className="registerWrap">
-                  <div className="ml-3">
-                    {/* <Input type="checkbox" id="rememberMe" />
-                    <Label for="rememberMe" className="mb-0">Remember Me</Label> */}
-                  </div>
+                  <div className="ml-3"></div>
 
                   <a
                     href="javascript:void(0)"
@@ -304,13 +328,13 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data,
+    user: state.user,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logUser: (user) => dispatch(logUser(user)),
+    logUser: (userLoginData) => dispatch(logUser(userLoginData)),
   };
 };
 
