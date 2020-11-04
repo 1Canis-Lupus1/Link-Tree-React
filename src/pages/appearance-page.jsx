@@ -20,6 +20,10 @@ class Appearance extends Component {
     selectedTheme: "",
   };
 
+  handleShare = () => {
+    this.props.history.push("/profile-preview");
+  };
+
   uploadImage = (e) => {
     const file = e.target.files[0];
     const fd = new FormData();
@@ -210,7 +214,9 @@ class Appearance extends Component {
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn">Share</Button>
+                <Button className="shareProfileBtn" onClick={this.handleShare}>
+                  Share
+                </Button>
                 {/* change the theme class name accordingly, default is previewLight */}
                 <div
                   className={`profilePreview` + ` ` + `preview${selectedTheme}`}

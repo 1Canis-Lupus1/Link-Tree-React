@@ -18,9 +18,10 @@ class ProfilePreview extends Component {
               <Fragment>
                 <Button
                   key={data.content._id}
-                  className='btnOrange'
-                  onClick={() => window.open(`${data.content.url}`, "_blank")}>
-                  {data.content.title}
+                  className="btnOrange"
+                  onClick={() => window.open(`${data.content.url}`, "_blank")}
+                >
+                  {data.content.title.toUpperCase()}
                 </Button>
               </Fragment>
             );
@@ -30,19 +31,19 @@ class ProfilePreview extends Component {
     };
 
     return (
-      <div className='app flex-row animated fadeIn innerPagesBg'>
+      <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
-          <Row className='justify-content-center'>
-            <Col md='10' xl='8'>
-              <div className='d-flex justify-content-start align-items-center my-3'>
-                <h4 className='pg-title'>Profile</h4>
+          <Row className="justify-content-center">
+            <Col md="10" xl="8">
+              <div className="d-flex justify-content-start align-items-center my-3">
+                <h4 className="pg-title">Profile</h4>
               </div>
 
-              <Card className='userDetails mb-4'>
+              <Card className="userDetails mb-4">
                 <CardBody>
-                  <div className='text-center'>
-                    <Label className='btn uploadBtnProfile'>
-                      <input type='file' style={{ display: "none" }} />
+                  <div className="text-center">
+                    <Label className="btn uploadBtnProfile">
+                      <input type="file" style={{ display: "none" }} />
                       {/* <img
                         alt=''
                         className=''
@@ -51,13 +52,13 @@ class ProfilePreview extends Component {
                       {this.props.contentData.avatarLink ? (
                         <img
                           src={this.props.contentData.avatarLink}
-                          alt='chosen'
+                          alt="chosen"
                           style={{ height: "100px", width: "100px" }}
                         />
                       ) : (
                         <img
-                          alt=''
-                          className=''
+                          alt=""
+                          className=""
                           src={"assets/img/user-img-default.png"}
                         />
                       )}
@@ -65,7 +66,7 @@ class ProfilePreview extends Component {
                     <h5>{`@${this.props.userData.userName}`}</h5>
                   </div>
 
-                  <div className='mt-4'>{showButton()}</div>
+                  <div className="mt-4">{showButton()}</div>
                 </CardBody>
               </Card>
             </Col>

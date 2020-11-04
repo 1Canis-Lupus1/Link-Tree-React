@@ -65,6 +65,10 @@ class Links extends Component {
     });
   };
 
+  handleShare = () => {
+    this.props.history.push("/profile-preview");
+  };
+
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentDidMount() {
     const { _links } = this.state;
@@ -482,7 +486,9 @@ class Links extends Component {
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn">Share</Button>
+                <Button className="shareProfileBtn" onClick={this.handleShare}>
+                  Share
+                </Button>
                 <div className="profilePreview">
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
