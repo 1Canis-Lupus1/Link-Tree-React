@@ -5,13 +5,13 @@ import { connect } from "react-redux";
 class ProfilePreview extends Component {
   render() {
     const showButton = () => {
+      // window.location.reload();
       if (
         this.props.contentData.contents === undefined ||
         this.props.contentData.contents === null
       ) {
-        console.log("page is empty while displaying");
+        console.log("Links Empty");
       } else {
-        // this.props.userContents(pageContents)
         return this.props.contentData.contents.map((data) => {
           if (data.status) {
             return (
@@ -44,11 +44,6 @@ class ProfilePreview extends Component {
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
                       <input type="file" style={{ display: "none" }} />
-                      {/* <img
-                        alt=''
-                        className=''
-                        src={"assets/img/user-img-default.png"}
-                      /> */}
                       {this.props.contentData.avatarLink ? (
                         <img
                           src={this.props.contentData.avatarLink}
@@ -84,4 +79,3 @@ const mapStateToProps = (state) => {
   };
 };
 export default connect(mapStateToProps)(ProfilePreview);
-// export default ProfilePreview;

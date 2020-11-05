@@ -54,6 +54,7 @@ export const validPass = (forgot_passData) => {
     makePostRequest(url + "/forgotPassword", false, forgot_passData)
       .then((response) => {
         resolve(response);
+        console.log("RESPONSE::", response);
       })
       .catch((e) => {
         console.log("API call error: ", e);

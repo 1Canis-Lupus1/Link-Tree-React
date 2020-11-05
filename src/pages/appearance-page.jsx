@@ -17,7 +17,7 @@ class Appearance extends Component {
   state = {
     modals: [false, false],
     defaultTheme: "Light",
-    selectedTheme: "",
+    myTheme: "",
   };
 
   handleShare = () => {
@@ -30,14 +30,14 @@ class Appearance extends Component {
     fd.append("file", file);
     uploadProfilePic(fd)
       .then((res) => {
-        console.log("cloudinary res", res);
+        console.log("Response", res);
         if (!res.error) {
           const obj = {
             avatarLink: res.url,
           };
           updatePic(obj)
             .then((res) => {
-              console.log("cloudinary res upload", res);
+              console.log("Upload Response", res);
               if (!res.error) {
                 this.props.addUserAvatar(res.user.avatarLink);
               }
@@ -57,15 +57,14 @@ class Appearance extends Component {
   };
 
   render() {
-    const { selectedTheme } = this.state;
+    const { myTheme } = this.state;
     const showButton = () => {
       if (
         this.props.contentData.contents === undefined ||
         this.props.contentData.contents === null
       ) {
-        console.log("page is empty while displaying");
+        console.log("Links Empty");
       } else {
-        // this.props.userContents(pageContents)
         return this.props.contentData.contents.map((data) => {
           if (data.status) {
             return (
@@ -136,9 +135,7 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme themeSeleted"
-                          onClick={() =>
-                            this.setState({ selectedTheme: "Light" })
-                          }
+                          onClick={() => this.setState({ myTheme: "Light" })}
                         >
                           <div className="themeLight">
                             <div className="themeLightBtn"></div>
@@ -151,9 +148,7 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme"
-                          onClick={() =>
-                            this.setState({ selectedTheme: "Dark" })
-                          }
+                          onClick={() => this.setState({ myTheme: "Dark" })}
                         >
                           <div className="themeDark">
                             <div className="themeDarkBtn"></div>
@@ -166,9 +161,7 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme"
-                          onClick={() =>
-                            this.setState({ selectedTheme: "Scooter" })
-                          }
+                          onClick={() => this.setState({ myTheme: "Scooter" })}
                         >
                           <div className="themeScooter">
                             <div className="themeScooterBtn"></div>
@@ -181,9 +174,7 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme"
-                          onClick={() =>
-                            this.setState({ selectedTheme: "Leaf" })
-                          }
+                          onClick={() => this.setState({ myTheme: "Leaf" })}
                         >
                           <div className="themeLeaf">
                             <div className="themeLeafBtn"></div>
@@ -196,9 +187,7 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme"
-                          onClick={() =>
-                            this.setState({ selectedTheme: "Moon" })
-                          }
+                          onClick={() => this.setState({ myTheme: "Moon" })}
                         >
                           <div className="themeMoon">
                             <div className="themeMoonBtn"></div>
@@ -216,19 +205,12 @@ class Appearance extends Component {
               <div className="profilePreviewWrap">
                 <Button className="shareProfileBtn" onClick={this.handleShare}>
                   Share
-                </Button>
-                {/* change the theme class name accordingly, default is previewLight */}
-                <div
-                  className={`profilePreview` + ` ` + `preview${selectedTheme}`}
-                >
+                </Button>{" "}
+                */}
+                <div className={`profilePreview` + ` ` + `preview${myTheme}`}>
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
                       <input type="file" style={{ display: "none" }} />
-                      {/* <img
-                        alt=''
-                        className=''
-                        src={"assets/img/user-img-default.png"}
-                      /> */}
                       {this.props.contentData.avatarLink ? (
                         <img
                           src={this.props.contentData.avatarLink}
@@ -243,11 +225,9 @@ class Appearance extends Component {
                         />
                       )}
                     </Label>
-                    {/* use class text-white in Dark and Scooter theme*/}
-                    {/* <h5 className='text-black'>{`@${this.props.userData.userName}`}</h5> */}
                     <h5
                       className={
-                        selectedTheme === "Dark" || selectedTheme === "Scooter"
+                        myTheme === "Dark" || myTheme === "Scooter"
                           ? "text-white"
                           : "text-black"
                       }
@@ -278,4 +258,3 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Appearance);
-// export default Appearance;

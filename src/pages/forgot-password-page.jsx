@@ -34,6 +34,7 @@ class ForgotPassword extends Component {
       },
       errors: {},
       validMail: false,
+      myRes: "",
     };
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
@@ -83,14 +84,21 @@ class ForgotPassword extends Component {
     };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
-      console.log(errors);
+      console.log("Errors In Validation;", errors);
       if (!errors) {
         const forgot_passData = {
           handle: user.mail,
         };
-        validPass(forgot_passData).then((res) => console.log(res));
-        alert("Password Reset Link Sent Successfully");
-        this.props.history.push("/login");
+        validPass(forgot_passData).then((res) => {
+          console.log("My response is;", res);
+          if (res.error === false) {
+            alert("Password Reset Link Sent Successfully");
+            this.props.history.push("/login");
+          } else {
+            alert("Email Not Registered.Create a New User");
+            // this.props.history.push("/signup");
+          }
+        });
       }
     });
   };
@@ -153,7 +161,7 @@ class ForgotPassword extends Component {
     };
     this.setState({ isTrue }, () => {
       let errors = this.validation();
-      console.log(errors);
+      console.log("Errors in Validationg;", errors);
       if (!errors) {
         const { user } = this.state;
         this.login();
