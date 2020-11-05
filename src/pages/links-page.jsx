@@ -429,7 +429,6 @@ class Links extends Component {
                   onClick={() => window.open(`https://${data.content.url}`)}
                 >
                   {data.content.title.toUpperCase()}
-                  {data.content.url}
                 </Button>
               </Fragment>
             );
