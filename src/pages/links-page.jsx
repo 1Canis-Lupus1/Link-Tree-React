@@ -426,9 +426,10 @@ class Links extends Component {
                 <Button
                   key={data.content._id}
                   className="btnOrange"
-                  onClick={() => window.open(`${data.content.url}`, "_blank")}
+                  onClick={() => window.open(`https://${data.content.url}`)}
                 >
                   {data.content.title.toUpperCase()}
+                  {data.content.url}
                 </Button>
               </Fragment>
             );
