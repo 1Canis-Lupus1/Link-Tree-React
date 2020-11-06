@@ -85,7 +85,7 @@ class Appearance extends Component {
     };
     updatePic(newTheme)
       .then((response) => {
-        console.log("Response on Theme Change:", response);
+        console.log("Response on Theme Change:", response.user.template);
         if (!response.error) {
           this.props.selectMyTheme(response.user.template);
           this.setState({ myTheme: response.user.template });
@@ -193,7 +193,10 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme themeSeleted"
-                          onClick={() => this.setState({ myTheme: "Light" })}
+                          onClick={() => {
+                            this.setState({ myTheme: "Light" });
+                            this.handleThemeChange("Light");
+                          }}
                         >
                           <div className="themeLight">
                             <div className="themeLightBtn"></div>
@@ -206,7 +209,10 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme themeSeleted"
-                          onClick={() => this.setState({ myTheme: "Dark" })}
+                          onClick={() => {
+                            this.setState({ myTheme: "Dark" });
+                            this.handleThemeChange("Dark");
+                          }}
                         >
                           <div className="themeDark">
                             <div className="themeDarkBtn"></div>
@@ -219,7 +225,10 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme themeSeleted"
-                          onClick={() => this.setState({ myTheme: "Scooter" })}
+                          onClick={() => {
+                            this.setState({ myTheme: "Scooter" });
+                            this.handleThemeChange("Scooter");
+                          }}
                         >
                           <div className="themeScooter">
                             <div className="themeScooterBtn"></div>
@@ -232,7 +241,10 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme themeSeleted"
-                          onClick={() => this.setState({ myTheme: "Leaf" })}
+                          onClick={() => {
+                            this.setState({ myTheme: "Leaf" });
+                            this.handleThemeChange("Leaf");
+                          }}
                         >
                           <div className="themeLeaf">
                             <div className="themeLeafBtn"></div>
@@ -245,7 +257,10 @@ class Appearance extends Component {
                       <Col md={6} lg={4}>
                         <Button
                           className="selectTheme themeSeleted"
-                          onClick={() => this.setState({ myTheme: "Moon" })}
+                          onClick={() => {
+                            this.setState({ myTheme: "Moon" });
+                            this.handleThemeChange("Moon");
+                          }}
                         >
                           <div className="themeMoon">
                             <div className="themeMoonBtn"></div>

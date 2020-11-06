@@ -452,7 +452,7 @@ class Links extends Component {
       } else {
         return _links.map((data) => {
           if (data.status) {
-            // console.log("MY LINKS;", _links);
+            console.log("MY LINKS;", data);
             return (
               <Fragment>
                 <Button

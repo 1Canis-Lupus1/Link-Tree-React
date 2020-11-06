@@ -125,6 +125,7 @@ export const updatePic = (userData) => {
     makePutRequest(url + "/user", true, userData)
       .then((response) => {
         resolve(response);
+        console.log("Checking NOW:", response);
       })
       .catch((e) => {
         console.log("Cloudinary update API call error: ", e);
