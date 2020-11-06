@@ -6,18 +6,40 @@ import {
   Button,
   Card,
   CardBody,
-  CustomInput,
   Label,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "reactstrap";
-import { uploadProfilePic, updatePic } from "../http/http-calls";
-import { addUserAvatar } from "../redux/actions/user_data";
+import { uploadProfilePic, updatePic, getUserData } from "../http/http-calls";
+import { logUser, addUserAvatar } from "../redux/actions/user_data";
 import { connect } from "react-redux";
 
 class Appearance extends Component {
-  state = {
-    modals: [false, false],
-    defaultTheme: "Light",
-    myTheme: "",
+  constructor(props) {
+    super(props);
+    this.state = {
+      modals: [false, false, false],
+      myTheme: "",
+    };
+    this.uploadImage = this.uploadImage.bind(this.uploadImage);
+  }
+
+  componentDidMount() {
+    getUserData().then((res) => {
+      //Getiing Default Theme Of The User
+      console.log("My Theme:", res.user.template);
+      this.setState({ myTheme: res.user.template });
+    });
+  }
+
+  _toggleModal = (index) => {
+    const { modals } = this.state;
+    modals[index] = !modals[index];
+    this.setState({
+      modals,
+    });
   };
 
   handleShare = () => {
@@ -30,14 +52,14 @@ class Appearance extends Component {
     fd.append("file", file);
     uploadProfilePic(fd)
       .then((res) => {
-        console.log("Response", res);
+        console.log("cloudinary res", res);
         if (!res.error) {
           const obj = {
             avatarLink: res.url,
           };
           updatePic(obj)
             .then((res) => {
-              console.log("Upload Response", res);
+              console.log("cloudinary res upload", res);
               if (!res.error) {
                 this.props.addUserAvatar(res.user.avatarLink);
               }
@@ -46,14 +68,6 @@ class Appearance extends Component {
         }
       })
       .catch((err) => console.log(err));
-  };
-
-  _toggleModal = (index) => {
-    const { modals } = this.state;
-    modals[index] = !modals[index];
-    this.setState({
-      modals,
-    });
   };
 
   render() {
@@ -104,11 +118,6 @@ class Appearance extends Component {
                           style={{ display: "none" }}
                           onChange={(e) => this.uploadImage(e)}
                         />
-                        {/* <img
-                          alt=''
-                          className=''
-                          src={"assets/img/user-img-default.png"}
-                        /> */}
                         {this.props.contentData.avatarLink ? (
                           <img
                             src={this.props.contentData.avatarLink}
@@ -147,7 +156,7 @@ class Appearance extends Component {
                       </Col>
                       <Col md={6} lg={4}>
                         <Button
-                          className="selectTheme"
+                          className="selectTheme themeSeleted"
                           onClick={() => this.setState({ myTheme: "Dark" })}
                         >
                           <div className="themeDark">
@@ -160,7 +169,7 @@ class Appearance extends Component {
                       </Col>
                       <Col md={6} lg={4}>
                         <Button
-                          className="selectTheme"
+                          className="selectTheme themeSeleted"
                           onClick={() => this.setState({ myTheme: "Scooter" })}
                         >
                           <div className="themeScooter">
@@ -173,7 +182,7 @@ class Appearance extends Component {
                       </Col>
                       <Col md={6} lg={4}>
                         <Button
-                          className="selectTheme"
+                          className="selectTheme themeSeleted"
                           onClick={() => this.setState({ myTheme: "Leaf" })}
                         >
                           <div className="themeLeaf">
@@ -186,7 +195,7 @@ class Appearance extends Component {
                       </Col>
                       <Col md={6} lg={4}>
                         <Button
-                          className="selectTheme"
+                          className="selectTheme themeSeleted"
                           onClick={() => this.setState({ myTheme: "Moon" })}
                         >
                           <div className="themeMoon">
@@ -205,8 +214,7 @@ class Appearance extends Component {
               <div className="profilePreviewWrap">
                 <Button className="shareProfileBtn" onClick={this.handleShare}>
                   Share
-                </Button>{" "}
-                */}
+                </Button>
                 <div className={`profilePreview` + ` ` + `preview${myTheme}`}>
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
@@ -235,8 +243,7 @@ class Appearance extends Component {
                   </div>
 
                   <div className="mt-4">{showButton()}</div>
-                </div>{" "}
-                {/* profilePreview */}
+                </div>
               </div>
             </Col>
           </Row>

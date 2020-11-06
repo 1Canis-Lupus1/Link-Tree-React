@@ -55,6 +55,7 @@ class Links extends Component {
     addFlag: false,
     editFlag: false,
     contentDatanull: false,
+    btnTheme: "",
   };
 
   _toggleModal = (index) => {
@@ -343,7 +344,14 @@ class Links extends Component {
 
   render() {
     //Destructuring state values
-    const { _links, errors, deleteCurrEntry, pageId, addFlag } = this.state;
+    const {
+      _links,
+      errors,
+      deleteCurrEntry,
+      pageId,
+      addFlag,
+      btnTheme,
+    } = this.state;
     const emptyLinks = () => {
       if (!this.state._links.length) {
         return <Button className="btnOrange">No Links</Button>;
@@ -425,10 +433,18 @@ class Links extends Component {
               <Fragment>
                 <Button
                   key={data.content._id}
-                  className="btnOrange"
-                  onClick={() => window.open(`https://${data.content.url}`)}
+                  className={
+                    btnTheme === "Dark" || btnTheme === "Scooter"
+                      ? "btnOrange btnLight"
+                      : btnTheme === "Leaf"
+                      ? "btnOrange btnLeaf"
+                      : btnTheme === "Moon"
+                      ? "btnOrange btnMoon"
+                      : "btnOrange"
+                  }
+                  onClick={() => window.open(`${data.content.url}`, "_blank")}
                 >
-                  {data.content.title.toUpperCase()}
+                  {data.content.title}
                 </Button>
               </Fragment>
             );
