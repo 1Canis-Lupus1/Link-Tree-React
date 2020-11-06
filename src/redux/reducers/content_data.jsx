@@ -1,4 +1,10 @@
-import { ADD_ENTRY, EDIT_ENTRY, DELETE_ENTRY, ADD_ID } from "../actions/action";
+import {
+  ADD_ENTRY,
+  EDIT_ENTRY,
+  DELETE_ENTRY,
+  ADD_ID,
+  ADD_THEME,
+} from "../actions/action";
 
 const contentData = {
   contents: [],
@@ -23,6 +29,10 @@ export const contentDataReducer = (state = contentData, action) => {
     case DELETE_ENTRY: {
       console.log("Remove_CONTENT_DATA: ", action.payload);
       newState.contents = [];
+      break;
+    }
+    case ADD_THEME: {
+      newState.template = action.payload.myClassName;
       break;
     }
 

@@ -36,6 +36,7 @@ export const userDataReducer = (state = userData, action) => {
     }
     case ADD_THEME: {
       newState.template = action.payload.myClassName;
+      break;
     }
     default: {
     }

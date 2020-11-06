@@ -27,8 +27,8 @@ import {
   editContent,
   removeContent,
   addId,
-  addUserAvatar,
 } from "../redux/actions/content_data";
+import { addUserAvatar, selectMyTheme } from "../redux/actions/user_data";
 import { connect } from "react-redux";
 
 class Links extends Component {
@@ -55,7 +55,7 @@ class Links extends Component {
     addFlag: false,
     editFlag: false,
     contentDatanull: false,
-    btnTheme: "",
+    myTheme: "",
   };
 
   _toggleModal = (index) => {
@@ -72,7 +72,7 @@ class Links extends Component {
 
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentDidMount() {
-    const { _links } = this.state;
+    const { _links, myTheme } = this.state;
     //Fetching Current Added Links for user
     getPages().then((res) => {
       if (res.page === null) {
@@ -87,12 +87,16 @@ class Links extends Component {
         this.props.addContent(res.page.contents);
       }
     });
-    console.log(_links);
 
-    getUserData().then((res) => {
-      console.log(res);
-      this.props.addUserAvatar(res.user.avatarLink);
-    });
+    getUserData()
+      .then((res) => {
+        console.log(res);
+        this.props.addUserAvatar(res.user.avatarLink);
+        this.props.selectMyTheme(res.user.template);
+        this.setState({ myTheme: res.user.template });
+        console.log("MY THEME IS:", myTheme);
+      })
+      .catch((err) => console.log("MY ERROR IN THEME:", err));
   }
 
   handleAddEntry = () => {
