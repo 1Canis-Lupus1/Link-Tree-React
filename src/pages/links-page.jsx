@@ -68,6 +68,10 @@ class Links extends Component {
     });
   };
 
+  handleShare = () => {
+    this.props.history.push("/profile-preview");
+  };
+
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentDidMount() {
     const { _links } = this.state;
@@ -421,7 +425,17 @@ class Links extends Component {
       if (!_links.length) {
         return (
           <Fragment>
-            <Button className="btnOrange">
+            <Button
+              className={
+                myTheme === "Dark" || myTheme === "Scooter"
+                  ? "btnOrange btnLight"
+                  : myTheme === "Leaf"
+                  ? "btnOrange btnLeaf"
+                  : myTheme === "Moon"
+                  ? "btnOrange btnMoon"
+                  : "btnOrange"
+              }
+            >
               <strong>No Links</strong>
             </Button>
           </Fragment>
@@ -444,7 +458,7 @@ class Links extends Component {
                   }
                   onClick={() => window.open(`http://${data.content.url}`)}
                 >
-                  {data.content.title}
+                  {data.content.title.toUpperCase()}
                 </Button>
               </Fragment>
             );
@@ -514,7 +528,7 @@ class Links extends Component {
               <div className="profilePreviewWrap">
                 <Button
                   className="shareProfileBtn btnMoon"
-                  onClick={() => this._toggleModal(3)}
+                  onClick={this.handleShare}
                 >
                   Share
                 </Button>

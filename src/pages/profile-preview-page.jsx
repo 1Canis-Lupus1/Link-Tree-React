@@ -1,36 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { Col, Container, Row, Button, Label, Card, CardBody } from "reactstrap";
 import { connect } from "react-redux";
+import {
+  FacebookShareButton,
+  FacebookMessengerShareButton,
+  LinkedinShareButton,
+  TelegramShareButton,
+  FacebookIcon,
+  FacebookMessengerIcon,
+  LinkedinIcon,
+  TelegramIcon,
+} from "react-share";
 
 class ProfilePreview extends Component {
   render() {
-    const showButton = () => {
-      // window.location.reload();
-      console.log("SHOW BUTTON OF PROFILE:", this.props.contentData);
-      if (
-        this.props.contentData.contents === undefined ||
-        this.props.contentData.contents === null
-      ) {
-        console.log("Links Empty");
-      } else {
-        return this.props.contentData.contents.map((data) => {
-          if (data.status) {
-            return (
-              <Fragment>
-                <Button
-                  key={data.content._id}
-                  className="btnOrange"
-                  onClick={() => window.open(`http://${data.content.url}`)}
-                >
-                  {data.content.title.toUpperCase()}
-                </Button>
-              </Fragment>
-            );
-          }
-        });
-      }
-    };
-
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -62,7 +45,75 @@ class ProfilePreview extends Component {
                     <h5>{`@${this.props.userData.userName}`}</h5>
                   </div>
 
-                  <div className="mt-4">{showButton()}</div>
+                  <div className="mt-4">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <FacebookShareButton
+                          url={
+                            `${this.props.userData.url}` +
+                            "/profile" +
+                            "/" +
+                            `${this.props.userData.userName}`
+                          }
+                          title="Facebook : "
+                          className="Demo__some-network__share-button"
+                        >
+                          <FacebookIcon size={40} round />
+                          <p style={{ margin: "0" }}>Facebook</p>
+                        </FacebookShareButton>
+                      </div>
+                      <div>
+                        <FacebookMessengerShareButton
+                          url={
+                            `${this.props.userData.url}` +
+                            "/profile" +
+                            "/" +
+                            `${this.props.userData.userName}`
+                          }
+                          title="Messenger : "
+                          className="Demo__some-network__share-button"
+                        >
+                          <FacebookMessengerIcon size={40} round />
+                          <p style={{ margin: "0" }}>Messenger</p>
+                        </FacebookMessengerShareButton>
+                      </div>
+                      <div>
+                        <LinkedinShareButton
+                          url={
+                            `${this.props.userData.url}` +
+                            "/profile" +
+                            "/" +
+                            `${this.props.userData.userName}`
+                          }
+                          title="Linkedin : "
+                          className="Demo__some-network__share-button"
+                        >
+                          <LinkedinIcon size={40} round />
+                          <p style={{ margin: "0" }}>Linkedin</p>
+                        </LinkedinShareButton>
+                      </div>
+                      <div>
+                        <TelegramShareButton
+                          url={
+                            `${this.props.userData.url}` +
+                            "/profile" +
+                            "/" +
+                            `${this.props.userData.userName}`
+                          }
+                          title="Telegram : "
+                          className="Demo__some-network__share-button"
+                        >
+                          <TelegramIcon size={40} round />
+                          <p style={{ margin: "0" }}>Telegram</p>
+                        </TelegramShareButton>
+                      </div>
+                    </div>
+                  </div>
                 </CardBody>
               </Card>
             </Col>

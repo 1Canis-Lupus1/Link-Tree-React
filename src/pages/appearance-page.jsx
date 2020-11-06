@@ -88,11 +88,25 @@ class Appearance extends Component {
   render() {
     const { myTheme } = this.state;
     const showButton = () => {
-      if (!this.props.contentData.length) {
+      if (
+        this.props.contentData.contents === undefined ||
+        this.props.contentData.contents === null
+      ) {
         return (
           <Fragment>
-            <Button className="btnOrange">
-              <strong>No Links</strong>
+            <Button
+              key={this.props.contentData.content._id}
+              className={
+                myTheme === "Dark" || myTheme === "Scooter"
+                  ? "btnOrange btnLight"
+                  : myTheme === "Leaf"
+                  ? "btnOrange btnLeaf"
+                  : myTheme === "Moon"
+                  ? "btnOrange btnMoon"
+                  : "btnOrange"
+              }
+            >
+              <strong>Links Empty</strong>
             </Button>
           </Fragment>
         );
