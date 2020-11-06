@@ -141,15 +141,15 @@ class Appearance extends Component {
                           style={{ display: "none" }}
                           onChange={(e) => this.uploadImage(e)}
                         />
-                        {this.props.contentData.avatarLink ? (
+                        {this.props.userData.avatarLink ? (
                           <img
-                            src={this.props.contentData.avatarLink}
-                            alt="chosen"
+                            src={this.props.userData.avatarLink}
+                            alt={`${this.props.userData.userName}/profile`}
                             style={{ height: "100px", width: "100px" }}
                           />
                         ) : (
                           <img
-                            alt=""
+                            alt={`${this.props.userData.userName}/profile`}
                             className=""
                             src={"assets/img/user-img-default.png"}
                           />
@@ -242,10 +242,10 @@ class Appearance extends Component {
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
                       <input type="file" style={{ display: "none" }} />
-                      {this.props.contentData.avatarLink ? (
+                      {this.props.userData.avatarLink ? (
                         <img
-                          src={this.props.contentData.avatarLink}
-                          alt="chosen"
+                          src={this.props.userData.avatarLink}
+                          alt={`${this.props.userData.userName}/profile`}
                           style={{ height: "100px", width: "100px" }}
                         />
                       ) : (

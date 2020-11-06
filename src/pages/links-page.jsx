@@ -199,7 +199,7 @@ class Links extends Component {
             } else if (
               contentData.url.trim().length &&
               !new RegExp(
-                "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
+                "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,})"
               ).test(contentData.url)
             ) {
               errors.url = "Invalid URL";
@@ -523,15 +523,15 @@ class Links extends Component {
                 <div className="profilePreview">
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
-                      {this.props.contentData.avatarLink ? (
+                      {this.props.userData.avatarLink ? (
                         <img
-                          src={this.props.contentData.avatarLink}
-                          alt="chosen"
+                          src={this.props.userData.avatarLink}
+                          alt={`${this.props.userData.userName}/profile`}
                           style={{ height: "100px", width: "100px" }}
                         />
                       ) : (
                         <img
-                          alt=""
+                          alt={`${this.props.userData.userName}/profile`}
                           className=""
                           src={"assets/img/user-img-default.png"}
                         />
