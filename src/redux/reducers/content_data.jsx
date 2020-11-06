@@ -31,10 +31,10 @@ export const contentDataReducer = (state = contentData, action) => {
       newState.contents = [];
       break;
     }
-    case ADD_THEME: {
-      newState.template = action.payload.myClassName;
-      break;
-    }
+    // case ADD_THEME: {
+    //   newState.template = action.payload.myClassName;
+    //   break;
+    // }
 
     default: {
     }

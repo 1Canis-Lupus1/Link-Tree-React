@@ -7,7 +7,7 @@ import {
 } from "./action";
 
 export const addContent = (pageContents) => {
-  console.log("addContent:-> ", pageContents);
+  console.log("My Links:", pageContents);
   return {
     type: ADD_ENTRY,
     payload: pageContents,

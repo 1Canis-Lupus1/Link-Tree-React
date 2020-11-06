@@ -428,27 +428,32 @@ class Links extends Component {
       }
     };
     const showButton = () => {
-      if (_links === undefined || _links === null) {
-        console.log("No Links To Show");
+      const { myTheme } = this.state;
+      if (
+        this.props.contentData.contents === undefined ||
+        this.props.contentData.contents === null
+      ) {
+        console.log("Links Empty");
+        console.log("My Contentdata:", this.props.contentData);
       } else {
-        return _links.map((data) => {
+        return this.props.contentData.contents.map((data) => {
           if (data.status) {
             return (
               <Fragment>
                 <Button
                   key={data.content._id}
                   className={
-                    btnTheme === "Dark" || btnTheme === "Scooter"
+                    myTheme === "Dark" || myTheme === "Scooter"
                       ? "btnOrange btnLight"
-                      : btnTheme === "Leaf"
+                      : myTheme === "Leaf"
                       ? "btnOrange btnLeaf"
-                      : btnTheme === "Moon"
+                      : myTheme === "Moon"
                       ? "btnOrange btnMoon"
                       : "btnOrange"
                   }
-                  onClick={() => window.open(`${data.content.url}`, "_blank")}
+                  onClick={() => window.open(`http://${data.content.url}`)}
                 >
-                  {data.content.title}
+                  {data.content.title.toUpperCase()}
                 </Button>
               </Fragment>
             );
