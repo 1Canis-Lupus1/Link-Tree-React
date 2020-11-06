@@ -23,7 +23,6 @@ class Appearance extends Component {
       modals: [false, false, false],
       myTheme: "",
     };
-    this.uploadImage = this.uploadImage.bind(this.uploadImage);
   }
 
   componentDidMount() {
