@@ -109,7 +109,7 @@ class Appearance extends Component {
                       ? "btnOrange btnMoon"
                       : "btnOrange"
                   }
-                  onClick={() => window.open(`${data.content.url}`, "_blank")}
+                  onClick={() => window.open(`http://${data.content.url}`)}
                 >
                   {data.content.title.toUpperCase()}
                 </Button>

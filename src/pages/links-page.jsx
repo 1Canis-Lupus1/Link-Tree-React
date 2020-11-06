@@ -495,7 +495,13 @@ class Links extends Component {
                   <Button
                     className="addBtn"
                     onClick={() => {
-                      this.setState({ addFlag: true });
+                      this.setState({
+                        contentData: {
+                          title: "",
+                          url: "",
+                        },
+                        addFlag: true,
+                      });
                       this._toggleModal(1);
                     }}
                   >
