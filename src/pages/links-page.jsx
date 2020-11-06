@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-
 import {
   Col,
   Container,
@@ -32,31 +31,34 @@ import { addUserAvatar, selectMyTheme } from "../redux/actions/user_data";
 import { connect } from "react-redux";
 
 class Links extends Component {
-  state = {
-    modals: [false, false],
-    contentData: {
-      title: "",
-      url: "",
-    },
-    isTrue: {
-      title: "",
-      url: "",
-    },
-    editContentData: {
-      title: "",
-      url: "",
-    },
-    pageId: "",
-    _links: [],
-    linksNotPresent: false,
-    errors: {},
-    deleteCurrEntry: "",
-    editCurrEntry: "",
-    addFlag: false,
-    editFlag: false,
-    contentDatanull: false,
-    myTheme: "",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modals: [false, false, false],
+      contentData: {
+        title: "",
+        url: "",
+      },
+      isTrue: {
+        title: "",
+        url: "",
+      },
+      editContentData: {
+        title: "",
+        url: "",
+      },
+      pageId: "",
+      _links: [],
+      linksNotPresent: false,
+      errors: {},
+      deleteCurrEntry: "",
+      editCurrEntry: "",
+      addFlag: false,
+      editFlag: false,
+      contentDatanull: false,
+      myTheme: "",
+    };
+  }
 
   _toggleModal = (index) => {
     const { modals } = this.state;
@@ -66,13 +68,9 @@ class Links extends Component {
     });
   };
 
-  handleShare = () => {
-    this.props.history.push("/profile-preview");
-  };
-
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentDidMount() {
-    const { _links, myTheme } = this.state;
+    const { _links } = this.state;
     //Fetching Current Added Links for user
     getPages().then((res) => {
       if (res.page === null) {
@@ -94,20 +92,14 @@ class Links extends Component {
         this.props.addUserAvatar(res.user.avatarLink);
         this.props.selectMyTheme(res.user.template);
         this.setState({ myTheme: res.user.template });
-        console.log("MY THEME IS:", myTheme);
+        console.log("MY THEME IS:", this.state.myTheme);
       })
       .catch((err) => console.log("MY ERROR IN THEME:", err));
   }
 
   handleAddEntry = () => {
     const { contentData, _links, pageId } = this.state;
-    // If no links present in state
-    if (
-      contentData.url === null ||
-      contentData.title === null ||
-      contentData.url === undefined ||
-      contentData.title === undefined
-    ) {
+    if (contentData.url === undefined || contentData.title === undefined) {
       this.setState({ contentDatanull: true });
     } else if (this.state.linksNotPresent) {
       const createData = {
@@ -148,13 +140,15 @@ class Links extends Component {
           subContentType: "facebook",
         },
       ];
-      const obj = {
+      const myVal = {
         contents: updateData,
       };
-      createEntry(obj, pageId).then((res) => {
-        console.log("Creating Entry Reponse:", res);
+      createEntry(myVal, pageId).then((res) => {
+        console.log("createContentLst: ", res);
         const lastContent = res.page.contents[res.page.contents.length - 1];
+        console.log("newAddedContent:", lastContent);
         this.setState({ _links: res.page.contents });
+        console.log("added data list: ", _links);
       });
       this.setState({
         contentData: {
@@ -190,8 +184,8 @@ class Links extends Component {
 
   validation() {
     const { contentData, isTrue, errors } = this.state;
-    Object.keys(contentData).forEach((each) => {
-      switch (each) {
+    Object.keys(contentData).forEach((entry) => {
+      switch (entry) {
         case "url": {
           if (isTrue.url) {
             if (!contentData.url.trim().length) {
@@ -199,12 +193,12 @@ class Links extends Component {
             } else if (
               contentData.url.trim().length &&
               !new RegExp(
-                "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,})"
+                "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
               ).test(contentData.url)
             ) {
               errors.url = "Invalid URL";
             } else {
-              delete errors[each];
+              delete errors[entry];
               isTrue.url = false;
             }
           }
@@ -213,9 +207,9 @@ class Links extends Component {
         case "title": {
           if (isTrue.title) {
             if (!contentData.title.trim().length) {
-              errors[each] = "*Field cannot be empty";
+              errors[entry] = "*Field cannot be empty";
             } else {
-              delete errors[each];
+              delete errors[entry];
               isTrue.title = false;
             }
           }
@@ -241,11 +235,12 @@ class Links extends Component {
       console.log(errors);
       if (!errors) {
         const { contentData } = this.state;
-        console.log("Data in State ", contentData);
+        console.log("Data in State : ", contentData);
         this.handleAddEntry();
       }
     });
   };
+
   editCurrEntry = (e) => {
     let isTrue = {
       url: true,
@@ -256,24 +251,24 @@ class Links extends Component {
       console.log(errors);
       if (!errors) {
         const { contentData } = this.state;
-        console.log("Data in State ", contentData);
+        console.log("Data in State : ", contentData);
         this.editMyModal();
       }
     });
   };
 
-  handleToggle = (flag, _id) => {
+  handleToggle = (buffer, _id) => {
     const { _links, pageId } = this.state;
-    if (flag) {
+    if (buffer) {
       return _links.map((e) => {
         if (_id === e._id) {
           e.status = true;
         }
         this.setState({ _links });
-        const obj = {
+        const myVal = {
           contents: _links,
         };
-        createEntry(obj, pageId).then((res) => {
+        createEntry(myVal, pageId).then((res) => {
           console.log("Response received :", res);
           const lastContent = res.page.contents[res.page.contents.length - 1];
           this.setState({ _links: res.page.contents });
@@ -287,11 +282,12 @@ class Links extends Component {
         if (_id === e._id) {
           e.status = false;
         }
+        //setstate and APi
         this.setState({ _links });
-        const obj = {
+        const myVal = {
           contents: _links,
         };
-        createEntry(obj, pageId).then((res) => {
+        createEntry(myVal, pageId).then((res) => {
           console.log("Response received :", res);
           const lastContent = res.page.contents[res.page.contents.length - 1];
           this.setState({ _links: res.page.contents });
@@ -305,7 +301,7 @@ class Links extends Component {
   editMyModal = () => {
     const { _links, pageId, editCurrEntry, contentData } = this.state;
     if (_links === null || _links === undefined) {
-      return console.log("Links Empty!!");
+      return console.log("No Link item present");
     } else {
       var index = _links.findIndex((item) => item._id === editCurrEntry);
       console.log("Current Index:", index);
@@ -320,11 +316,11 @@ class Links extends Component {
         subContentType: "facebook",
       };
       _links.splice(index, 1, editedContent);
-      console.log("My Links:", _links);
-      const obj = {
+      console.log(_links);
+      const myVal = {
         contents: _links,
       };
-      createEntry(obj, pageId).then((res) => {
+      createEntry(myVal, pageId).then((res) => {
         console.log("Response Received: ", res);
         const lastContent = res.page.contents[res.page.contents.length - 1];
         this.setState({ _links: res.page.contents });
@@ -338,7 +334,6 @@ class Links extends Component {
         editFlag: false,
       });
     }
-    //Resetting Values
     this.setState({
       modals: [false, false],
       editContentData: { title: "", url: "" },
@@ -347,20 +342,14 @@ class Links extends Component {
   };
 
   render() {
-    //Destructuring state values
     const {
       _links,
       errors,
       deleteCurrEntry,
       pageId,
       addFlag,
-      btnTheme,
+      myTheme,
     } = this.state;
-    const emptyLinks = () => {
-      if (!this.state._links.length) {
-        return <Button className="btnOrange">No Links</Button>;
-      }
-    };
 
     const showLinkCard = () => {
       if (_links === undefined || _links === null) {
@@ -427,16 +416,18 @@ class Links extends Component {
         });
       }
     };
+
     const showButton = () => {
-      const { myTheme } = this.state;
-      if (
-        this.props.contentData.contents === undefined ||
-        this.props.contentData.contents === null
-      ) {
-        console.log("Links Empty");
-        console.log("My Contentdata:", this.props.contentData);
+      if (!_links.length) {
+        return (
+          <Fragment>
+            <Button className="btnOrange">
+              <strong>No Links</strong>
+            </Button>
+          </Fragment>
+        );
       } else {
-        return this.props.contentData.contents.map((data) => {
+        return _links.map((data) => {
           if (data.status) {
             return (
               <Fragment>
@@ -453,7 +444,7 @@ class Links extends Component {
                   }
                   onClick={() => window.open(`http://${data.content.url}`)}
                 >
-                  {data.content.title.toUpperCase()}
+                  {data.content.title}
                 </Button>
               </Fragment>
             );
@@ -461,23 +452,23 @@ class Links extends Component {
         });
       }
     };
+
     const deleteModal = () => {
       if (_links === null || _links === undefined) {
         return console.log("No Link item present");
       } else {
         var index = _links.findIndex((item) => item._id === deleteCurrEntry);
         _links.splice(index, 1);
-        console.log("new list after delete: ", _links);
-        const obj = {
+        console.log("New List: ", _links);
+        const myVal = {
           contents: _links,
         };
-        createEntry(obj, pageId).then((res) => {
+        createEntry(myVal, pageId).then((res) => {
           // debugger;
-          console.log("deletedContent: ", res);
+          console.log("Received Response:", res);
           const lastContent = res.page.contents[res.page.contents.length - 1];
-          console.log("LastContent:", lastContent);
           this.setState({ _links: res.page.contents });
-          console.log("New data list: ", _links);
+          console.log("After Set State", _links);
         });
       }
       this.setState({ modals: [false, false] });
@@ -511,33 +502,46 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {this.state.linksNotPresent ? emptyLinks() : showLinkCard()}
+                    {!this.state._links.length ? (
+                      <strong>Links Empty For Current User</strong>
+                    ) : (
+                      showLinkCard()
+                    )}
                   </CardBody>
                 </Card>
               </div>
 
               <div className="profilePreviewWrap">
-                <Button className="shareProfileBtn" onClick={this.handleShare}>
+                <Button
+                  className="shareProfileBtn btnMoon"
+                  onClick={() => this._toggleModal(3)}
+                >
                   Share
                 </Button>
-                <div className="profilePreview">
+                <div className={`profilePreview` + ` ` + `preview${myTheme}`}>
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
                       {this.props.userData.avatarLink ? (
                         <img
                           src={this.props.userData.avatarLink}
-                          alt={`${this.props.userData.userName}/profile`}
+                          alt="chosen"
                           style={{ height: "100px", width: "100px" }}
                         />
                       ) : (
                         <img
-                          alt={`${this.props.userData.userName}/profile`}
+                          alt=""
                           className=""
                           src={"assets/img/user-img-default.png"}
                         />
                       )}
                     </Label>
-                    <h5>{`@${this.props.userData.userName}`}</h5>
+                    <h5
+                      className={
+                        myTheme === "Dark" || myTheme === "Scooter"
+                          ? "text-white"
+                          : "text-black"
+                      }
+                    >{`@${this.props.userData.userName}`}</h5>
                   </div>
 
                   <div className="mt-4">{showButton()}</div>
@@ -547,7 +551,7 @@ class Links extends Component {
             </Col>
           </Row>
 
-          {/* Modal */}
+          {/* Modal for showing "Create New Link" && "EDIT LINK"*/}
           <Modal
             isOpen={this.state.modals[1]}
             toggle={() => this._toggleModal(1)}
@@ -610,7 +614,7 @@ class Links extends Component {
             </ModalFooter>
           </Modal>
 
-          {/* Modal for deleting an exisiting Link */}
+          {/* Modal for deleting Link */}
           <Modal
             isOpen={this.state.modals[2]}
             toggle={() => this._toggleModal(2)}
@@ -661,6 +665,7 @@ const mapDispatchToProps = (dispatch) => {
     addContent: (_links) => dispatch(addContent(_links)),
     addId: (_id) => dispatch(addId(_id)),
     addUserAvatar: (avatarLink) => dispatch(addUserAvatar(avatarLink)),
+    selectMyTheme: (theme) => dispatch(selectMyTheme(theme)),
   };
 };
 

@@ -88,11 +88,14 @@ class Appearance extends Component {
   render() {
     const { myTheme } = this.state;
     const showButton = () => {
-      if (
-        this.props.contentData.contents === undefined ||
-        this.props.contentData.contents === null
-      ) {
-        console.log("Links Empty");
+      if (!this.props.contentData.length) {
+        return (
+          <Fragment>
+            <Button className="btnOrange">
+              <strong>No Links</strong>
+            </Button>
+          </Fragment>
+        );
       } else {
         return this.props.contentData.contents.map((data) => {
           if (data.status) {

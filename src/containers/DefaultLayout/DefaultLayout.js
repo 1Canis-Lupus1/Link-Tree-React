@@ -39,7 +39,7 @@ class DefaultLayout extends Component {
   }
 
   componentDidMount() {
-    console.log("in layout :>> ");
+    console.log("In Default Layout ");
   }
 
   render() {

@@ -6,6 +6,7 @@ class ProfilePreview extends Component {
   render() {
     const showButton = () => {
       // window.location.reload();
+      console.log("SHOW BUTTON OF PROFILE:", this.props.contentData);
       if (
         this.props.contentData.contents === undefined ||
         this.props.contentData.contents === null
@@ -19,7 +20,7 @@ class ProfilePreview extends Component {
                 <Button
                   key={data.content._id}
                   className="btnOrange"
-                  onClick={() => window.open(`${data.content.url}`, "_blank")}
+                  onClick={() => window.open(`http://${data.content.url}`)}
                 >
                   {data.content.title.toUpperCase()}
                 </Button>
@@ -44,15 +45,15 @@ class ProfilePreview extends Component {
                   <div className="text-center">
                     <Label className="btn uploadBtnProfile">
                       <input type="file" style={{ display: "none" }} />
-                      {this.props.contentData.avatarLink ? (
+                      {this.props.userData.avatarLink ? (
                         <img
-                          src={this.props.contentData.avatarLink}
-                          alt="chosen"
+                          src={this.props.userData.avatarLink}
+                          alt={`${this.props.userData.userName}/profile`}
                           style={{ height: "100px", width: "100px" }}
                         />
                       ) : (
                         <img
-                          alt=""
+                          alt={`${this.props.userData.userName}/profile`}
                           className=""
                           src={"assets/img/user-img-default.png"}
                         />
