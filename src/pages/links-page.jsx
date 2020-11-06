@@ -29,6 +29,14 @@ import {
 } from "../redux/actions/content_data";
 import { addUserAvatar, selectMyTheme } from "../redux/actions/user_data";
 import { connect } from "react-redux";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  FacebookMessengerShareButton,
+  FacebookIcon,
+  FacebookMessengerIcon,
+  WhatsappIcon,
+} from "react-share";
 
 class Links extends Component {
   constructor(props) {
@@ -69,7 +77,8 @@ class Links extends Component {
   };
 
   handleShare = () => {
-    this.props.history.push("/profile-preview");
+    //Modal For Share Links
+    this._toggleModal(3);
   };
 
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
@@ -443,6 +452,7 @@ class Links extends Component {
       } else {
         return _links.map((data) => {
           if (data.status) {
+            // console.log("MY LINKS;", _links);
             return (
               <Fragment>
                 <Button
@@ -478,7 +488,6 @@ class Links extends Component {
           contents: _links,
         };
         createEntry(myVal, pageId).then((res) => {
-          // debugger;
           console.log("Received Response:", res);
           const lastContent = res.page.contents[res.page.contents.length - 1];
           this.setState({ _links: res.page.contents });
@@ -658,6 +667,54 @@ class Links extends Component {
                 onClick={() => deleteModal()}
               >
                 Delete
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          {/* Modal For Share Link */}
+          <Modal
+            isOpen={this.state.modals[3]}
+            toggle={() => this._toggleModal(3)}
+            className="modal-dialog-centered"
+          >
+            <ModalHeader toggle={() => this._toggleModal(3)}>
+              <strong>Share Link</strong>
+            </ModalHeader>
+            <ModalBody className="modalContent text-center">
+              <h5 className="mt-3 px-4" style={{ fontWeight: 400 }}>
+                <FacebookShareButton
+                  url={`${window.location.href}/profile/${this.props.userData.userName}`}
+                  title="Facebook "
+                  className="Demo__some-network__share-button"
+                >
+                  <FacebookIcon size={40} round />
+                  <p style={{ margin: "10px", padding: "10px" }}>Facebook</p>
+                </FacebookShareButton>
+                <FacebookMessengerShareButton
+                  url={`${window.location.href}/profile/${this.props.userData.userName}`}
+                  title="Messenger : "
+                  className="Demo__some-network__share-button"
+                >
+                  <FacebookMessengerIcon size={40} round />
+                  <p style={{ margin: "10px", padding: "10px" }}>Messenger</p>
+                </FacebookMessengerShareButton>
+                <WhatsappShareButton
+                  url={`${window.location.href}/profile/${this.props.userData.userName}`}
+                  title="Whatsapp : "
+                  className="Demo__some-network__share-button"
+                >
+                  <WhatsappIcon size={40} round />
+                  <p style={{ margin: "10px", padding: "10px" }}>Whatsapp</p>
+                </WhatsappShareButton>
+              </h5>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                className="modalBtnCancel"
+                toggle={() => this._toggleModal(3)}
+                onClick={() => this._toggleModal(3)}
+              >
+                Cancel
               </Button>
             </ModalFooter>
           </Modal>

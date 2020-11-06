@@ -15,6 +15,14 @@ import {
 import { uploadProfilePic, updatePic, getUserData } from "../http/http-calls";
 import { selectMyTheme, addUserAvatar } from "../redux/actions/user_data";
 import { connect } from "react-redux";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  FacebookMessengerShareButton,
+  FacebookIcon,
+  FacebookMessengerIcon,
+  WhatsappIcon,
+} from "react-share";
 
 class Appearance extends Component {
   constructor(props) {
@@ -42,7 +50,8 @@ class Appearance extends Component {
   };
 
   handleShare = () => {
-    this.props.history.push("/profile-preview");
+    // this.props.history.push("/profile-preview");
+    this._toggleModal(3);
   };
 
   uploadImage = (e) => {
@@ -287,6 +296,54 @@ class Appearance extends Component {
               </div>
             </Col>
           </Row>
+
+          {/* Modal For Share Link */}
+          <Modal
+            isOpen={this.state.modals[3]}
+            toggle={() => this._toggleModal(3)}
+            className="modal-dialog-centered"
+          >
+            <ModalHeader toggle={() => this._toggleModal(3)}>
+              <strong>Share Link</strong>
+            </ModalHeader>
+            <ModalBody className="modalContent text-center">
+              <h5 className="mt-3 px-4" style={{ fontWeight: 400 }}>
+                <FacebookShareButton
+                  url={`${window.location.href}/profile/${this.props.userData.userName}`}
+                  title="Facebook "
+                  className="Demo__some-network__share-button"
+                >
+                  <FacebookIcon size={40} round />
+                  <p style={{ margin: "10px", padding: "10px" }}>Facebook</p>
+                </FacebookShareButton>
+                <FacebookMessengerShareButton
+                  url={`${window.location.href}/profile/${this.props.userData.userName}`}
+                  title="Messenger : "
+                  className="Demo__some-network__share-button"
+                >
+                  <FacebookMessengerIcon size={40} round />
+                  <p style={{ margin: "10px", padding: "10px" }}>Messenger</p>
+                </FacebookMessengerShareButton>
+                <WhatsappShareButton
+                  url={`${window.location.href}/profile/${this.props.userData.userName}`}
+                  title="Whatsapp : "
+                  className="Demo__some-network__share-button"
+                >
+                  <WhatsappIcon size={40} round />
+                  <p style={{ margin: "10px", padding: "10px" }}>Whatsapp</p>
+                </WhatsappShareButton>
+              </h5>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                className="modalBtnCancel"
+                toggle={() => this._toggleModal(3)}
+                onClick={() => this._toggleModal(3)}
+              >
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Modal>
         </Container>
       </div>
     );
