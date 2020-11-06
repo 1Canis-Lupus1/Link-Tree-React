@@ -1,6 +1,7 @@
 export { ADD_USERDATA } from "./action";
 export { REMOVE_USERDATA } from "./action";
 export { ADD_USER_AVATAR } from "./action";
+export { ADD_THEME } from "./action";
 
 export { ADD_CONTENT } from "./action";
 export { EDIT_CONTENT_DATA } from "./action";

@@ -13,7 +13,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { uploadProfilePic, updatePic, getUserData } from "../http/http-calls";
-import { logUser, addUserAvatar } from "../redux/actions/user_data";
+import { selectMyTheme, addUserAvatar } from "../redux/actions/user_data";
 import { connect } from "react-redux";
 
 class Appearance extends Component {
@@ -47,23 +47,39 @@ class Appearance extends Component {
 
   uploadImage = (e) => {
     const file = e.target.files[0];
-    const fd = new FormData();
-    fd.append("file", file);
-    uploadProfilePic(fd)
+    const fData = new FormData();
+    fData.append("file", file);
+    uploadProfilePic(fData)
       .then((res) => {
-        console.log("cloudinary res", res);
+        console.log("Response:", res);
         if (!res.error) {
           const obj = {
             avatarLink: res.url,
           };
           updatePic(obj)
             .then((res) => {
-              console.log("cloudinary res upload", res);
+              console.log("Response From backend:", res);
               if (!res.error) {
                 this.props.addUserAvatar(res.user.avatarLink);
               }
             })
             .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  handleThemeChange = (theme) => {
+    //To Be sent to request as Template contains theme selected
+    const newTheme = {
+      template: theme,
+    };
+    updatePic(newTheme)
+      .then((response) => {
+        console.log("Response on Theme Change:", response);
+        if (!response.error) {
+          this.props.selectMyTheme(response.user.template);
+          this.setState({ myTheme: response.user.template });
         }
       })
       .catch((err) => console.log(err));
@@ -84,7 +100,15 @@ class Appearance extends Component {
               <Fragment>
                 <Button
                   key={data.content._id}
-                  className="btnOrange"
+                  className={
+                    myTheme === "Dark" || myTheme === "Scooter"
+                      ? "btnOrange btnLight"
+                      : myTheme === "Leaf"
+                      ? "btnOrange btnLeaf"
+                      : myTheme === "Moon"
+                      ? "btnOrange btnMoon"
+                      : "btnOrange"
+                  }
                   onClick={() => window.open(`${data.content.url}`, "_blank")}
                 >
                   {data.content.title.toUpperCase()}
@@ -261,6 +285,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addUserAvatar: (avatarLink) => dispatch(addUserAvatar(avatarLink)),
+    selectMyTheme: (theme) => dispatch(selectMyTheme(theme)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Appearance);

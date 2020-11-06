@@ -1,4 +1,4 @@
-import { ADD_DATA, DEL_DATA, ADD_PIC } from "./action";
+import { ADD_DATA, DEL_DATA, ADD_PIC, ADD_THEME } from "./action";
 
 export const logUser = (user) => {
   return {
@@ -18,6 +18,15 @@ export const addUserAvatar = (avatarLink) => {
     type: ADD_PIC,
     payload: {
       avatarLink,
+    },
+  };
+};
+
+export const selectMyTheme = (myClassName) => {
+  return {
+    type: ADD_THEME,
+    payload: {
+      myClassName,
     },
   };
 };

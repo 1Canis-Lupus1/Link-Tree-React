@@ -1,4 +1,4 @@
-import { ADD_DATA, DEL_DATA, ADD_PIC } from "../actions/action";
+import { ADD_DATA, DEL_DATA, ADD_PIC, ADD_THEME } from "../actions/action";
 
 const userData = {
   userName: "",
@@ -33,6 +33,9 @@ export const userDataReducer = (state = userData, action) => {
       console.log(action.payload);
       newState.avatarLink = action.payload.avatarLink;
       break;
+    }
+    case ADD_THEME: {
+      newState.template = action.payload.myClassName;
     }
     default: {
     }
