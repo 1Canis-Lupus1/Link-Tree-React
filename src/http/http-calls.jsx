@@ -7,7 +7,7 @@ import {
 
 const url = "http://139.59.14.81:4000/api/v1";
 const profileCloudinary = {
-  preset: "ml_default",
+  preset: "cuax9lkz",
 };
 
 export const SignUp = (signupData) => {
