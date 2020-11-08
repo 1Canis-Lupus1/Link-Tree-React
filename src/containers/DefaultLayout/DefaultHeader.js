@@ -19,14 +19,22 @@ import {
 import logo from "../../assets/img/company-logo.png";
 import sygnet from "../../assets/img/brand/sygnet.svg";
 import { connect } from "react-redux";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const propTypes = {
   children: PropTypes.node,
 };
 
 const defaultProps = {};
+toast.configure();
 
 class DefaultHeader extends Component {
+  logggingOut = () => {
+    toast.warn("User Logged-out Successfully", {
+      position: toast.POSITION.BOTTOM_CENTER,
+    });
+  };
   render() {
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
@@ -80,10 +88,13 @@ class DefaultHeader extends Component {
               <DropdownItem
                 onClick={(e) => {
                   this.props.onLogout(e);
+                  console.log("Logging Out in Deafult Header");
                   window.location.reload();
+                  this.logggingOut();
                 }}
               >
-                <i className="fa fa-power-off"></i> Logout
+                <i className="fa fa-power-off"></i>
+                Logout
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>

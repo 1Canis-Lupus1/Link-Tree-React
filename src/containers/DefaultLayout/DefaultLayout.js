@@ -21,7 +21,10 @@ import ProtectedRoute from "../../components/protected-routes";
 import ProfilePreview from "./../../pages/profile-preview-page";
 import Links from "./../../pages/links-page";
 import Appearance from "./../../pages/appearance-page";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+toast.configure();
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
@@ -31,8 +34,16 @@ class DefaultLayout extends Component {
     <div className="animated fadeIn pt-1 text-center">Loading...</div>
   );
 
+  loggingOut = () => {
+    toast.success("User Logged-Out Successfully", {
+      position: toast.POSITION.BOTTOM_CENTER,
+    });
+    // alert("Logged Out");
+  };
+
   signOut(e) {
     e.preventDefault();
+    console.log("On Sign out", e.target);
     localStorage.clear();
     //Clear Store here for Logout
     this.props.history.push("/login");
@@ -47,7 +58,12 @@ class DefaultLayout extends Component {
       <div className="app">
         <AppHeader fixed>
           <Suspense fallback={this.loading()}>
-            <DefaultHeader onLogout={(e) => this.signOut(e)} />
+            <DefaultHeader
+              onLogout={(e) => {
+                alert("Logout Successful");
+                this.signOut(e);
+              }}
+            />
           </Suspense>
         </AppHeader>
         <div className="app-body">
