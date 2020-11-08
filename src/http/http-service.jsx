@@ -84,7 +84,6 @@ export const makeGetRequest = async (
     try {
       const authToken = await getToken();
       if (authToken) {
-        console.log(authToken);
         headers["Authorization"] = "Bearer " + authToken;
       }
     } catch (e) {

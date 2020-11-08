@@ -454,7 +454,7 @@ class Links extends Component {
                   : "btnOrange"
               }
             >
-              <strong>No Links</strong>
+              <strong>Links Empty</strong>
             </Button>
           </Fragment>
         );
@@ -535,7 +535,10 @@ class Links extends Component {
                 <Card className="userDetails mb-4">
                   <CardBody>
                     {!this.state._links.length ? (
-                      <strong>Links Empty For Current User</strong>
+                      <h3>
+                        No Links for User: @
+                        <i>{this.props.userData.userName}</i>
+                      </h3>
                     ) : (
                       showLinkCard()
                     )}
