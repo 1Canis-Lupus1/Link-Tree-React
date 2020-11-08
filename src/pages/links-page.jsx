@@ -37,7 +37,10 @@ import {
   FacebookMessengerIcon,
   WhatsappIcon,
 } from "react-share";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+toast.configure();
 class Links extends Component {
   constructor(props) {
     super(props);
@@ -73,6 +76,12 @@ class Links extends Component {
     modals[index] = !modals[index];
     this.setState({
       modals,
+    });
+  };
+
+  change = () => {
+    toast.warn("Changes Updated successfully", {
+      position: toast.POSITION.TOP_CENTER,
     });
   };
 
@@ -630,6 +639,7 @@ class Links extends Component {
                 toggle={() => this._toggleModal(1)}
                 onClick={() => {
                   addFlag ? this.addCurrEntry() : this.editCurrEntry();
+                  this.change();
                 }}
               >
                 Create

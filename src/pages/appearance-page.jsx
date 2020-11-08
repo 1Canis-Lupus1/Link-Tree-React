@@ -23,7 +23,10 @@ import {
   FacebookMessengerIcon,
   WhatsappIcon,
 } from "react-share";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+toast.configure();
 class Appearance extends Component {
   constructor(props) {
     super(props);
@@ -40,6 +43,10 @@ class Appearance extends Component {
       this.setState({ myTheme: res.user.template });
     });
   }
+
+  themeChange = () => {
+    toast.info("Layout theme Updated", { position: toast.POSITION.TOP_CENTER });
+  };
 
   _toggleModal = (index) => {
     const { modals } = this.state;
@@ -192,6 +199,7 @@ class Appearance extends Component {
                           onClick={() => {
                             this.setState({ myTheme: "Light" });
                             this.handleThemeChange("Light");
+                            this.themeChange();
                           }}
                         >
                           <div className="themeLight">
@@ -208,6 +216,7 @@ class Appearance extends Component {
                           onClick={() => {
                             this.setState({ myTheme: "Dark" });
                             this.handleThemeChange("Dark");
+                            this.themeChange();
                           }}
                         >
                           <div className="themeDark">
@@ -224,6 +233,7 @@ class Appearance extends Component {
                           onClick={() => {
                             this.setState({ myTheme: "Scooter" });
                             this.handleThemeChange("Scooter");
+                            this.themeChange();
                           }}
                         >
                           <div className="themeScooter">
@@ -240,6 +250,7 @@ class Appearance extends Component {
                           onClick={() => {
                             this.setState({ myTheme: "Leaf" });
                             this.handleThemeChange("Leaf");
+                            this.themeChange();
                           }}
                         >
                           <div className="themeLeaf">
@@ -256,6 +267,7 @@ class Appearance extends Component {
                           onClick={() => {
                             this.setState({ myTheme: "Moon" });
                             this.handleThemeChange("Moon");
+                            this.themeChange();
                           }}
                         >
                           <div className="themeMoon">
