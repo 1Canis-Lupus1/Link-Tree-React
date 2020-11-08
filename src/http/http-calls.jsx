@@ -4,10 +4,17 @@ import {
   makePutRequest,
   uploadUserAvatar,
 } from "./http-service";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const url = "http://139.59.14.81:4000/api/v1";
 const profileCloudinary = {
   preset: "cuax9lkz",
+};
+toast.configure();
+
+const notify = () => {
+  toast.error("Invalid Email Id", { position: toast.POSITION.TOP_LEFT });
 };
 
 export const SignUp = (signupData) => {
@@ -58,6 +65,7 @@ export const validPass = (forgot_passData) => {
       })
       .catch((e) => {
         console.log("API call error: ", e);
+        notify();
         reject(e);
       });
   });

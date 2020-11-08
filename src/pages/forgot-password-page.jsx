@@ -13,6 +13,10 @@ import {
   Label,
 } from "reactstrap";
 import { validPass } from "../http/http-calls";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 const items = [
   {
     header: "Title",
@@ -77,6 +81,12 @@ class ForgotPassword extends Component {
     this.props.history.push("/login");
   };
 
+  notify = () => {
+    toast.success("Password Reset Link Sent Succesfully", {
+      position: toast.POSITION.TOP_LEFT,
+    });
+  };
+
   login = (e) => {
     const { user } = this.state;
     let isTrue = {
@@ -92,11 +102,11 @@ class ForgotPassword extends Component {
         validPass(forgot_passData).then((res) => {
           console.log("My response is;", res);
           if (res.error === false) {
-            alert("Password Reset Link Sent Successfully");
+            this.notify();
             this.props.history.push("/login");
-          } else {
-            alert("Email Not Registered.Create a New User");
-            // this.props.history.push("/signup");
+          }
+          if (res.error !== false) {
+            alert("Invalid Email Id");
           }
         });
       }

@@ -15,6 +15,10 @@ import {
 import { Logging } from "../http/http-calls";
 import { connect } from "react-redux";
 import { logUser } from "../redux/actions/user_data";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 const items = [
   {
     header: "Title",
@@ -45,6 +49,18 @@ class Login extends Component {
     this.onExiting = this.onExiting.bind(this);
     this.onExited = this.onExited.bind(this);
   }
+
+  notify = () => {
+    toast.success("Logged-In Successfully", {
+      position: toast.POSITION.BOTTOM_CENTER,
+    });
+  };
+
+  errNotify = () => {
+    toast.error("Credential Mismatch", {
+      position: toast.POSITION.BOTTOM_CENTER,
+    });
+  };
 
   onExiting() {
     this.animating = true;
@@ -99,10 +115,12 @@ class Login extends Component {
         };
         console.log("userLoginData: ", userLoginData);
         this.props.logUser({ userLoginData });
+        this.notify();
         this.props.history.push("/links");
       })
       .catch((err) => {
         console.log(err);
+        this.errNotify();
         this.props.history.push("/login");
       });
   };
@@ -175,6 +193,7 @@ class Login extends Component {
       if (!errors) {
         const { user } = this.state;
         console.log("Final API call: ", user);
+        // this.notify();
         this.users();
       }
     });

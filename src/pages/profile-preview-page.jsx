@@ -11,9 +11,17 @@ import {
   LinkedinIcon,
   TelegramIcon,
 } from "react-share";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+toast.configure();
 class ProfilePreview extends Component {
   render() {
+    const notify = () => {
+      if ("A" === "A") {
+        toast("HEllo There");
+      }
+    };
     return (
       <div className="app flex-row animated fadeIn innerPagesBg">
         <Container>
@@ -118,6 +126,7 @@ class ProfilePreview extends Component {
               </Card>
             </Col>
           </Row>
+          <button onClick={notify}>Click ME</button>
         </Container>
       </div>
     );

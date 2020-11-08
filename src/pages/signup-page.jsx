@@ -13,6 +13,9 @@ import {
   Label,
 } from "reactstrap";
 import { SignUp, validUsername } from "../http/http-calls";
+import { toast, toasts } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const items = [
   {
     header: "Title",
@@ -20,6 +23,7 @@ const items = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis bibendum orci sit amet aliquam.",
   },
 ];
+toast.configure();
 
 class RequestDemo extends Component {
   constructor(props) {
@@ -40,7 +44,6 @@ class RequestDemo extends Component {
       },
       errors: {},
       validUsername: false,
-      /////////
       type: "password",
     };
     this.next = this.next.bind(this);
@@ -49,6 +52,12 @@ class RequestDemo extends Component {
     this.onExiting = this.onExiting.bind(this);
     this.onExited = this.onExited.bind(this);
   }
+
+  notify = () => {
+    toast.success("User Registration Successful", {
+      position: toast.POSITION.TOP_LEFT,
+    });
+  };
 
   onExiting() {
     this.animating = true;
@@ -96,7 +105,9 @@ class RequestDemo extends Component {
           userName: this.state.user.username,
           password: this.state.user.password,
         };
-        SignUp(signupData).then((res) => console.log(res));
+        SignUp(signupData).then((res) => {
+          console.log("My Signup Response:", res);
+        });
         this.props.history.push("/login");
       }
     });
@@ -233,6 +244,7 @@ class RequestDemo extends Component {
       if (!errors) {
         const { user } = this.state;
         console.log("Value in State 'user':", user);
+        this.notify();
         this.login();
       }
     });
