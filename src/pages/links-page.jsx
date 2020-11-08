@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   Col,
   Container,
@@ -31,8 +32,8 @@ import { addUserAvatar, selectMyTheme } from "../redux/actions/user_data";
 import { connect } from "react-redux";
 import {
   FacebookShareButton,
-  WhatsappShareButton,
   FacebookMessengerShareButton,
+  WhatsappShareButton,
   FacebookIcon,
   FacebookMessengerIcon,
   WhatsappIcon,
@@ -64,10 +65,11 @@ class Links extends Component {
       errors: {},
       deleteCurrEntry: "",
       editCurrEntry: "",
-      addFlag: false,
-      editFlag: false,
+      addFlag: "",
+      editFlag: "",
       contentDatanull: false,
       myTheme: "",
+      copied: false,
     };
   }
 
@@ -93,12 +95,10 @@ class Links extends Component {
   //On Initial reder checking the page contents and setting state accordingly(Check values in console)
   componentDidMount() {
     const { _links } = this.state;
-    //Fetching Current Added Links for user
     getPages().then((res) => {
       if (res.page === null) {
         this.setState({ linksNotPresent: true });
       } else {
-        //Adding Current state value to the links
         this.setState({
           _links: res.page.contents,
           pageId: res.page._id,
@@ -117,6 +117,14 @@ class Links extends Component {
         console.log("MY THEME IS:", this.state.myTheme);
       })
       .catch((err) => console.log("MY ERROR IN THEME:", err));
+
+    // let userUrl = window.location.href;
+    // userUrl = userUrl.substring(0, userUrl.lastIndexOf("/"));
+    // console.log(userUrl);
+    // this.setState({
+    //   userProfileUrl:
+    //     `${userUrl}` + "/profile" + "/" + `${this.props.userData.userName}`,
+    // });
   }
 
   handleAddEntry = () => {
@@ -166,18 +174,18 @@ class Links extends Component {
         contents: updateData,
       };
       createEntry(myVal, pageId).then((res) => {
-        console.log("createContentLst: ", res);
+        console.log("Response After Post to /page: ", res);
         const lastContent = res.page.contents[res.page.contents.length - 1];
-        console.log("newAddedContent:", lastContent);
-        this.setState({ _links: res.page.contents });
-        console.log("added data list: ", _links);
+        this.setState({ _links: res.page.contents }, () => {
+          console.log("After setState: ", _links);
+        });
       });
       this.setState({
         contentData: {
           title: "",
           url: "",
         },
-        addFlag: false,
+        addLinkFlag: false,
       });
     }
     this.props.addContent(_links);
@@ -218,7 +226,7 @@ class Links extends Component {
                 "(https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\//\\//(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})"
               ).test(contentData.url)
             ) {
-              errors.url = "Invalid URL";
+              errors.url = "*Invalid URL";
             } else {
               delete errors[entry];
               isTrue.url = false;
@@ -258,6 +266,7 @@ class Links extends Component {
       if (!errors) {
         const { contentData } = this.state;
         console.log("Data in State : ", contentData);
+        this.setState({ addLinkFlag: false });
         this.handleAddEntry();
       }
     });
@@ -277,6 +286,7 @@ class Links extends Component {
         this.editMyModal();
       }
     });
+    this.setState({ editLinkFlag: false });
   };
 
   handleToggle = (buffer, _id) => {
@@ -343,7 +353,7 @@ class Links extends Component {
         contents: _links,
       };
       createEntry(myVal, pageId).then((res) => {
-        console.log("Response Received: ", res);
+        console.log("Response Received:", res);
         const lastContent = res.page.contents[res.page.contents.length - 1];
         this.setState({ _links: res.page.contents });
         console.log("After Set State", _links);
@@ -353,13 +363,49 @@ class Links extends Component {
           title: "",
           url: "",
         },
-        editFlag: false,
+        editLinkFlag: false,
       });
     }
     this.setState({
       modals: [false, false],
       editContentData: { title: "", url: "" },
       contentData: { title: "", url: "" },
+    });
+  };
+
+  dragLink = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  onDragEnd = (result) => {
+    const { pageId } = this.state;
+    //When Dragged Out Of the Card
+    if (!result.destination) {
+      return;
+    }
+
+    const _links = this.dragLink(
+      this.state._links,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.setState({
+      _links,
+    });
+
+    this.props.addContent(_links);
+    const myVal = {
+      contents: _links,
+    };
+    createEntry(myVal, pageId).then((res) => {
+      console.log("Response Received: ", res);
+      const lastContent = res.page.contents[res.page.contents.length - 1];
+      this.setState({ _links: res.page.contents });
+      console.log("After Set State", _links);
     });
   };
 
@@ -375,67 +421,91 @@ class Links extends Component {
 
     const showLinkCard = () => {
       if (_links === undefined || _links === null) {
-        console.log("page is empty while displaying");
+        console.log("_links is Undefined");
       } else {
-        return _links.map((data) => {
-          if (data.content.url === "" || data.content.title === "") {
-            return false;
-          } else {
-            return (
-              <Fragment>
-                <div className="addedLinksWrap">
-                  <div className="moveLink">
-                    <i className="fa fa-ellipsis-v"></i>
-                  </div>
-                  <div className="addedLinkDetails">
-                    <h5>{data.content.title.toUpperCase()}</h5>
-                    <p>{data.content.url}</p>
-                    <div className="actionBtnWrap">
-                      <CustomInput
-                        type="switch"
-                        id={"exampleCustomSwitch" + data._id}
-                        name="customSwitch"
-                        label=""
-                        checked={data.status}
-                        className="disableLink"
-                        key={data._id}
-                        onClick={(e) =>
-                          this.handleToggle(e.target.checked, data._id)
-                        }
-                      />
-
-                      <Button
-                        className="delLinkBtn"
-                        onClick={() => {
-                          this.setState({
-                            editCurrEntry: data._id,
-                            contentData: {
-                              title: data.content.title,
-                              url: data.content.url,
-                            },
-                            editFlag: true,
-                          });
-                          this._toggleModal(1);
-                        }}
-                      >
-                        <i className="fa fa-pencil"></i>
-                      </Button>
-                      <Button
-                        className="delLinkBtn"
-                        onClick={() => {
-                          this.setState({ deleteCurrEntry: data._id });
-                          this._toggleModal(2);
-                        }}
-                      >
-                        <i className="fa fa-trash-o text-danger"></i>
-                      </Button>
-                    </div>
-                  </div>
+        return (
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided, snapshot) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {_links.map((data, index) => (
+                    <Draggable
+                      key={data._id}
+                      draggableId={data._id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Fragment>
+                            <div className="addedLinksWrap">
+                              <div className="moveLink">
+                                <i className="fa fa-ellipsis-v"></i>
+                              </div>
+                              <div className="addedLinkDetails">
+                                <h5>{data.content.title.toUpperCase()}</h5>
+                                <p>{data.content.url}</p>
+                                <div className="actionBtnWrap">
+                                  <CustomInput
+                                    type="switch"
+                                    id={"exampleCustomSwitch" + data._id}
+                                    name="customSwitch"
+                                    label=""
+                                    checked={data.status}
+                                    className="disableLink"
+                                    key={data._id}
+                                    onClick={(e) =>
+                                      this.handleToggle(
+                                        e.target.checked,
+                                        data._id
+                                      )
+                                    }
+                                  />
+                                  <Button
+                                    className="editLinkBtn"
+                                    onClick={() => {
+                                      this.setState({
+                                        editCurrEntry: data._id,
+                                        contentData: {
+                                          title: data.content.title,
+                                          url: data.content.url,
+                                        },
+                                        addFlag: "edit",
+                                        errors: {},
+                                      });
+                                      this._toggleModal(1);
+                                    }}
+                                  >
+                                    <i className="fa fa-pencil"></i>
+                                  </Button>
+                                  <Button
+                                    className="delLinkBtn"
+                                    onClick={() => {
+                                      this.setState({
+                                        deleteCurrEntry: data._id,
+                                      });
+                                      this._toggleModal(2);
+                                    }}
+                                  >
+                                    <i className="fa fa-trash-o text-danger"></i>
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </Fragment>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
                 </div>
-              </Fragment>
-            );
-          }
-        });
+              )}
+            </Droppable>
+          </DragDropContext>
+        );
       }
     };
 
@@ -492,13 +562,12 @@ class Links extends Component {
       } else {
         var index = _links.findIndex((item) => item._id === deleteCurrEntry);
         _links.splice(index, 1);
-        console.log("New List: ", _links);
+        console.log("New List:  ", _links);
         const myVal = {
           contents: _links,
         };
         createEntry(myVal, pageId).then((res) => {
           console.log("Received Response:", res);
-          const lastContent = res.page.contents[res.page.contents.length - 1];
           this.setState({ _links: res.page.contents });
           console.log("After Set State", _links);
         });
@@ -519,11 +588,12 @@ class Links extends Component {
                     className="addBtn"
                     onClick={() => {
                       this.setState({
+                        addFlag: "add",
                         contentData: {
                           title: "",
                           url: "",
                         },
-                        addFlag: true,
+                        errors: {},
                       });
                       this._toggleModal(1);
                     }}
@@ -534,14 +604,8 @@ class Links extends Component {
 
                 <Card className="userDetails mb-4">
                   <CardBody>
-                    {!this.state._links.length ? (
-                      <h3>
-                        No links for user : "@
-                        <i>
-                          <u>{this.props.userData.userName}</u>
-                        </i>{" "}
-                        "
-                      </h3>
+                    {this.state.linksNotPresent ? (
+                      <Fragment>NO LINKS AVAILABLE</Fragment>
                     ) : (
                       showLinkCard()
                     )}
@@ -552,7 +616,7 @@ class Links extends Component {
               <div className="profilePreviewWrap">
                 <Button
                   className="shareProfileBtn btnMoon"
-                  onClick={this.handleShare}
+                  onClick={() => this._toggleModal(3)}
                 >
                   Share
                 </Button>
@@ -583,7 +647,7 @@ class Links extends Component {
                   </div>
 
                   <div className="mt-4">{showButton()}</div>
-                </div>{" "}
+                </div>
                 {/* profilePreview */}
               </div>
             </Col>
@@ -596,7 +660,7 @@ class Links extends Component {
             className="modal-dialog-centered"
           >
             <ModalHeader toggle={() => this._toggleModal(1)}>
-              {addFlag ? "Add New Link" : "Edit Link"}
+              {addFlag === "add" ? "Add New Link" : "Edit Link"}
             </ModalHeader>
             <ModalBody className="modalContent">
               <FormGroup>
@@ -644,16 +708,17 @@ class Links extends Component {
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(1)}
                 onClick={() => {
-                  addFlag ? this.addCurrEntry() : this.editCurrEntry();
-                  this.change();
+                  addFlag === "add"
+                    ? this.addCurrEntry()
+                    : this.editCurrEntry();
                 }}
               >
-                Create
+                {addFlag === "add" ? "Create" : "Edit"}
               </Button>
             </ModalFooter>
           </Modal>
 
-          {/* Modal for deleting Link */}
+          {/* Modal for deleting an exisiting Link */}
           <Modal
             isOpen={this.state.modals[2]}
             toggle={() => this._toggleModal(2)}
@@ -687,7 +752,7 @@ class Links extends Component {
             </ModalFooter>
           </Modal>
 
-          {/* Modal For Share Link */}
+          {/* Modal for Share Link */}
           <Modal
             isOpen={this.state.modals[3]}
             toggle={() => this._toggleModal(3)}
@@ -750,7 +815,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addContent: (_links) => dispatch(addContent(_links)),
+    // removeContent: (_id) => dispatch(removeContent(_id)),
+    // editContent: (content) => dispatch(editContent(content)),
     addId: (_id) => dispatch(addId(_id)),
+    // addUser: (avatarLink) => dispatch(addUser(avatarLink))
     addUserAvatar: (avatarLink) => dispatch(addUserAvatar(avatarLink)),
     selectMyTheme: (theme) => dispatch(selectMyTheme(theme)),
   };
