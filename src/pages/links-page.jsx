@@ -536,8 +536,11 @@ class Links extends Component {
                   <CardBody>
                     {!this.state._links.length ? (
                       <h3>
-                        No Links for User: @
-                        <i>{this.props.userData.userName}</i>
+                        No links for user : "@
+                        <i>
+                          <u>{this.props.userData.userName}</u>
+                        </i>{" "}
+                        "
                       </h3>
                     ) : (
                       showLinkCard()
