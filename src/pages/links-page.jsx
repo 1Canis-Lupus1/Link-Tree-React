@@ -313,7 +313,6 @@ class Links extends Component {
         if (_id === e._id) {
           e.status = false;
         }
-        //setstate and APi
         this.setState({ _links });
       });
       const myVal = {
