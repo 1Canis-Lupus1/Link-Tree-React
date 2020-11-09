@@ -11,3 +11,5 @@ export const ADD_AVATAR = "ADD_AVATAR";
 
 export const DISPLAY_LOADER = "DISPLAY_LOADER";
 export const HIDE_LOADER = "HIDE_LOADER";
+
+export const LOG_OUT = "LOG_OUT";

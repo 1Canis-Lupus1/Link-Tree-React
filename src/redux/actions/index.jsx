@@ -11,3 +11,5 @@ export { ADD_AVATAR } from "./action";
 
 export { SHOW_LOADER } from "./action";
 export { HIDE_LOADER } from "./action";
+
+export { LOG_OUT } from "./action";

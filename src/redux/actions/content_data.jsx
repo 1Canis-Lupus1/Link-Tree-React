@@ -27,6 +27,7 @@ export const removeContent = (content) => {
     payload: content,
   };
 };
+
 export const addId = (_id) => {
   return {
     type: ADD_ID,
@@ -35,6 +36,7 @@ export const addId = (_id) => {
     },
   };
 };
+
 export const addUserAvatar = (avatarLink) => {
   return {
     type: ADD_AVATAR,
