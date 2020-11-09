@@ -87,6 +87,12 @@ class Links extends Component {
     });
   };
 
+  del = () => {
+    toast.error("Link Deleted Successfully", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
+
   handleShare = () => {
     //Modal For Share Links
     this._toggleModal(3);
@@ -117,14 +123,6 @@ class Links extends Component {
         console.log("MY THEME IS:", this.state.myTheme);
       })
       .catch((err) => console.log("MY ERROR IN THEME:", err));
-
-    // let userUrl = window.location.href;
-    // userUrl = userUrl.substring(0, userUrl.lastIndexOf("/"));
-    // console.log(userUrl);
-    // this.setState({
-    //   userProfileUrl:
-    //     `${userUrl}` + "/profile" + "/" + `${this.props.userData.userName}`,
-    // });
   }
 
   handleAddEntry = () => {
@@ -711,6 +709,7 @@ class Links extends Component {
                   addFlag === "add"
                     ? this.addCurrEntry()
                     : this.editCurrEntry();
+                  this.change();
                 }}
               >
                 {addFlag === "add" ? "Create" : "Edit"}
@@ -745,7 +744,10 @@ class Links extends Component {
                 className="modalBtnSave"
                 toggle={() => this._toggleModal(2)}
                 //onclick
-                onClick={() => deleteModal()}
+                onClick={() => {
+                  deleteModal();
+                  this.del();
+                }}
               >
                 Delete
               </Button>
