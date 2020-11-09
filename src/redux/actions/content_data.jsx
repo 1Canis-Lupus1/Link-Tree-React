@@ -4,6 +4,7 @@ import {
   DELETE_ENTRY,
   ADD_ID,
   ADD_AVATAR,
+  LOG_OUT,
 } from "./action";
 
 export const addContent = (pageContents) => {
@@ -43,5 +44,11 @@ export const addUserAvatar = (avatarLink) => {
     payload: {
       avatarLink,
     },
+  };
+};
+
+export const delItem = () => {
+  return {
+    type: "LOG_OUT",
   };
 };

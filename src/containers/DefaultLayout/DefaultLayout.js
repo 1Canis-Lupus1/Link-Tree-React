@@ -23,6 +23,8 @@ import Links from "./../../pages/links-page";
 import Appearance from "./../../pages/appearance-page";
 import { toast, toasts } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { removeUser } from "../../redux/actions/user_data";
+import { delItem } from "../../redux/actions/content_data";
 
 toast.configure();
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
@@ -35,7 +37,7 @@ class DefaultLayout extends Component {
   );
 
   loggingOut = () => {
-    toast.success("User Logged-Out Successfully", {
+    toast.warn("User Logged-Out Successfully", {
       position: toast.POSITION.BOTTOM_CENTER,
     });
     // alert("Logged Out");
@@ -43,10 +45,11 @@ class DefaultLayout extends Component {
 
   signOut(e) {
     e.preventDefault();
-    console.log("On Sign out", e.target);
+    // console.log("On Sign out", e.target);
+    this.loggingOut();
+    removeUser();
+    delItem();
     localStorage.clear();
-    //Clear Store here for Logout
-    this.props.history.push("/login");
   }
 
   componentDidMount() {
@@ -60,7 +63,7 @@ class DefaultLayout extends Component {
           <Suspense fallback={this.loading()}>
             <DefaultHeader
               onLogout={(e) => {
-                alert("Logout Successful");
+                // alert("Logout Successful");
                 this.signOut(e);
               }}
             />

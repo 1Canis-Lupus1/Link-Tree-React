@@ -8,8 +8,9 @@ import {
   loaderDataReducer,
 } from "./reducers";
 import logger from "redux-logger";
+import { LOG_OUT } from "../redux/actions/action";
 
-const appReducer = combineReducers({
+const rootReducer = combineReducers({
   userData: userDataReducer,
   loaderData: loaderDataReducer,
   contentData: contentDataReducer,
@@ -22,15 +23,16 @@ const persistConfig = {
   stateReconciler: hardSet,
 };
 
-const rootReducer = (state, action) => {
-  if (action.type === "LOG_OUT") {
-    storage.removeItem("persist:root");
-    state = undefined;
-  }
-  return appReducer(state, action);
-};
+//Clearing Out Redux store on Logout
+// const rootReducer = (state, action) => {
+//   if (action.type === "LOG_OUT") {
+//     storage.removeItem("persist:root");
+//     state = undefined;
+//   }
+//   return appReducer(state, action);
+// };
 
-const pReducer = persistReducer(persistConfig, appReducer);
+const pReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = createStore(pReducer, undefined, applyMiddleware(logger));
 

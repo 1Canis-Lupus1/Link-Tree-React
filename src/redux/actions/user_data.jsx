@@ -1,4 +1,4 @@
-import { ADD_DATA, DEL_DATA, ADD_PIC, ADD_THEME } from "./action";
+import { ADD_DATA, DEL_DATA, ADD_PIC, ADD_THEME, LOG_OUT } from "./action";
 
 export const logUser = (user) => {
   return {

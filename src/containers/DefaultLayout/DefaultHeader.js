@@ -30,11 +30,11 @@ const defaultProps = {};
 toast.configure();
 
 class DefaultHeader extends Component {
-  logggingOut = () => {
-    toast.warn("User Logged-out Successfully", {
-      position: toast.POSITION.BOTTOM_CENTER,
-    });
-  };
+  // logggingOut = () => {
+  //   toast.warn("User Logged-out Successfully", {
+  //     position: toast.POSITION.BOTTOM_CENTER,
+  //   });
+  // };
   render() {
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
@@ -94,7 +94,7 @@ class DefaultHeader extends Component {
               </DropdownItem>
               <DropdownItem
                 onClick={(e) => {
-                  this.logggingOut();
+                  // this.logggingOut();
                   this.props.onLogout(e);
                   console.log("Logging Out in Deafult Header");
                   window.location.reload();

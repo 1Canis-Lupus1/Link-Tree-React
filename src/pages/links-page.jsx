@@ -793,7 +793,7 @@ class Links extends Component {
               </h5>
               <hr />
               <div>
-                <QRCode value="http://localhost:3000/profile-preview" />
+                <QRCode value="http://my-final-link-tree.surge.sh/profile-preview" />
               </div>
             </ModalBody>
             <ModalFooter>

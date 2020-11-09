@@ -25,6 +25,11 @@ export const loaderDataReducer = (state = loaderInitialState, action) => {
       };
       break;
     }
+    // case LOG_OUT: {
+    //   storage.removeItem("persist:root");
+    //   state = undefined;
+    //   break;
+    // }
     default: {
     }
   }

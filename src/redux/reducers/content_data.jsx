@@ -1,9 +1,10 @@
+import storage from "redux-persist/lib/storage";
 import {
   ADD_ENTRY,
   EDIT_ENTRY,
   DELETE_ENTRY,
   ADD_ID,
-  ADD_THEME,
+  LOG_OUT,
 } from "../actions/action";
 
 const contentData = {
@@ -31,10 +32,13 @@ export const contentDataReducer = (state = contentData, action) => {
       newState.contents = [];
       break;
     }
-    // case ADD_THEME: {
-    //   newState.template = action.payload.myClassName;
-    //   break;
-    // }
+    case LOG_OUT: {
+      newState = {
+        contents: [],
+        id: newState.id,
+      };
+      break;
+    }
 
     default: {
     }

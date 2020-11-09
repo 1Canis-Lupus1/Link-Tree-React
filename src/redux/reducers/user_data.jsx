@@ -38,6 +38,11 @@ export const userDataReducer = (state = userData, action) => {
       newState.template = action.payload.myClassName;
       break;
     }
+    // case LOG_OUT: {
+    //   storage.removeItem("persist:root");
+    //   state = undefined;
+    //   break;
+    // }
     default: {
     }
   }
