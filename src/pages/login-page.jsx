@@ -56,8 +56,8 @@ class Login extends Component {
     });
   };
 
-  errNotify = () => {
-    toast.error("Credentials Mismatch", {
+  errNotify = (err) => {
+    toast.error(err, {
       position: toast.POSITION.BOTTOM_CENTER,
     });
   };
@@ -119,8 +119,9 @@ class Login extends Component {
         this.props.history.push("/links");
       })
       .catch((err) => {
-        console.log(err);
-        this.errNotify();
+        console.log("My error:", err);
+        const myError = err.reason;
+        this.errNotify(myError);
         this.props.history.push("/login");
       });
   };
