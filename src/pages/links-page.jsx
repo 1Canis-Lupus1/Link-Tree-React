@@ -40,6 +40,7 @@ import {
 } from "react-share";
 import { toast, toasts } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import QRCode from "qrcode.react";
 
 toast.configure();
 class Links extends Component {
@@ -790,6 +791,10 @@ class Links extends Component {
                   <p style={{ margin: "10px", padding: "10px" }}>Whatsapp</p>
                 </WhatsappShareButton>
               </h5>
+              <hr />
+              <div>
+                <QRCode value="http://localhost:3000/profile-preview" />
+              </div>
             </ModalBody>
             <ModalFooter>
               <Button
