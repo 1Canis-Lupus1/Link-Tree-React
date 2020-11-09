@@ -295,34 +295,35 @@ class Links extends Component {
           e.status = true;
         }
         this.setState({ _links });
-        const myVal = {
-          contents: _links,
-        };
-        createEntry(myVal, pageId).then((res) => {
-          console.log("Response received :", res);
-          const lastContent = res.page.contents[res.page.contents.length - 1];
-          this.setState({ _links: res.page.contents });
-          console.log("After Set State", _links);
-        });
-        //Page Reload for Toggle
-        window.location.reload();
       });
-    } else {
+      const myVal = {
+        contents: _links,
+      };
+      createEntry(myVal, pageId).then((res) => {
+        console.log("Response received :", res);
+        const lastContent = res.page.contents[res.page.contents.length - 1];
+        this.setState({ _links: res.page.contents });
+        console.log("After Set State", _links);
+      });
+      //Page Reload for Toggle
+      window.location.reload();
+    }
+    if (!buffer) {
       _links.map((e) => {
         if (_id === e._id) {
           e.status = false;
         }
         //setstate and APi
         this.setState({ _links });
-        const myVal = {
-          contents: _links,
-        };
-        createEntry(myVal, pageId).then((res) => {
-          console.log("Response received :", res);
-          const lastContent = res.page.contents[res.page.contents.length - 1];
-          this.setState({ _links: res.page.contents });
-          console.log("After Set State", _links);
-        });
+      });
+      const myVal = {
+        contents: _links,
+      };
+      createEntry(myVal, pageId).then((res) => {
+        console.log("Response received :", res);
+        const lastContent = res.page.contents[res.page.contents.length - 1];
+        this.setState({ _links: res.page.contents });
+        console.log("After Set State", _links);
       });
     }
     console.log(_links);
@@ -529,7 +530,7 @@ class Links extends Component {
       } else {
         return _links.map((data) => {
           if (data.status) {
-            console.log("MY LINKS;", data);
+            // console.log("MY LINKS;", data);
             return (
               <Fragment>
                 <Button

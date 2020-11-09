@@ -57,7 +57,7 @@ class Login extends Component {
   };
 
   errNotify = () => {
-    toast.error("User not found", {
+    toast.error("Credentials Mismatch", {
       position: toast.POSITION.BOTTOM_CENTER,
     });
   };
