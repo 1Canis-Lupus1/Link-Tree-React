@@ -60,7 +60,14 @@ class DefaultHeader extends Component {
             </Link>
           </NavItem>
           <NavItem className="px-2">
-            <Link to="/appearance" className="nav-link">
+            <Link
+              to="/appearance"
+              className="nav-link"
+              // onClick={() => {
+              //   this.props.history.push("/links");
+              //   this.props.history.push("/appearance");
+              // }}
+            >
               Appearance
             </Link>
           </NavItem>
@@ -87,10 +94,10 @@ class DefaultHeader extends Component {
               </DropdownItem>
               <DropdownItem
                 onClick={(e) => {
+                  this.logggingOut();
                   this.props.onLogout(e);
                   console.log("Logging Out in Deafult Header");
                   window.location.reload();
-                  this.logggingOut();
                 }}
               >
                 <i className="fa fa-power-off"></i>
